@@ -80,6 +80,12 @@ PORTABLE_RUN_ON_SERVER_IP.bat
 PORTABLE_RESET_AND_RUN_DEMO.bat
 ```
 
+اگر مرحله copy اولیه fail شد، می‌توانید مستقیم این را در CMD اجرا کنید:
+```bat
+set BORNA_PORTABLE_LOCAL=1
+powershell -NoProfile -ExecutionPolicy Bypass -File portable\bootstrap_portable_runtime.ps1
+```
+
 جزئیات بیشتر در `docs/windows_truly_portable_fa.md` آمده است.
 
 ### Docker

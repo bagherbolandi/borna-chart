@@ -30,6 +30,17 @@
 PORTABLE_OPEN_ME_FIRST.bat
 ```
 
+### اگر مرحله کپی اولیه fail شد
+این نسخه ابتدا بسته را به مسیر local کوتاه‌تری کپی می‌کند:
+- `%LOCALAPPDATA%\\BornaP24`
+
+اگر به هر دلیل robocopy در این مرحله fail شد، در همان پوشه extracted این دو دستور را مستقیم در CMD اجرا کنید:
+
+```bat
+set BORNA_PORTABLE_LOCAL=1
+powershell -NoProfile -ExecutionPolicy Bypass -File portable\bootstrap_portable_runtime.ps1
+```
+
 ## اجرا روی IP سرور / LAN
 ```bat
 ENABLE_WINDOWS_FIREWALL_8000.bat
