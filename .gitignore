@@ -10,6 +10,9 @@ __pycache__/
 *.sqlite
 *.sqlite3
 
+# Generated deliverables
+/deliverables/
+
 # IDE / OS
 .DS_Store
 .vscode/

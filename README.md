@@ -67,6 +67,21 @@ run_borna_server.bat --lan
 
 جزئیات بیشتر در `docs/windows_run_guide_fa.md` و `docs/windows_server_deploy_iis_fa.md` آمده است.
 
+### Windows Truly Portable
+اگر نسخه‌ای می‌خواهید که به Python نصب‌شده روی سرور وابسته نباشد، از بسته portable استفاده کنید. این بسته:
+- embedded Python 3.12 را داخل خود دارد
+- wheelhouse وابستگی‌های runtime را داخل خود دارد
+- روی اجرای مستقیم از network share تکیه نمی‌کند و خودش به local runtime کپی می‌شود
+
+فایل‌های اصلی نسخه portable:
+```bat
+PORTABLE_OPEN_ME_FIRST.bat
+PORTABLE_RUN_ON_SERVER_IP.bat
+PORTABLE_RESET_AND_RUN_DEMO.bat
+```
+
+جزئیات بیشتر در `docs/windows_truly_portable_fa.md` آمده است.
+
 ### Docker
 ```bash
 docker compose up --build
