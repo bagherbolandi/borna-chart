@@ -4,10 +4,11 @@ if /I "%BORNA_PORTABLE_LOCAL%"=="1" goto local_run
 set "BORNA_PORTABLE_LOCAL=1"
 set "BORNA_PORTABLE_DEST=%LOCALAPPDATA%\BornaP24"
 set "BORNA_COPY_LOG=%TEMP%\borna_portable_copy.log"
-echo [Borna Portable] Source package: %CD%
+set "BORNA_PORTABLE_SOURCE=%~dp0."
+echo [Borna Portable] Source package: %BORNA_PORTABLE_SOURCE%
 echo [Borna Portable] Local runtime folder: %BORNA_PORTABLE_DEST%
 echo [Borna Portable] Copying package to local runtime folder...
-robocopy "%~dp0" "%BORNA_PORTABLE_DEST%" /E /R:1 /W:1 /NFL /NDL /NP /XD .portable_runtime .git deliverables __pycache__ .pytest_cache .mypy_cache .ruff_cache /XF borna_chart.db *.pyc *.pyo > "%BORNA_COPY_LOG%"
+robocopy "%BORNA_PORTABLE_SOURCE%" "%BORNA_PORTABLE_DEST%" /E /R:1 /W:1 /NFL /NDL /NP /XD .portable_runtime .git deliverables __pycache__ .pytest_cache .mypy_cache .ruff_cache /XF borna_chart.db *.pyc *.pyo > "%BORNA_COPY_LOG%"
 set "BORNA_COPY_RC=%ERRORLEVEL%"
 if %BORNA_COPY_RC% GEQ 8 goto :fail
 cd /d "%BORNA_PORTABLE_DEST%"
