@@ -1,0 +1,70 @@
+{
+  "process": "security_incident",
+  "object_type": "SecurityIncident",
+  "states": [
+    {
+      "code": "open",
+      "name": "Open",
+      "initial": true
+    },
+    {
+      "code": "under_review",
+      "name": "Under Review"
+    },
+    {
+      "code": "contained",
+      "name": "Contained"
+    },
+    {
+      "code": "resolved",
+      "name": "Resolved"
+    },
+    {
+      "code": "closed",
+      "name": "Closed",
+      "final": true
+    }
+  ],
+  "transitions": [
+    {
+      "from": "open",
+      "to": "under_review",
+      "action": "triage_incident",
+      "roles": [
+        "Security Officer",
+        "Master Data Admin"
+      ],
+      "rules": []
+    },
+    {
+      "from": "under_review",
+      "to": "contained",
+      "action": "contain_incident",
+      "roles": [
+        "Security Officer",
+        "Master Data Admin"
+      ],
+      "rules": []
+    },
+    {
+      "from": "contained",
+      "to": "resolved",
+      "action": "resolve_incident",
+      "roles": [
+        "Security Officer",
+        "Master Data Admin"
+      ],
+      "rules": []
+    },
+    {
+      "from": "resolved",
+      "to": "closed",
+      "action": "close_incident",
+      "roles": [
+        "Security Officer",
+        "Master Data Admin"
+      ],
+      "rules": []
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "prohibited_pairs": [
+    {
+      "actor_role": "Requester",
+      "restricted_role": "Final Approver",
+      "scope": "same_document"
+    },
+    {
+      "actor_role": "Buyer",
+      "restricted_role": "Goods Receiver",
+      "scope": "same_po"
+    },
+    {
+      "actor_role": "Goods Receiver",
+      "restricted_role": "QC Approver",
+      "scope": "same_receipt"
+    },
+    {
+      "actor_role": "AP Matcher",
+      "restricted_role": "Payment Executor",
+      "scope": "same_invoice"
+    },
+    {
+      "actor_role": "Sales Creator",
+      "restricted_role": "Discount Final Approver",
+      "scope": "same_order"
+    },
+    {
+      "actor_role": "Project Requester",
+      "restricted_role": "Budget Final Approver",
+      "scope": "same_project"
+    },
+    {
+      "actor_role": "Master Data Admin",
+      "restricted_role": "Audit Log Admin",
+      "scope": "platform"
+    }
+  ]
+}

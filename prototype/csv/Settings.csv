@@ -1,0 +1,4 @@
+﻿setting_group,setting_key,setting_value,value_type,effective_from,effective_to,status,notes
+SLA,PR_REVIEW_DAYS,1,integer,2026-01-01,,active,Configurable
+DOA,PURCHASE_LEVEL_1,Department Manager,string,2026-01-01,,active,Configurable
+RULE,MIN_RFQ_QUOTES,3,integer,2026-01-01,,active,Configurable

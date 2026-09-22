@@ -1,0 +1,16 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Local runtime artifacts
+.env
+*.db
+*.sqlite
+*.sqlite3
+
+# IDE / OS
+.DS_Store
+.vscode/
+.idea/

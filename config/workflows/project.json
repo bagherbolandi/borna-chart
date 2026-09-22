@@ -1,0 +1,151 @@
+{
+  "process": "project",
+  "object_type": "project_case",
+  "states": [
+    {
+      "code": "idea_logged",
+      "name": "Idea Logged",
+      "initial": true
+    },
+    {
+      "code": "screening",
+      "name": "Screening"
+    },
+    {
+      "code": "feasibility",
+      "name": "Feasibility"
+    },
+    {
+      "code": "business_case_prepared",
+      "name": "Business Case Prepared"
+    },
+    {
+      "code": "investment_approved",
+      "name": "Investment Approved"
+    },
+    {
+      "code": "project_initiated",
+      "name": "Project Initiated"
+    },
+    {
+      "code": "execution",
+      "name": "Execution"
+    },
+    {
+      "code": "commissioning",
+      "name": "Commissioning"
+    },
+    {
+      "code": "launch",
+      "name": "Launch"
+    },
+    {
+      "code": "post_implementation_review",
+      "name": "Post Implementation Review"
+    },
+    {
+      "code": "closed",
+      "name": "Closed",
+      "final": true
+    }
+  ],
+  "transitions": [
+    {
+      "from": "idea_logged",
+      "to": "screening",
+      "action": "screen",
+      "roles": [
+        "PMO"
+      ],
+      "rules": []
+    },
+    {
+      "from": "screening",
+      "to": "feasibility",
+      "action": "start_feasibility",
+      "roles": [
+        "Engineering Manager"
+      ],
+      "rules": []
+    },
+    {
+      "from": "feasibility",
+      "to": "business_case_prepared",
+      "action": "prepare_business_case",
+      "roles": [
+        "Finance Manager",
+        "Project Manager"
+      ],
+      "rules": []
+    },
+    {
+      "from": "business_case_prepared",
+      "to": "investment_approved",
+      "action": "approve_investment",
+      "roles": [
+        "Investment Committee"
+      ],
+      "rules": [
+        "PROJ-001"
+      ]
+    },
+    {
+      "from": "investment_approved",
+      "to": "project_initiated",
+      "action": "initiate_project",
+      "roles": [
+        "Project Manager"
+      ],
+      "rules": [
+        "PROJ-001"
+      ]
+    },
+    {
+      "from": "project_initiated",
+      "to": "execution",
+      "action": "execute",
+      "roles": [
+        "Project Manager"
+      ],
+      "rules": []
+    },
+    {
+      "from": "execution",
+      "to": "commissioning",
+      "action": "commission",
+      "roles": [
+        "Operations Manager"
+      ],
+      "rules": []
+    },
+    {
+      "from": "commissioning",
+      "to": "launch",
+      "action": "launch",
+      "roles": [
+        "Operations Manager"
+      ],
+      "rules": []
+    },
+    {
+      "from": "launch",
+      "to": "post_implementation_review",
+      "action": "pir",
+      "roles": [
+        "Internal Auditor",
+        "PMO"
+      ],
+      "rules": []
+    },
+    {
+      "from": "post_implementation_review",
+      "to": "closed",
+      "action": "close_project",
+      "roles": [
+        "Sponsor",
+        "PMO"
+      ],
+      "rules": []
+    }
+  ]
+}

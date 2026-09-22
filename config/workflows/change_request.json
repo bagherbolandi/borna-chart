@@ -1,0 +1,108 @@
+{
+  "process": "change_request",
+  "object_type": "change_request",
+  "states": [
+    {
+      "code": "draft",
+      "name": "Draft",
+      "initial": true
+    },
+    {
+      "code": "submitted",
+      "name": "Submitted"
+    },
+    {
+      "code": "impact_analysis",
+      "name": "Impact Analysis"
+    },
+    {
+      "code": "approval",
+      "name": "Approval"
+    },
+    {
+      "code": "implementation",
+      "name": "Implementation"
+    },
+    {
+      "code": "verification",
+      "name": "Verification"
+    },
+    {
+      "code": "closed",
+      "name": "Closed",
+      "final": true
+    },
+    {
+      "code": "rejected",
+      "name": "Rejected",
+      "final": true
+    }
+  ],
+  "transitions": [
+    {
+      "from": "draft",
+      "to": "submitted",
+      "action": "submit",
+      "roles": [
+        "Any Authorized User"
+      ],
+      "rules": []
+    },
+    {
+      "from": "submitted",
+      "to": "impact_analysis",
+      "action": "analyze",
+      "roles": [
+        "Process Owner",
+        "Finance Manager",
+        "Engineering Manager"
+      ],
+      "rules": []
+    },
+    {
+      "from": "impact_analysis",
+      "to": "approval",
+      "action": "route_approval",
+      "roles": [
+        "System"
+      ],
+      "rules": []
+    },
+    {
+      "from": "approval",
+      "to": "implementation",
+      "action": "approve",
+      "roles": [
+        "Relevant Approver"
+      ],
+      "rules": []
+    },
+    {
+      "from": "implementation",
+      "to": "verification",
+      "action": "verify",
+      "roles": [
+        "Independent Verifier"
+      ],
+      "rules": []
+    },
+    {
+      "from": "verification",
+      "to": "closed",
+      "action": "close",
+      "roles": [
+        "Process Owner"
+      ],
+      "rules": []
+    },
+    {
+      "from": "approval",
+      "to": "rejected",
+      "action": "reject",
+      "roles": [
+        "Relevant Approver"
+      ],
+      "rules": []
+    }
+  ]
+}

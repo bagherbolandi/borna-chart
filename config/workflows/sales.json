@@ -1,0 +1,201 @@
+{
+  "process": "sales",
+  "object_type": "sales_case",
+  "states": [
+    {
+      "code": "draft_inquiry",
+      "name": "Draft Inquiry",
+      "initial": true
+    },
+    {
+      "code": "quoted",
+      "name": "Quoted"
+    },
+    {
+      "code": "pricing_review",
+      "name": "Pricing Review"
+    },
+    {
+      "code": "price_approved",
+      "name": "Price Approved"
+    },
+    {
+      "code": "credit_check",
+      "name": "Credit Check"
+    },
+    {
+      "code": "sales_order_confirmed",
+      "name": "Sales Order Confirmed"
+    },
+    {
+      "code": "planning_allocation",
+      "name": "Planning/Allocation"
+    },
+    {
+      "code": "ready_to_deliver",
+      "name": "Ready to Deliver"
+    },
+    {
+      "code": "delivered",
+      "name": "Delivered"
+    },
+    {
+      "code": "invoiced",
+      "name": "Invoiced"
+    },
+    {
+      "code": "collection_open",
+      "name": "Collection Open"
+    },
+    {
+      "code": "collected",
+      "name": "Collected"
+    },
+    {
+      "code": "profitability_reviewed",
+      "name": "Profitability Reviewed"
+    },
+    {
+      "code": "closed",
+      "name": "Closed",
+      "final": true
+    }
+  ],
+  "transitions": [
+    {
+      "from": "draft_inquiry",
+      "to": "quoted",
+      "action": "issue_quote",
+      "roles": [
+        "Sales Officer"
+      ],
+      "rules": []
+    },
+    {
+      "from": "quoted",
+      "to": "pricing_review",
+      "action": "send_pricing_review",
+      "roles": [
+        "Sales Officer"
+      ],
+      "rules": [
+        "PRC-001"
+      ]
+    },
+    {
+      "from": "pricing_review",
+      "to": "price_approved",
+      "action": "approve_price",
+      "roles": [
+        "Pricing Analyst",
+        "Sales Manager",
+        "Finance Manager"
+      ],
+      "rules": [
+        "PRC-002"
+      ]
+    },
+    {
+      "from": "price_approved",
+      "to": "credit_check",
+      "action": "run_credit_check",
+      "roles": [
+        "System",
+        "Credit Controller"
+      ],
+      "rules": [
+        "SAL-001"
+      ]
+    },
+    {
+      "from": "credit_check",
+      "to": "sales_order_confirmed",
+      "action": "confirm_so",
+      "roles": [
+        "Sales Manager"
+      ],
+      "rules": [
+        "SAL-001"
+      ]
+    },
+    {
+      "from": "sales_order_confirmed",
+      "to": "planning_allocation",
+      "action": "allocate_supply",
+      "roles": [
+        "Planning Officer"
+      ],
+      "rules": []
+    },
+    {
+      "from": "planning_allocation",
+      "to": "ready_to_deliver",
+      "action": "release_delivery",
+      "roles": [
+        "Planning Officer",
+        "Warehouse Receiver"
+      ],
+      "rules": []
+    },
+    {
+      "from": "ready_to_deliver",
+      "to": "delivered",
+      "action": "deliver",
+      "roles": [
+        "Logistics Officer"
+      ],
+      "rules": [
+        "DEL-001"
+      ]
+    },
+    {
+      "from": "delivered",
+      "to": "invoiced",
+      "action": "invoice",
+      "roles": [
+        "AR Accountant"
+      ],
+      "rules": [
+        "DEL-001"
+      ]
+    },
+    {
+      "from": "invoiced",
+      "to": "collection_open",
+      "action": "open_collection",
+      "roles": [
+        "System"
+      ],
+      "rules": []
+    },
+    {
+      "from": "collection_open",
+      "to": "collected",
+      "action": "allocate_receipt",
+      "roles": [
+        "Collections Officer"
+      ],
+      "rules": []
+    },
+    {
+      "from": "collected",
+      "to": "profitability_reviewed",
+      "action": "analyze_margin",
+      "roles": [
+        "Pricing Analyst",
+        "Finance Manager"
+      ],
+      "rules": []
+    },
+    {
+      "from": "profitability_reviewed",
+      "to": "closed",
+      "action": "close_case",
+      "roles": [
+        "System",
+        "Sales Manager"
+      ],
+      "rules": []
+    }
+  ]
+}

@@ -1,0 +1,297 @@
+{
+  "process": "procurement",
+  "object_type": "procurement_case",
+  "states": [
+    {
+      "code": "draft",
+      "name": "Draft",
+      "initial": true
+    },
+    {
+      "code": "submitted",
+      "name": "Submitted"
+    },
+    {
+      "code": "under_review",
+      "name": "Under Review"
+    },
+    {
+      "code": "approved",
+      "name": "Approved"
+    },
+    {
+      "code": "rfq_created",
+      "name": "RFQ Created"
+    },
+    {
+      "code": "quotation_received",
+      "name": "Quotation Received"
+    },
+    {
+      "code": "commercial_evaluated",
+      "name": "Commercial Evaluated"
+    },
+    {
+      "code": "technically_approved",
+      "name": "Technically Approved"
+    },
+    {
+      "code": "price_approved",
+      "name": "Price Approved"
+    },
+    {
+      "code": "po_issued",
+      "name": "PO Issued"
+    },
+    {
+      "code": "waiting_delivery",
+      "name": "Waiting Delivery"
+    },
+    {
+      "code": "received",
+      "name": "Received"
+    },
+    {
+      "code": "qc_pending",
+      "name": "QC Pending"
+    },
+    {
+      "code": "accepted",
+      "name": "Accepted"
+    },
+    {
+      "code": "rejected",
+      "name": "Rejected"
+    },
+    {
+      "code": "inventory_released",
+      "name": "Inventory Released"
+    },
+    {
+      "code": "invoice_matched",
+      "name": "Invoice Matched"
+    },
+    {
+      "code": "payment_approved",
+      "name": "Payment Approved"
+    },
+    {
+      "code": "paid",
+      "name": "Paid"
+    },
+    {
+      "code": "closed",
+      "name": "Closed",
+      "final": true
+    }
+  ],
+  "transitions": [
+    {
+      "from": "draft",
+      "to": "submitted",
+      "action": "submit",
+      "roles": [
+        "Requester"
+      ],
+      "rules": [
+        "PR-001"
+      ]
+    },
+    {
+      "from": "submitted",
+      "to": "under_review",
+      "action": "route_review",
+      "roles": [
+        "System",
+        "Department Manager"
+      ],
+      "rules": [
+        "PR-002"
+      ]
+    },
+    {
+      "from": "under_review",
+      "to": "approved",
+      "action": "approve",
+      "roles": [
+        "Department Manager",
+        "Finance Manager"
+      ],
+      "rules": [
+        "SOD-001"
+      ]
+    },
+    {
+      "from": "approved",
+      "to": "rfq_created",
+      "action": "create_rfq",
+      "roles": [
+        "Procurement Officer"
+      ],
+      "rules": [
+        "RFQ-001"
+      ]
+    },
+    {
+      "from": "rfq_created",
+      "to": "quotation_received",
+      "action": "record_quotes",
+      "roles": [
+        "Procurement Officer"
+      ],
+      "rules": [
+        "RFQ-002"
+      ]
+    },
+    {
+      "from": "quotation_received",
+      "to": "commercial_evaluated",
+      "action": "commercial_eval",
+      "roles": [
+        "Procurement Officer"
+      ],
+      "rules": [
+        "QUO-001"
+      ]
+    },
+    {
+      "from": "commercial_evaluated",
+      "to": "technically_approved",
+      "action": "technical_eval",
+      "roles": [
+        "Technical Evaluator"
+      ],
+      "rules": []
+    },
+    {
+      "from": "technically_approved",
+      "to": "price_approved",
+      "action": "approve_price",
+      "roles": [
+        "Procurement Manager",
+        "Finance Manager"
+      ],
+      "rules": [
+        "PO-002"
+      ]
+    },
+    {
+      "from": "price_approved",
+      "to": "po_issued",
+      "action": "issue_po",
+      "roles": [
+        "Procurement Officer"
+      ],
+      "rules": [
+        "PO-001",
+        "SUP-001"
+      ]
+    },
+    {
+      "from": "po_issued",
+      "to": "waiting_delivery",
+      "action": "release_supplier",
+      "roles": [
+        "System"
+      ],
+      "rules": []
+    },
+    {
+      "from": "waiting_delivery",
+      "to": "received",
+      "action": "record_receipt",
+      "roles": [
+        "Warehouse Receiver"
+      ],
+      "rules": [
+        "GRN-001"
+      ]
+    },
+    {
+      "from": "received",
+      "to": "qc_pending",
+      "action": "send_to_qc",
+      "roles": [
+        "System",
+        "Warehouse Receiver"
+      ],
+      "rules": []
+    },
+    {
+      "from": "qc_pending",
+      "to": "accepted",
+      "action": "accept_qc",
+      "roles": [
+        "QC Inspector"
+      ],
+      "rules": [
+        "QC-001"
+      ]
+    },
+    {
+      "from": "qc_pending",
+      "to": "rejected",
+      "action": "reject_qc",
+      "roles": [
+        "QC Inspector"
+      ],
+      "rules": [
+        "QC-001"
+      ]
+    },
+    {
+      "from": "accepted",
+      "to": "inventory_released",
+      "action": "release_inventory",
+      "roles": [
+        "Warehouse Receiver"
+      ],
+      "rules": [
+        "QC-001"
+      ]
+    },
+    {
+      "from": "inventory_released",
+      "to": "invoice_matched",
+      "action": "match_invoice",
+      "roles": [
+        "AP Accountant"
+      ],
+      "rules": [
+        "INV-001"
+      ]
+    },
+    {
+      "from": "invoice_matched",
+      "to": "payment_approved",
+      "action": "approve_payment",
+      "roles": [
+        "Finance Manager"
+      ],
+      "rules": [
+        "PAY-001"
+      ]
+    },
+    {
+      "from": "payment_approved",
+      "to": "paid",
+      "action": "execute_payment",
+      "roles": [
+        "Treasury Officer"
+      ],
+      "rules": [
+        "PAY-001"
+      ]
+    },
+    {
+      "from": "paid",
+      "to": "closed",
+      "action": "close_case",
+      "roles": [
+        "System",
+        "Procurement Manager"
+      ],
+      "rules": []
+    }
+  ]
+}

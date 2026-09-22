@@ -1,0 +1,184 @@
+{
+  "profiles": [
+    {
+      "code": "PR_REVIEW",
+      "process": "procurement",
+      "stage": "under_review",
+      "duration": 1,
+      "unit": "business_day",
+      "escalation_profile": "APPROVAL_DELAY"
+    },
+    {
+      "code": "SUPPLIER_EVAL",
+      "process": "procurement",
+      "stage": "commercial_evaluated",
+      "duration": 2,
+      "unit": "business_day",
+      "escalation_profile": "APPROVAL_DELAY"
+    },
+    {
+      "code": "QUOTE_ANALYSIS",
+      "process": "procurement",
+      "stage": "quotation_received",
+      "duration": 2,
+      "unit": "business_day",
+      "escalation_profile": "APPROVAL_DELAY"
+    },
+    {
+      "code": "PO_ISSUE",
+      "process": "procurement",
+      "stage": "price_approved",
+      "duration": 1,
+      "unit": "business_day",
+      "escalation_profile": "APPROVAL_DELAY"
+    },
+    {
+      "code": "QC_STANDARD",
+      "process": "quality",
+      "stage": "qc_pending",
+      "duration": 1,
+      "unit": "business_day",
+      "escalation_profile": "APPROVAL_DELAY"
+    },
+    {
+      "code": "INVOICE_MATCH",
+      "process": "finance",
+      "stage": "invoice_matched",
+      "duration": 1,
+      "unit": "business_day",
+      "escalation_profile": "APPROVAL_DELAY"
+    },
+    {
+      "code": "SALES_PRICING_REVIEW",
+      "process": "sales",
+      "stage": "pricing_review",
+      "duration": 1,
+      "unit": "business_day",
+      "escalation_profile": "APPROVAL_DELAY"
+    },
+    {
+      "code": "SALES_CREDIT_CHECK",
+      "process": "sales",
+      "stage": "credit_check",
+      "duration": 1,
+      "unit": "business_day",
+      "escalation_profile": "APPROVAL_DELAY"
+    },
+    {
+      "code": "SALES_DELIVERY_RELEASE",
+      "process": "sales",
+      "stage": "ready_to_deliver",
+      "duration": 2,
+      "unit": "business_day",
+      "escalation_profile": "APPROVAL_DELAY"
+    },
+    {
+      "code": "SALES_COLLECTION",
+      "process": "sales",
+      "stage": "collection_open",
+      "duration": 5,
+      "unit": "business_day",
+      "escalation_profile": "APPROVAL_DELAY"
+    },
+    {
+      "code": "SECURITY_INCIDENT_OPEN",
+      "process": "security_incident",
+      "stage": "open",
+      "duration": 4,
+      "unit": "hour",
+      "escalation_profile": "APPROVAL_DELAY"
+    },
+    {
+      "code": "SECURITY_INCIDENT_REVIEW",
+      "process": "security_incident",
+      "stage": "under_review",
+      "duration": 8,
+      "unit": "hour",
+      "escalation_profile": "APPROVAL_DELAY"
+    },
+    {
+      "code": "SECURITY_INCIDENT_CONTAINED",
+      "process": "security_incident",
+      "stage": "contained",
+      "duration": 1,
+      "unit": "day",
+      "escalation_profile": "APPROVAL_DELAY"
+    },
+    {
+      "code": "PROJECT_MILESTONE",
+      "process": "project",
+      "stage": "execution",
+      "duration": 5,
+      "unit": "business_day",
+      "escalation_profile": "PROJECT_DELAY"
+    }
+  ],
+  "escalation_profiles": [
+    {
+      "code": "APPROVAL_DELAY",
+      "levels": [
+        {
+          "level": 1,
+          "after": "0h",
+          "notify_roles": [
+            "Owner"
+          ]
+        },
+        {
+          "level": 2,
+          "after": "8h",
+          "notify_roles": [
+            "Supervisor"
+          ]
+        },
+        {
+          "level": 3,
+          "after": "16h",
+          "notify_roles": [
+            "Process Owner"
+          ]
+        },
+        {
+          "level": 4,
+          "after": "24h",
+          "notify_roles": [
+            "Management"
+          ]
+        }
+      ]
+    },
+    {
+      "code": "PROJECT_DELAY",
+      "levels": [
+        {
+          "level": 1,
+          "after": "0h",
+          "notify_roles": [
+            "Project Manager"
+          ]
+        },
+        {
+          "level": 2,
+          "after": "24h",
+          "notify_roles": [
+            "PMO"
+          ]
+        },
+        {
+          "level": 3,
+          "after": "48h",
+          "notify_roles": [
+            "Sponsor"
+          ]
+        },
+        {
+          "level": 4,
+          "after": "72h",
+          "notify_roles": [
+            "Committee"
+          ]
+        }
+      ]
+    }
+  ]
+}

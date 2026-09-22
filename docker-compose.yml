@@ -1,0 +1,44 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: borna_chart
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  api:
+    build: .
+    environment:
+      APP_NAME: Borna Process Control API
+      APP_VERSION: 0.1.0
+      API_PREFIX: /api/v1
+      ENVIRONMENT: docker
+      DEBUG: "false"
+      DOCS_ENABLED: "false"
+      AUTH_TOKEN_TTL_HOURS: "8"
+      MAX_FAILED_LOGIN_ATTEMPTS: "5"
+      ACCOUNT_LOCK_MINUTES: "15"
+      LOGIN_RATE_LIMIT_ATTEMPTS: "10"
+      LOGIN_RATE_LIMIT_WINDOW_SECONDS: "60"
+      SECURITY_HSTS_ENABLED: "true"
+      SECURITY_HSTS_MAX_AGE_SECONDS: "31536000"
+      PASSWORD_MIN_LENGTH: "10"
+      PASSWORD_REQUIRE_UPPER: "true"
+      PASSWORD_REQUIRE_LOWER: "true"
+      PASSWORD_REQUIRE_DIGIT: "true"
+      PASSWORD_REQUIRE_SPECIAL: "true"
+      DATABASE_URL: postgresql+psycopg://postgres:postgres@db:5432/borna_chart
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+
+volumes:
+  pgdata:

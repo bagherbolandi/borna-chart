@@ -1,0 +1,83 @@
+{
+  "purchase": [
+    {
+      "level": 1,
+      "max_amount": 100000000,
+      "approvers": [
+        "Department Manager"
+      ]
+    },
+    {
+      "level": 2,
+      "max_amount": 500000000,
+      "approvers": [
+        "Department Manager",
+        "Finance Manager"
+      ]
+    },
+    {
+      "level": 3,
+      "max_amount": 2000000000,
+      "approvers": [
+        "COO",
+        "CFO"
+      ]
+    },
+    {
+      "level": 4,
+      "max_amount": null,
+      "approvers": [
+        "CEO",
+        "Committee"
+      ]
+    }
+  ],
+  "sales_below_floor": [
+    {
+      "level": 1,
+      "threshold_pct": 2,
+      "approvers": [
+        "Sales Manager"
+      ]
+    },
+    {
+      "level": 2,
+      "threshold_pct": 5,
+      "approvers": [
+        "Sales Manager",
+        "Finance Manager"
+      ]
+    },
+    {
+      "level": 3,
+      "threshold_pct": 10,
+      "approvers": [
+        "CEO"
+      ]
+    }
+  ],
+  "project_capex": [
+    {
+      "level": 1,
+      "max_amount": 500000000,
+      "approvers": [
+        "Project Sponsor"
+      ]
+    },
+    {
+      "level": 2,
+      "max_amount": 2000000000,
+      "approvers": [
+        "PMO",
+        "Finance Manager"
+      ]
+    },
+    {
+      "level": 3,
+      "max_amount": null,
+      "approvers": [
+        "Investment Committee"
+      ]
+    }
+  ]
+}

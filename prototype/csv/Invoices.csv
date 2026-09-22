@@ -1,0 +1,1 @@
+﻿invoice_id,invoice_code,invoice_type,counterparty_code,reference_code,invoice_no,invoice_date,due_date,currency,total_amount,match_status,status,workflow_id,created_at,modified_at

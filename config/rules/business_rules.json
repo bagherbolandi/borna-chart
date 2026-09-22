@@ -1,0 +1,205 @@
+{
+  "version": "1.0",
+  "rules": [
+    {
+      "code": "PR-001",
+      "process": "procurement",
+      "object_type": "PR",
+      "event": "submit",
+      "severity": "block",
+      "description": "PR without cost center and need reason cannot be submitted."
+    },
+    {
+      "code": "PR-002",
+      "process": "procurement",
+      "object_type": "PR",
+      "event": "route_review",
+      "severity": "block",
+      "description": "PR above budget cannot proceed without approved exception."
+    },
+    {
+      "code": "RFQ-001",
+      "process": "procurement",
+      "object_type": "RFQ",
+      "event": "create",
+      "severity": "block",
+      "description": "RFQ is prohibited before PR approval."
+    },
+    {
+      "code": "RFQ-002",
+      "process": "procurement",
+      "object_type": "RFQ",
+      "event": "submit",
+      "severity": "block",
+      "description": "Minimum number of quotations must comply with policy or approved exception."
+    },
+    {
+      "code": "QUO-001",
+      "process": "procurement",
+      "object_type": "QuotationEvaluation",
+      "event": "approve",
+      "severity": "block",
+      "description": "Commercial comparison is mandatory before PO issue."
+    },
+    {
+      "code": "SUP-001",
+      "process": "procurement",
+      "object_type": "PO",
+      "event": "issue",
+      "severity": "block",
+      "description": "Supplier must be in approved status to be used on PO."
+    },
+    {
+      "code": "SUP-002",
+      "process": "procurement",
+      "object_type": "PO",
+      "event": "issue",
+      "severity": "escalate",
+      "description": "High-risk supplier requires additional approval."
+    },
+    {
+      "code": "PO-001",
+      "process": "procurement",
+      "object_type": "PO",
+      "event": "issue",
+      "severity": "block",
+      "description": "PO without evaluation and valid approval is not allowed."
+    },
+    {
+      "code": "PO-002",
+      "process": "procurement",
+      "object_type": "PO",
+      "event": "approve_price",
+      "severity": "escalate",
+      "description": "Purchase price variance above threshold requires escalation."
+    },
+    {
+      "code": "GRN-001",
+      "process": "procurement",
+      "object_type": "GRN",
+      "event": "create",
+      "severity": "block",
+      "description": "Receipt without valid PO is not allowed unless approved exception exists."
+    },
+    {
+      "code": "QC-001",
+      "process": "quality",
+      "object_type": "QC",
+      "event": "finalize",
+      "severity": "block",
+      "description": "Rejected quantity cannot be released to usable inventory."
+    },
+    {
+      "code": "INV-001",
+      "process": "finance",
+      "object_type": "SupplierInvoice",
+      "event": "match",
+      "severity": "block",
+      "description": "Supplier invoice requires valid PO/GRN match."
+    },
+    {
+      "code": "PAY-001",
+      "process": "finance",
+      "object_type": "Payment",
+      "event": "approve",
+      "severity": "block",
+      "description": "Payment without successful three-way match is prohibited."
+    },
+    {
+      "code": "CST-001",
+      "process": "costing",
+      "object_type": "CostSheet",
+      "event": "approve",
+      "severity": "block",
+      "description": "Cost sheet without approved absorption rates cannot be approved."
+    },
+    {
+      "code": "PRC-001",
+      "process": "pricing",
+      "object_type": "PriceProposal",
+      "event": "submit",
+      "severity": "block",
+      "description": "Final product pricing requires approved cost basis."
+    },
+    {
+      "code": "PRC-002",
+      "process": "pricing",
+      "object_type": "SalesOrder",
+      "event": "approve",
+      "severity": "escalate",
+      "description": "Sales price below approved minimum triggers approval escalation."
+    },
+    {
+      "code": "SAL-001",
+      "process": "sales",
+      "object_type": "SalesOrder",
+      "event": "confirm",
+      "severity": "block",
+      "description": "Customer orders above credit limit are blocked or placed on hold."
+    },
+    {
+      "code": "DEL-001",
+      "process": "sales",
+      "object_type": "Delivery",
+      "event": "create",
+      "severity": "block",
+      "description": "Delivery without valid sales order is not allowed."
+    },
+    {
+      "code": "INV-002",
+      "process": "sales",
+      "object_type": "SalesInvoice",
+      "event": "create",
+      "severity": "block",
+      "description": "Sales invoice cannot exceed delivered quantity value or be created before delivery."
+    },
+    {
+      "code": "COL-001",
+      "process": "sales",
+      "object_type": "CollectionReceipt",
+      "event": "create",
+      "severity": "block",
+      "description": "Collection receipt cannot exceed invoice open amount and requires open receivable."
+    },
+    {
+      "code": "BOM-001",
+      "process": "engineering",
+      "object_type": "BOM",
+      "event": "change",
+      "severity": "block",
+      "description": "BOM change without approved change request is prohibited."
+    },
+    {
+      "code": "PROJ-001",
+      "process": "project",
+      "object_type": "Project",
+      "event": "execute",
+      "severity": "block",
+      "description": "Project execution cannot start before investment approval."
+    },
+    {
+      "code": "PROJ-002",
+      "process": "project",
+      "object_type": "Project",
+      "event": "monitor",
+      "severity": "escalate",
+      "description": "Budget overrun above threshold must be escalated."
+    },
+    {
+      "code": "AUD-001",
+      "process": "audit",
+      "object_type": "SensitiveChange",
+      "event": "update",
+      "severity": "alert",
+      "description": "Sensitive changes to price, terms, or limits must be logged and alerted."
+    },
+    {
+      "code": "SOD-001",
+      "process": "security",
+      "object_type": "Approval",
+      "event": "approve",
+      "severity": "block",
+      "description": "Requester and final approver cannot be the same person for the same object."
+    }
+  ]
+}
