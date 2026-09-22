@@ -3,38 +3,36 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>سامانه عملیات فرایندی بورنا</title>
+    <title>سامانه عملیاتی بورنا</title>
     <style>
       :root {
-        color-scheme: light;
-        --bg: #f4f7fb;
+        --bg: #f3f6fb;
         --panel: #ffffff;
         --panel-soft: #f8fbff;
-        --line: #d9e4f2;
-        --text: #122033;
-        --muted: #5c6b7c;
+        --line: #d8e2ef;
+        --text: #162336;
+        --muted: #627286;
         --primary: #1d4ed8;
         --primary-soft: #dbeafe;
         --success: #0f766e;
         --success-soft: #d1fae5;
-        --warning: #92400e;
+        --warning: #a16207;
         --warning-soft: #fef3c7;
         --danger: #b91c1c;
         --danger-soft: #fee2e2;
-        --shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+        --shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
         --radius: 18px;
       }
-
       * { box-sizing: border-box; }
-      html { scroll-behavior: smooth; }
       body {
         margin: 0;
         font-family: Tahoma, "Segoe UI", sans-serif;
-        background: linear-gradient(180deg, #eef4ff 0%, var(--bg) 180px);
         color: var(--text);
+        background: linear-gradient(180deg, #eef4ff 0, var(--bg) 180px);
       }
-
       .hidden { display: none !important; }
+      button, input, select, textarea { font: inherit; }
+      a { color: inherit; }
       .auth-shell {
         min-height: 100vh;
         display: grid;
@@ -47,90 +45,78 @@
         border: 1px solid var(--line);
         border-radius: 28px;
         box-shadow: var(--shadow);
-        overflow: hidden;
         display: grid;
-        grid-template-columns: 1.1fr 0.9fr;
+        grid-template-columns: 1.08fr 0.92fr;
+        overflow: hidden;
       }
-      .hero-panel {
-        background: radial-gradient(circle at top right, #1d4ed8 0%, #0f172a 85%);
+      .hero {
+        background: radial-gradient(circle at top right, #1e40af 0, #0f172a 80%);
         color: #fff;
         padding: 40px;
       }
-      .hero-panel h1 {
+      .hero h1 {
         margin: 0 0 12px;
         font-size: 34px;
       }
-      .hero-panel p {
-        line-height: 1.9;
-        color: rgba(255,255,255,0.92);
-      }
-      .hero-points {
+      .hero p { line-height: 1.9; color: rgba(255,255,255,.93); }
+      .hero-cards {
         display: grid;
         gap: 14px;
-        margin-top: 28px;
+        margin-top: 22px;
       }
-      .hero-point {
-        background: rgba(255,255,255,0.12);
-        border: 1px solid rgba(255,255,255,0.18);
+      .hero-card {
+        border: 1px solid rgba(255,255,255,.18);
+        background: rgba(255,255,255,.10);
         border-radius: 16px;
         padding: 14px 16px;
       }
-      .hero-point strong { display: block; margin-bottom: 6px; }
-
-      .login-panel {
-        padding: 34px 32px;
-        background: var(--panel);
-      }
+      .hero-card strong { display: block; margin-bottom: 6px; }
+      .login-panel { padding: 34px 32px; }
       .badge {
         display: inline-flex;
         align-items: center;
         gap: 8px;
         padding: 8px 12px;
+        border-radius: 999px;
         background: var(--primary-soft);
         color: var(--primary);
-        border-radius: 999px;
         font-size: 13px;
         font-weight: 700;
       }
-      h2.section-title {
-        margin: 0 0 10px;
-        font-size: 26px;
+      .section-title {
+        margin: 14px 0 8px;
+        font-size: 28px;
       }
       .muted { color: var(--muted); }
-      .small { font-size: 13px; }
-      .note-box,
-      .status,
-      .soft-box {
-        border-radius: 16px;
-        padding: 14px 16px;
+      .small { font-size: 12px; }
+      .status {
+        margin-top: 14px;
+        border-radius: 14px;
+        padding: 12px 14px;
         border: 1px solid var(--line);
         background: var(--panel-soft);
       }
-      .status {
-        margin-top: 12px;
-      }
-      .status.success { background: var(--success-soft); color: var(--success); border-color: #a7f3d0; }
-      .status.error { background: var(--danger-soft); color: var(--danger); border-color: #fecaca; }
-      .status.warning { background: var(--warning-soft); color: var(--warning); border-color: #fde68a; }
-
-      .form-grid {
+      .status.success { color: var(--success); background: var(--success-soft); border-color: #a7f3d0; }
+      .status.error { color: var(--danger); background: var(--danger-soft); border-color: #fecaca; }
+      .status.warning { color: var(--warning); background: var(--warning-soft); border-color: #fde68a; }
+      .grid, .grid-2, .grid-3, .stats-grid, .forms-grid {
         display: grid;
-        grid-template-columns: repeat(12, minmax(0, 1fr));
-        gap: 14px;
+        gap: 16px;
       }
-      .field { display: flex; flex-direction: column; gap: 7px; }
+      .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .stats-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+      .forms-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); }
       .col-12 { grid-column: span 12; }
       .col-8 { grid-column: span 8; }
       .col-6 { grid-column: span 6; }
       .col-4 { grid-column: span 4; }
       .col-3 { grid-column: span 3; }
+      .field { display: flex; flex-direction: column; gap: 7px; }
       label {
         font-size: 13px;
         font-weight: 700;
-        color: #26415f;
-      }
-      input, select, textarea, button {
-        font: inherit;
+        color: #284261;
       }
       input, select, textarea {
         width: 100%;
@@ -140,12 +126,7 @@
         background: #fff;
         color: var(--text);
       }
-      textarea { min-height: 96px; resize: vertical; }
-      .actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-      }
+      textarea { min-height: 92px; resize: vertical; }
       button {
         border: 0;
         border-radius: 12px;
@@ -154,220 +135,170 @@
         transition: transform .14s ease, opacity .14s ease;
       }
       button:hover { transform: translateY(-1px); }
-      button:disabled { opacity: 0.55; cursor: progress; transform: none; }
+      button:disabled { opacity: .58; cursor: progress; transform: none; }
       .primary { background: var(--primary); color: #fff; }
-      .secondary { background: #e8eef8; color: #1e3557; }
+      .secondary { background: #e8eef8; color: #183354; }
       .success { background: var(--success); color: #fff; }
       .danger { background: var(--danger); color: #fff; }
-      .ghost { background: transparent; color: var(--primary); border: 1px solid #bfd4ff; }
-      .mini-btn {
-        padding: 7px 10px;
-        border-radius: 10px;
-        font-size: 12px;
+      .ghost { background: transparent; border: 1px solid #bfd4ff; color: var(--primary); }
+      .mini-btn { padding: 7px 10px; font-size: 12px; border-radius: 10px; margin: 0 0 4px 4px; }
+      .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+      .soft-box {
+        background: var(--panel-soft);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 16px;
       }
-
+      .soft-box h4 { margin: 0 0 12px; }
+      .helper-list {
+        margin: 0;
+        padding-right: 18px;
+        line-height: 1.95;
+        color: var(--muted);
+      }
+      .app-shell { min-height: 100vh; }
       .topbar {
         position: sticky;
         top: 0;
         z-index: 30;
-        background: rgba(255,255,255,0.95);
-        backdrop-filter: blur(10px);
+        background: rgba(255,255,255,.95);
+        backdrop-filter: blur(12px);
         border-bottom: 1px solid var(--line);
         display: flex;
         justify-content: space-between;
-        gap: 18px;
         align-items: center;
+        gap: 18px;
         padding: 14px 20px;
       }
-      .brand-title { font-size: 22px; font-weight: 800; margin: 0; }
+      .brand-title { font-size: 23px; font-weight: 800; margin: 0; }
       .brand-sub { color: var(--muted); font-size: 13px; margin-top: 4px; }
-      .topbar-actions {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        flex-wrap: wrap;
-      }
+      .topbar-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
       .user-chip {
-        display: inline-flex;
-        flex-direction: column;
-        gap: 2px;
-        padding: 10px 14px;
-        border: 1px solid var(--line);
         background: var(--panel-soft);
+        border: 1px solid var(--line);
         border-radius: 14px;
-        min-width: 210px;
+        padding: 10px 14px;
+        min-width: 220px;
       }
       .layout {
         display: grid;
-        grid-template-columns: 270px minmax(0, 1fr);
+        grid-template-columns: 280px minmax(0, 1fr);
         gap: 18px;
         padding: 18px;
       }
       .sidebar {
         position: sticky;
-        top: 88px;
+        top: 84px;
         align-self: start;
         background: var(--panel);
         border: 1px solid var(--line);
-        border-radius: 22px;
+        border-radius: 24px;
         box-shadow: var(--shadow);
         padding: 18px;
       }
-      .menu-title { margin: 0 0 12px; font-size: 16px; }
-      .menu-list {
-        display: grid;
-        gap: 8px;
-      }
-      .menu-item {
-        text-decoration: none;
-        color: #16345a;
-        background: var(--panel-soft);
+      .nav-title { margin: 0 0 12px; font-size: 16px; }
+      .nav-menu { display: grid; gap: 8px; }
+      .nav-link {
         border: 1px solid var(--line);
+        background: var(--panel-soft);
         border-radius: 14px;
         padding: 12px 14px;
+        text-align: right;
         font-weight: 700;
       }
-      .menu-item:hover { background: #eef5ff; }
-      .content {
-        display: grid;
-        gap: 18px;
-      }
-      .card {
+      .nav-link.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+      .content { display: grid; gap: 18px; }
+      .page {
         background: var(--panel);
         border: 1px solid var(--line);
-        border-radius: 22px;
+        border-radius: 24px;
         box-shadow: var(--shadow);
-        padding: 20px;
+        padding: 22px;
       }
-      .card h3 {
-        margin: 0 0 10px;
-        font-size: 19px;
-      }
-      .card-head {
+      .page-head {
         display: flex;
         justify-content: space-between;
-        gap: 12px;
         align-items: flex-start;
-        margin-bottom: 14px;
-      }
-      .grid-2, .grid-3, .stats-grid, .record-grid {
-        display: grid;
         gap: 16px;
+        margin-bottom: 16px;
       }
-      .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-      .stats-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
-      .record-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .page h2, .page h3 { margin: 0 0 8px; }
+      .quick-actions { display: flex; flex-wrap: wrap; gap: 10px; }
       .stat {
         border-radius: 18px;
-        border: 1px solid var(--line);
-        background: linear-gradient(180deg, #fff 0%, #f7fbff 100%);
         padding: 16px;
+        border: 1px solid var(--line);
+        background: linear-gradient(180deg, #fff 0, #f7fbff 100%);
       }
       .stat-label { font-size: 13px; color: var(--muted); }
       .stat-value { font-size: 28px; font-weight: 800; margin-top: 8px; }
-      .chips {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
+      .chips { display: flex; flex-wrap: wrap; gap: 8px; }
       .chip {
-        background: #eef5ff;
-        color: #17355a;
-        border: 1px solid #cbdcfb;
+        padding: 7px 12px;
         border-radius: 999px;
-        padding: 8px 12px;
+        background: #eef5ff;
+        border: 1px solid #c8daf8;
         font-size: 12px;
         font-weight: 700;
       }
-      .process-map {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        align-items: center;
-      }
-      .process-step {
-        padding: 12px 14px;
-        border-radius: 14px;
+      .subnav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+      .subnav button.active { background: var(--primary); color: #fff; }
+      .subpanel {
         border: 1px solid var(--line);
-        background: var(--panel-soft);
-        font-size: 13px;
-        font-weight: 700;
+        border-radius: 18px;
+        background: #fff;
+        padding: 18px;
       }
-      .arrow { color: #7c8faa; font-weight: 900; }
-
+      .subpanel + .subpanel { margin-top: 16px; }
+      .workbench-note {
+        border-right: 4px solid var(--primary);
+        background: #f8fbff;
+        border-radius: 16px;
+        padding: 14px 16px;
+      }
+      .table-wrap { overflow: auto; }
       table {
         width: 100%;
         border-collapse: collapse;
         font-size: 13px;
       }
       th, td {
+        padding: 11px 10px;
         border-bottom: 1px solid var(--line);
-        padding: 12px 10px;
         text-align: right;
         vertical-align: top;
       }
-      th {
-        color: #294160;
-        background: #f8fbff;
-        font-size: 12px;
-      }
-      tbody tr:hover { background: #fafcff; }
-      .table-wrap { overflow: auto; }
+      th { background: #f8fbff; font-size: 12px; color: #2b435f; }
+      tbody tr:hover { background: #fbfdff; }
       .empty {
         padding: 18px;
-        border: 1px dashed #bfd2e8;
+        border: 1px dashed #c7d6e8;
         border-radius: 16px;
         color: var(--muted);
         background: #fbfdff;
       }
       .kv {
         display: grid;
-        grid-template-columns: 160px 1fr;
+        grid-template-columns: 180px 1fr;
         gap: 8px 12px;
       }
-      .timeline {
-        display: grid;
-        gap: 12px;
-      }
+      .timeline { display: grid; gap: 12px; }
       .timeline-item {
         border-right: 3px solid #bfd4ff;
-        padding: 10px 14px;
         background: #fbfdff;
         border-radius: 12px;
+        padding: 10px 14px;
       }
       .timeline-item strong { display: block; margin-bottom: 4px; }
-      .anchor-offset { scroll-margin-top: 86px; }
-      .helper-list {
-        margin: 0;
-        padding-right: 18px;
-        color: var(--muted);
-        line-height: 1.9;
-      }
-      .footer-note {
-        color: var(--muted);
-        font-size: 12px;
-        margin-top: 8px;
-      }
-
+      .footer-note { color: var(--muted); font-size: 12px; }
       @media (max-width: 1180px) {
-        .auth-card,
-        .layout,
-        .grid-2,
-        .grid-3,
-        .record-grid,
-        .stats-grid {
-          grid-template-columns: 1fr;
-        }
-        .sidebar {
-          position: static;
-        }
+        .auth-card, .layout, .grid-2, .grid-3, .stats-grid { grid-template-columns: 1fr; }
+        .sidebar { position: static; }
       }
       @media (max-width: 860px) {
         .auth-card { grid-template-columns: 1fr; }
-        .topbar { padding: 14px; }
         .layout { padding: 14px; }
-        .form-grid { grid-template-columns: 1fr; }
+        .forms-grid { grid-template-columns: 1fr; }
         .col-12, .col-8, .col-6, .col-4, .col-3 { grid-column: span 1; }
       }
     </style>
@@ -375,78 +306,71 @@
   <body>
     <section id="auth-view" class="auth-shell">
       <div class="auth-card">
-        <div class="hero-panel">
-          <div class="badge">ورود نقش‌محور و کارتابل عملیاتی</div>
-          <h1>سامانه عملیات فرایندی بورنا</h1>
+        <div class="hero">
+          <div class="badge">نسخه عملیاتی نقش‌محور</div>
+          <h1>سامانه عملیاتی و کنترلی بورنا</h1>
           <p>
-            این صفحه دیگر یک کنسول خام تست نیست. هر کاربر با نام کاربری و رمز خودش وارد می‌شود،
-            منو و عملیات مرتبط با همان نقش را می‌بیند، کارتابل خودش را پیگیری می‌کند، عملیات مجاز را انجام می‌دهد و خارج می‌شود.
+            این نسخه برای کار روزانه کاربر طراحی شده است: کاربر با نام کاربری و رمز خودش وارد می‌شود،
+            فقط منوها و عملیات مجاز خود را می‌بیند، کارهای در انتظارش را از کارتابل انجام می‌دهد و زنجیره اسناد را رهگیری می‌کند.
           </p>
-          <div class="hero-points">
-            <div class="hero-point">
-              <strong>کارتابل نقش‌محور</strong>
-              کاربر فقط کارهای مرتبط با نقش خود را در بخش «کارتابل من» و «عملیات نقش من» می‌بیند.
+          <div class="hero-cards">
+            <div class="hero-card">
+              <strong>خانه نقش‌محور</strong>
+              هر نقش پس از ورود، صفحه شروع و عملیات مناسب خودش را می‌بیند؛ نه یک کنسول عمومی و گیج‌کننده.
             </div>
-            <div class="hero-point">
-              <strong>ارتباط بین فرایندها</strong>
-              زنجیره خرید از درخواست خرید تا RFQ، سفارش خرید، دریافت، کنترل کیفیت، فاکتور و پرداخت به‌صورت رهگیری‌شونده نمایش داده می‌شود.
+            <div class="hero-card">
+              <strong>کارتابل و اقدام</strong>
+              آیتم‌های در انتظار اقدام، تایید، ارجاع یا اجرا در یک مسیر روشن قابل انجام هستند.
             </div>
-            <div class="hero-point">
-              <strong>مدیریت امنیت و نشست</strong>
-              خروج، تغییر رمز، نشست‌های فعال و عملیات امنیتی برای نقش‌های مجاز در دسترس است.
+            <div class="hero-card">
+              <strong>امنیت، نشست و رهگیری</strong>
+              مدیریت کاربران، نشست‌ها، رخدادهای امنیتی و رهگیری ارتباط بین فرایندها درون سامانه فعال است.
             </div>
           </div>
         </div>
 
         <div class="login-panel">
-          <div class="badge">نسخه بازبینی قابل اجرا</div>
+          <div class="badge">ورود رسمی سامانه</div>
           <h2 class="section-title">ورود به سامانه</h2>
-          <p class="muted">
-            برای بازبینی فرایندها می‌توانی با یکی از کاربران نمونه وارد شوی. در نسخه واقعی، مدیر سیستم کاربران و نقش‌ها را مدیریت می‌کند.
-          </p>
-
-          <form id="login-form" class="form-grid">
+          <p class="muted">برای بازبینی فرایندها می‌توانی با کاربران نمونه وارد شوی. در استقرار واقعی، کاربران و نقش‌ها توسط مدیر سیستم تعریف می‌شوند.</p>
+          <form id="login-form" class="forms-grid">
             <div class="field col-6">
               <label for="login-username">نام کاربری</label>
-              <input id="login-username" name="username" autocomplete="username" value="ali" />
+              <input id="login-username" autocomplete="username" value="ali" />
             </div>
             <div class="field col-6">
               <label for="login-password">رمز عبور</label>
-              <input id="login-password" name="password" type="password" autocomplete="current-password" value="ali" />
+              <input id="login-password" type="password" autocomplete="current-password" value="ali" />
             </div>
             <div class="field col-12">
               <div class="actions">
-                <button class="primary" type="submit" id="login-btn">ورود</button>
-                <button class="secondary" type="button" id="demo-requester-btn">ورود سریع درخواست‌کننده</button>
-                <button class="secondary" type="button" id="demo-manager-btn">ورود سریع مدیر</button>
-                <button class="secondary" type="button" id="demo-proc-btn">ورود سریع تدارکات</button>
+                <button class="primary" id="login-btn" type="submit">ورود</button>
+                <button class="secondary" id="demo-user-btn" type="button">درخواست‌کننده</button>
+                <button class="secondary" id="demo-security-btn" type="button">امنیت</button>
+                <button class="secondary" id="demo-proc-btn" type="button">تدارکات</button>
               </div>
             </div>
           </form>
-
           <div id="auth-status" class="status hidden"></div>
-
           <div class="grid-2" style="margin-top:18px;">
             <div class="soft-box">
-              <strong>کاربران نمونه برای سناریوی خرید</strong>
+              <h4>کاربران نمونه</h4>
               <ul class="helper-list">
                 <li>درخواست‌کننده: <strong>ali</strong></li>
                 <li>مدیر واحد: <strong>manager.1</strong></li>
                 <li>خریدار: <strong>buyer.1</strong></li>
                 <li>ارزیاب فنی: <strong>tech.1</strong></li>
                 <li>مدیر مالی: <strong>finance.1</strong></li>
-                <li>انبار: <strong>warehouse.1</strong></li>
-                <li>کنترل کیفیت: <strong>qc.1</strong></li>
-                <li>حسابداری پرداختنی: <strong>ap.1</strong></li>
-                <li>خزانه: <strong>treasury.1</strong></li>
+                <li>افسر امنیت: <strong>security.1</strong></li>
+                <li>مدیر داده پایه: <strong>master.admin</strong></li>
               </ul>
             </div>
             <div class="soft-box">
-              <strong>نکته مهم</strong>
+              <h4>سیاست کار با سامانه</h4>
               <ul class="helper-list">
-                <li>منوها بر اساس نقش نمایش داده می‌شوند.</li>
-                <li>در هر مرحله رهگیری فرایند، اسناد مرتبط و وضعیت جاری قابل مشاهده است.</li>
-                <li>برای ابزار فنی قبلی، لینک «کنسول فنی بازبینی» در داخل سامانه گذاشته شده است.</li>
+                <li>فقط عملیات مجاز نقش جاری نمایش داده می‌شود.</li>
+                <li>برای ادامه کار از «کارتابل» و «رهگیری فرایند» استفاده کن.</li>
+                <li>برای ابزار فنی تست API، لینک «کنسول فنی بازبینی» داخل سامانه موجود است.</li>
               </ul>
             </div>
           </div>
@@ -454,280 +378,405 @@
       </div>
     </section>
 
-    <section id="workspace-view" class="hidden">
+    <section id="app-view" class="app-shell hidden">
       <header class="topbar">
         <div>
-          <div class="brand-title">سامانه عملیات فرایندی بورنا</div>
-          <div class="brand-sub">داشبورد نقش‌محور، کارتابل، عملیات مجاز و رهگیری بین‌فرایندی</div>
+          <div class="brand-title">سامانه عملیاتی بورنا</div>
+          <div class="brand-sub">کارتابل نقش‌محور، مدیریت عملیات، امنیت و رهگیری بین‌فرایندی</div>
         </div>
-        <div class="topbar-actions">
+        <div class="topbar-right">
           <div class="user-chip">
             <strong id="header-name">-</strong>
-            <span class="muted small" id="header-role">-</span>
+            <div class="muted small" id="header-role">-</div>
           </div>
-          <button class="secondary" id="reload-btn">بارگذاری مجدد</button>
-          <a class="ghost" id="review-console-link" href="/review-console" target="_blank" style="text-decoration:none;display:inline-flex;align-items:center;">کنسول فنی بازبینی</a>
+          <button class="secondary" id="refresh-all-btn">بازخوانی</button>
+          <a href="/review-console" target="_blank" class="ghost" style="text-decoration:none;display:inline-flex;align-items:center;padding:11px 16px;border-radius:12px;">کنسول فنی بازبینی</a>
           <button class="danger" id="logout-btn">خروج</button>
         </div>
       </header>
 
       <div class="layout">
         <aside class="sidebar">
-          <h3 class="menu-title">منوی سامانه</h3>
-          <div id="main-menu" class="menu-list"></div>
-          <div class="note-box small" style="margin-top:14px;">
-            <strong>اصل کار</strong>
-            <div class="muted" id="role-guidance-side">
-              هر کاربر باید فقط کارهای مربوط به نقش خود را انجام دهد. برای مراحل بعدی از رهگیری فرایند و کارتابل استفاده کن.
-            </div>
+          <h3 class="nav-title">منوی سامانه</h3>
+          <div id="nav-menu" class="nav-menu"></div>
+          <div class="soft-box" style="margin-top:16px;">
+            <strong>راهنمای نقش جاری</strong>
+            <div class="muted" id="role-guidance" style="margin-top:8px; line-height:1.9;"></div>
           </div>
         </aside>
 
         <main class="content">
           <div id="global-status" class="status hidden"></div>
 
-          <section id="dashboard-section" class="card anchor-offset">
-            <div class="card-head">
+          <section id="page-dashboard" class="page" data-page="dashboard">
+            <div class="page-head">
               <div>
-                <h3>داشبورد</h3>
-                <div class="muted">تصویر سریع از وضعیت فرایندها، هشدارها و حجم کار باز</div>
+                <h2>خانه نقش</h2>
+                <div class="muted">نمای کلی نقش جاری، وضعیت کارهای باز و مسیرهای شروع کار</div>
               </div>
-              <div class="chips" id="role-chips"></div>
+              <div class="chips" id="role-badges"></div>
             </div>
-            <div id="dashboard-cards" class="stats-grid"></div>
+            <div id="home-stats" class="stats-grid"></div>
             <div class="grid-2" style="margin-top:16px;">
               <div class="soft-box">
-                <strong>جریان اصلی خرید</strong>
-                <div class="process-map" style="margin-top:10px;">
-                  <span class="process-step">درخواست خرید</span>
-                  <span class="arrow">←</span>
-                  <span class="process-step">RFQ و پیشنهادها</span>
-                  <span class="arrow">←</span>
-                  <span class="process-step">سفارش خرید</span>
-                  <span class="arrow">←</span>
-                  <span class="process-step">دریافت کالا</span>
-                  <span class="arrow">←</span>
-                  <span class="process-step">کنترل کیفیت</span>
-                  <span class="arrow">←</span>
-                  <span class="process-step">فاکتور</span>
-                  <span class="arrow">←</span>
-                  <span class="process-step">پرداخت</span>
-                </div>
+                <h4>اقدام‌های پیشنهادی امروز</h4>
+                <div id="role-quick-actions" class="quick-actions" style="margin-top:12px;"></div>
               </div>
               <div class="soft-box">
-                <strong>راهنمای نقش جاری</strong>
-                <div id="role-guidance-main" class="muted" style="margin-top:10px; line-height:1.9;"></div>
+                <h4>توضیح نقش</h4>
+                <div id="role-description" class="muted" style="line-height:1.95;"></div>
               </div>
+            </div>
+            <div class="subpanel" style="margin-top:16px;">
+              <h3>نمای خلاصه کارتابل</h3>
+              <div id="home-inbox-wrap" class="table-wrap" style="margin-top:12px;"></div>
             </div>
           </section>
 
-          <section id="tasks-section" class="card anchor-offset">
-            <div class="card-head">
+          <section id="page-inbox" class="page hidden" data-page="inbox">
+            <div class="page-head">
               <div>
-                <h3>کارتابل من</h3>
-                <div class="muted">کارهای در انتظار اقدام و آیتم‌هایی که طبق نقش فعلی می‌توانی روی آنها عملیات مجاز انجام دهی</div>
+                <h2>کارتابل و اقدام‌ها</h2>
+                <div class="muted">کارهای در انتظار اقدام و آیتم‌هایی که طبق نقش جاری می‌توان روی آنها تصمیم گرفت</div>
               </div>
             </div>
             <div class="grid-2">
-              <div>
-                <h4>کارهای منتسب به من</h4>
-                <div id="my-tasks-wrap" class="table-wrap"></div>
+              <div class="subpanel">
+                <h3>کارتابل من</h3>
+                <div id="my-tasks-wrap" class="table-wrap" style="margin-top:10px;"></div>
               </div>
-              <div>
-                <h4>اقدام‌های مجاز برای نقش من</h4>
-                <div id="approvals-wrap" class="table-wrap"></div>
+              <div class="subpanel">
+                <h3>اقدام‌های مجاز نقش من</h3>
+                <div id="approvals-wrap" class="table-wrap" style="margin-top:10px;"></div>
                 <div class="field" style="margin-top:12px;">
                   <label for="approval-note">یادداشت اقدام</label>
-                  <textarea id="approval-note" placeholder="در صورت نیاز توضیح اقدام یا دلیل تأیید/ارجاع را اینجا بنویس"></textarea>
+                  <textarea id="approval-note" placeholder="توضیح اقدام، ارجاع، علت تایید یا توضیح تصمیم"></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="workbench-note" style="margin-top:16px;">
+              <strong>منطق کار</strong>
+              <div class="muted">اگر اقدام برای نقش تو مستقیم باشد، از همین صفحه ثبت می‌شود. اگر اقدام نیازمند فرم تخصصی باشد، سامانه فرم مربوطه را در «میزکار عملیات» برایت آماده می‌کند.</div>
+            </div>
+          </section>
+
+          <section id="page-procurement" class="page hidden" data-page="procurement">
+            <div class="page-head">
+              <div>
+                <h2>میزکار عملیات</h2>
+                <div class="muted">اجرای عملیاتی فرایندها بر اساس نقش جاری</div>
+              </div>
+            </div>
+            <div id="proc-tabs" class="subnav"></div>
+            <div id="proc-request" class="subpanel proc-panel hidden">
+              <h3>ثبت و پیگیری درخواست خرید</h3>
+              <form id="pr-form" class="forms-grid">
+                <div class="field col-6"><label>واحد درخواست‌کننده</label><input id="pr-department" placeholder="ops / production / engineering" /></div>
+                <div class="field col-6"><label>تاریخ نیاز</label><input id="pr-need-date" type="date" /></div>
+                <div class="field col-4"><label>مرکز هزینه</label><input id="pr-cost-center" value="CC-100" /></div>
+                <div class="field col-4"><label>اولویت</label><select id="pr-priority"><option value="normal">عادی</option><option value="high">بالا</option><option value="urgent">فوری</option></select></div>
+                <div class="field col-4"><label>مبلغ برآوردی</label><input id="pr-total-amount" type="number" step="0.01" min="0" value="1000000" /></div>
+                <div class="field col-6"><label>شرح قلم</label><input id="pr-line-desc" value="خرید ماده اولیه" /></div>
+                <div class="field col-3"><label>تعداد</label><input id="pr-line-qty" type="number" step="0.01" min="0.01" value="10" /></div>
+                <div class="field col-3"><label>واحد سنجش</label><input id="pr-line-uom" value="EA" /></div>
+                <div class="field col-6"><label>قیمت واحد برآوردی</label><input id="pr-line-price" type="number" step="0.01" min="0" value="100000" /></div>
+                <div class="field col-12"><label>دلیل نیاز</label><textarea id="pr-reason">نیاز عملیاتی برای استمرار تولید</textarea></div>
+                <div class="field col-12"><button class="primary" type="submit">ثبت درخواست خرید</button></div>
+              </form>
+              <div class="footer-note">پس از ثبت، از جدول درخواست‌ها برای همان ردیف، دکمه «ارسال» را بزن.</div>
+            </div>
+
+            <div id="proc-sourcing" class="subpanel proc-panel hidden">
+              <h3>تدارکات، RFQ و سفارش خرید</h3>
+              <div class="grid-2">
+                <div class="soft-box">
+                  <h4>ایجاد RFQ</h4>
+                  <form id="rfq-form" class="forms-grid">
+                    <div class="field col-12"><label>درخواست خرید</label><select id="rfq-pr-select"></select></div>
+                    <div class="field col-6"><label>تاریخ صدور</label><input id="rfq-issue-date" type="date" /></div>
+                    <div class="field col-6"><label>تاریخ بسته‌شدن</label><input id="rfq-close-date" type="date" /></div>
+                    <div class="field col-6"><label>حداقل تعداد پیشنهاد</label><input id="rfq-min-quotes" type="number" min="1" value="3" /></div>
+                    <div class="field col-12"><button class="primary" type="submit">ایجاد RFQ</button></div>
+                  </form>
+                </div>
+                <div class="soft-box">
+                  <h4>ثبت پیشنهاد تامین‌کننده</h4>
+                  <form id="quote-form" class="forms-grid">
+                    <div class="field col-12"><label>RFQ</label><select id="quote-rfq-select"></select></div>
+                    <div class="field col-12"><label>تامین‌کننده</label><select id="quote-supplier-select"></select></div>
+                    <div class="field col-6"><label>شماره پیشنهاد</label><input id="quote-no" value="Q-001" /></div>
+                    <div class="field col-6"><label>تاریخ پیشنهاد</label><input id="quote-date" type="date" /></div>
+                    <div class="field col-6"><label>مبلغ کل</label><input id="quote-amount" type="number" step="0.01" min="0.01" value="950000" /></div>
+                    <div class="field col-6"><label>شرایط پرداخت</label><input id="quote-payment-terms" value="30 days" /></div>
+                    <div class="field col-6"><label>روز تحویل</label><input id="quote-delivery-days" type="number" min="0" value="7" /></div>
+                    <div class="field col-6"><label>واریانس قیمت %</label><input id="quote-variance" type="number" step="0.01" value="-5" /></div>
+                    <div class="field col-12"><button class="primary" type="submit">ثبت پیشنهاد</button></div>
+                  </form>
+                </div>
+              </div>
+              <div class="grid-2" style="margin-top:16px;">
+                <div class="soft-box">
+                  <h4>مرحله‌بندی RFQ</h4>
+                  <form id="record-quotes-form" class="forms-grid">
+                    <div class="field col-12"><label>RFQ برای ثبت دریافت پیشنهادها</label><select id="record-rfq-select"></select></div>
+                    <div class="field col-12"><button class="secondary" type="submit">ثبت دریافت پیشنهادها</button></div>
+                  </form>
+                  <hr style="border:none;border-top:1px solid var(--line);margin:16px 0;" />
+                  <form id="commercial-form" class="forms-grid">
+                    <div class="field col-6"><label>RFQ برای ارزیابی بازرگانی</label><select id="commercial-rfq-select"></select></div>
+                    <div class="field col-6"><label>پیشنهاد منتخب</label><select id="commercial-quote-select"></select></div>
+                    <div class="field col-12"><label>یادداشت</label><textarea id="commercial-note">پیشنهاد منتخب از نظر قیمت، تحویل و شرایط پرداخت مناسب‌تر است.</textarea></div>
+                    <div class="field col-12"><button class="primary" type="submit">ثبت ارزیابی بازرگانی</button></div>
+                  </form>
+                </div>
+                <div class="soft-box">
+                  <h4>صدور سفارش خرید</h4>
+                  <form id="po-form" class="forms-grid">
+                    <div class="field col-6"><label>RFQ</label><select id="po-rfq-select"></select></div>
+                    <div class="field col-6"><label>پیشنهاد منتخب</label><select id="po-quote-select"></select></div>
+                    <div class="field col-6"><label>تاریخ سفارش</label><input id="po-order-date" type="date" /></div>
+                    <div class="field col-6"><label>تاریخ تحویل</label><input id="po-delivery-date" type="date" /></div>
+                    <div class="field col-12"><button class="primary" type="submit">صدور سفارش خرید</button></div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <div id="proc-receiving" class="subpanel proc-panel hidden">
+              <h3>دریافت کالا و کنترل کیفیت</h3>
+              <div class="grid-2">
+                <div class="soft-box">
+                  <h4>ثبت رسید کالا</h4>
+                  <form id="receipt-form" class="forms-grid">
+                    <div class="field col-12"><label>سفارش خرید</label><select id="receipt-po-select"></select></div>
+                    <div class="field col-6"><label>تاریخ دریافت</label><input id="receipt-date" type="date" /></div>
+                    <div class="field col-6"><label>انبار</label><input id="receipt-warehouse" value="WH-01" /></div>
+                    <div class="field col-6"><label>مرجع تحویل تامین‌کننده</label><input id="receipt-ref" value="DEL-01" /></div>
+                    <div class="field col-6"><label>مقدار دریافتی</label><input id="receipt-qty" type="number" step="0.01" min="0.01" value="10" /></div>
+                    <div class="field col-12"><button class="primary" type="submit">ثبت رسید کالا</button></div>
+                  </form>
+                </div>
+                <div class="soft-box">
+                  <h4>ایجاد و نهایی‌سازی QC</h4>
+                  <form id="qc-create-form" class="forms-grid">
+                    <div class="field col-12"><label>رسید کالا</label><select id="qc-gr-select"></select></div>
+                    <div class="field col-12"><label>تاریخ بازرسی</label><input id="qc-date" type="date" /></div>
+                    <div class="field col-12"><button class="secondary" type="submit">ایجاد پرونده QC</button></div>
+                  </form>
+                  <hr style="border:none;border-top:1px solid var(--line);margin:16px 0;" />
+                  <form id="qc-finalize-form" class="forms-grid">
+                    <div class="field col-12"><label>پرونده QC</label><select id="qc-finalize-select"></select></div>
+                    <div class="field col-4"><label>نتیجه</label><select id="qc-result"><option value="accepted">قبول</option><option value="rejected">رد</option></select></div>
+                    <div class="field col-4"><label>تعداد قبول</label><input id="qc-accepted" type="number" step="0.01" min="0" value="10" /></div>
+                    <div class="field col-4"><label>تعداد رد</label><input id="qc-rejected" type="number" step="0.01" min="0" value="0" /></div>
+                    <div class="field col-6"><label>کد عیب</label><input id="qc-defect" /></div>
+                    <div class="field col-6"><label>اقدام اصلاحی</label><input id="qc-corrective" /></div>
+                    <div class="field col-12"><label>یادداشت</label><textarea id="qc-note">کنترل کیفیت بر اساس دریافت انجام شد.</textarea></div>
+                    <div class="field col-12"><button class="primary" type="submit">نهایی‌سازی QC</button></div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <div id="proc-finance" class="subpanel proc-panel hidden">
+              <h3>فاکتور تامین‌کننده و پرداخت</h3>
+              <div class="grid-2">
+                <div class="soft-box">
+                  <h4>ثبت فاکتور تامین‌کننده</h4>
+                  <form id="invoice-form" class="forms-grid">
+                    <div class="field col-4"><label>تامین‌کننده</label><select id="invoice-supplier-select"></select></div>
+                    <div class="field col-4"><label>سفارش خرید</label><select id="invoice-po-select"></select></div>
+                    <div class="field col-4"><label>رسید کالا</label><select id="invoice-gr-select"></select></div>
+                    <div class="field col-6"><label>شماره فاکتور</label><input id="invoice-no" value="INV-001" /></div>
+                    <div class="field col-6"><label>تاریخ فاکتور</label><input id="invoice-date" type="date" /></div>
+                    <div class="field col-6"><label>سررسید</label><input id="invoice-due-date" type="date" /></div>
+                    <div class="field col-6"><label>مبلغ</label><input id="invoice-amount" type="number" step="0.01" min="0.01" value="950000" /></div>
+                    <div class="field col-12"><button class="secondary" type="submit">ثبت فاکتور</button></div>
+                  </form>
+                </div>
+                <div class="soft-box">
+                  <h4>تطبیق و درخواست پرداخت</h4>
+                  <form id="invoice-match-form" class="forms-grid">
+                    <div class="field col-12"><label>فاکتور برای تطبیق</label><select id="match-invoice-select"></select></div>
+                    <div class="field col-12"><button class="secondary" type="submit">ثبت تطبیق فاکتور</button></div>
+                  </form>
+                  <hr style="border:none;border-top:1px solid var(--line);margin:16px 0;" />
+                  <form id="payment-form" class="forms-grid">
+                    <div class="field col-6"><label>فاکتور برای ایجاد پرداخت</label><select id="payment-invoice-select"></select></div>
+                    <div class="field col-6"><label>مبلغ پرداخت</label><input id="payment-amount" type="number" step="0.01" min="0.01" value="950000" /></div>
+                    <div class="field col-6"><label>تاریخ پرداخت</label><input id="payment-date" type="date" /></div>
+                    <div class="field col-6"><label>روش پرداخت</label><input id="payment-method" value="bank_transfer" /></div>
+                    <div class="field col-12"><label>مرجع بانکی</label><input id="payment-reference" value="BANK-REF-001" /></div>
+                    <div class="field col-12"><button class="primary" type="submit">ایجاد درخواست پرداخت</button></div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <div class="subpanel" style="margin-top:16px;">
+              <h3>جدول‌های عملیاتی</h3>
+              <div class="grid-2">
+                <div class="soft-box">
+                  <h4>درخواست‌های خرید و RFQ</h4>
+                  <div id="purchase-requests-wrap" class="table-wrap" style="margin-top:10px;"></div>
+                  <div id="rfqs-wrap" class="table-wrap" style="margin-top:12px;"></div>
+                </div>
+                <div class="soft-box">
+                  <h4>سفارش، دریافت، QC، فاکتور و پرداخت</h4>
+                  <div id="purchase-orders-wrap" class="table-wrap" style="margin-top:10px;"></div>
+                  <div id="goods-receipts-wrap" class="table-wrap" style="margin-top:12px;"></div>
+                  <div id="quality-wrap" class="table-wrap" style="margin-top:12px;"></div>
+                  <div id="invoices-wrap" class="table-wrap" style="margin-top:12px;"></div>
+                  <div id="payments-wrap" class="table-wrap" style="margin-top:12px;"></div>
                 </div>
               </div>
             </div>
           </section>
 
-          <section id="workspace-section" class="card anchor-offset">
-            <div class="card-head">
+          <section id="page-security" class="page hidden" data-page="security">
+            <div class="page-head">
               <div>
-                <h3>عملیات نقش من</h3>
-                <div class="muted">فرم‌هایی که کاربر جاری واقعاً برای انجام کار روزانه لازم دارد</div>
+                <h2>مدیریت امنیت، کاربران و نشست‌ها</h2>
+                <div class="muted">خانه اختصاصی نقش‌های امنیت و مدیر داده پایه</div>
+              </div>
+            </div>
+            <div id="security-tabs" class="subnav"></div>
+
+            <div id="sec-overview" class="subpanel security-panel hidden">
+              <h3>داشبورد امنیت</h3>
+              <div id="security-cards" class="stats-grid" style="margin-top:12px;"></div>
+              <div class="grid-2" style="margin-top:16px;">
+                <div class="soft-box">
+                  <h4>کاربران قفل‌شده / ریسک‌های باز</h4>
+                  <div id="security-summary-box" class="muted" style="line-height:1.9;"></div>
+                </div>
+                <div class="soft-box">
+                  <h4>رویدادهای اخیر امنیتی</h4>
+                  <div id="security-events-wrap" class="table-wrap" style="margin-top:10px;"></div>
+                </div>
               </div>
             </div>
 
-            <div class="grid-3">
-              <article class="card role-card" data-roles="*" style="padding:18px; box-shadow:none;">
-                <h3>پروفایل کاری</h3>
-                <div id="role-summary" class="kv"></div>
-              </article>
+            <div id="sec-users" class="subpanel security-panel hidden">
+              <h3>مدیریت کاربران</h3>
+              <div class="grid-2">
+                <div class="soft-box">
+                  <h4>ایجاد کاربر</h4>
+                  <form id="user-create-form" class="forms-grid">
+                    <div class="field col-6"><label>نام کاربری</label><input id="user-username" /></div>
+                    <div class="field col-6"><label>نام کامل</label><input id="user-full-name" /></div>
+                    <div class="field col-6"><label>رمز اولیه</label><input id="user-password" /></div>
+                    <div class="field col-6"><label>واحد</label><input id="user-department" value="ops" /></div>
+                    <div class="field col-6"><label>نقش</label><select id="user-role-select"></select></div>
+                    <div class="field col-6"><label>وضعیت</label><select id="user-status"><option value="active">فعال</option><option value="inactive">غیرفعال</option></select></div>
+                    <div class="field col-12"><button class="primary" type="submit">ایجاد کاربر</button></div>
+                  </form>
+                </div>
+                <div class="soft-box">
+                  <h4>ویرایش کاربر منتخب</h4>
+                  <form id="user-edit-form" class="forms-grid">
+                    <div class="field col-12"><label>کاربر منتخب</label><input id="edit-username" readonly /></div>
+                    <div class="field col-6"><label>نام کامل</label><input id="edit-full-name" /></div>
+                    <div class="field col-6"><label>واحد</label><input id="edit-department" /></div>
+                    <div class="field col-6"><label>نقش</label><select id="edit-role-select"></select></div>
+                    <div class="field col-6"><label>وضعیت</label><select id="edit-status"><option value="active">فعال</option><option value="inactive">غیرفعال</option></select></div>
+                    <div class="field col-12 actions">
+                      <button class="primary" type="submit">ثبت تغییرات</button>
+                      <button class="secondary" id="user-force-reset-btn" type="button">الزام تغییر رمز</button>
+                      <button class="secondary" id="user-unlock-btn" type="button">رفع قفل</button>
+                      <button class="danger" id="user-revoke-all-btn" type="button">ابطال همه نشست‌ها</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div class="soft-box" style="margin-top:16px;">
+                <h4>فهرست کاربران</h4>
+                <div id="users-wrap" class="table-wrap" style="margin-top:10px;"></div>
+              </div>
+            </div>
 
-              <article class="card role-card" data-roles="Requester" style="padding:18px; box-shadow:none;">
-                <h3>ثبت درخواست خرید</h3>
-                <form id="pr-form" class="form-grid">
-                  <div class="field col-6"><label>واحد</label><input id="pr-department" required placeholder="ops / production / engineering" /></div>
-                  <div class="field col-6"><label>تاریخ نیاز</label><input id="pr-need-date" type="date" /></div>
-                  <div class="field col-6"><label>مرکز هزینه</label><input id="pr-cost-center" value="CC-100" /></div>
-                  <div class="field col-6"><label>اولویت</label><select id="pr-priority"><option value="normal">عادی</option><option value="high">بالا</option><option value="urgent">فوری</option></select></div>
-                  <div class="field col-6"><label>مبلغ برآوردی</label><input id="pr-total-amount" type="number" min="0" step="0.01" value="1000000" /></div>
-                  <div class="field col-6"><label>شرح قلم</label><input id="pr-line-desc" value="خرید ماده اولیه" /></div>
-                  <div class="field col-3"><label>تعداد</label><input id="pr-line-qty" type="number" min="0.01" step="0.01" value="10" /></div>
-                  <div class="field col-3"><label>واحد سنجش</label><input id="pr-line-uom" value="EA" /></div>
-                  <div class="field col-6"><label>قیمت واحد برآوردی</label><input id="pr-line-price" type="number" min="0" step="0.01" value="100000" /></div>
-                  <div class="field col-12"><label>علت نیاز</label><textarea id="pr-reason" required>نیاز عملیاتی برای ادامه تولید</textarea></div>
-                  <div class="field col-12"><button class="primary" type="submit">ثبت درخواست خرید</button></div>
-                </form>
-                <div class="footer-note">بعد از ثبت، از جدول «درخواست‌های خرید» دکمه «ارسال» را بزن.</div>
-              </article>
+            <div id="sec-sessions" class="subpanel security-panel hidden">
+              <h3>نشست‌های فعال</h3>
+              <div class="grid-2">
+                <div class="soft-box">
+                  <h4>نشست‌های کاربر جاری</h4>
+                  <div id="my-sessions-wrap" class="table-wrap" style="margin-top:10px;"></div>
+                </div>
+                <div class="soft-box">
+                  <h4>جست‌وجوی نشست کاربر</h4>
+                  <div class="actions" style="margin-top:10px;">
+                    <input id="session-lookup-username" placeholder="نام کاربری" style="flex:1; min-width:180px;" />
+                    <button class="secondary" id="lookup-sessions-btn" type="button">جست‌وجو</button>
+                  </div>
+                  <div id="user-sessions-wrap" class="table-wrap" style="margin-top:12px;"></div>
+                </div>
+              </div>
+            </div>
 
-              <article class="card role-card" data-roles="Procurement Officer" style="padding:18px; box-shadow:none;">
-                <h3>ایجاد RFQ</h3>
-                <form id="rfq-form" class="form-grid">
-                  <div class="field col-12"><label>درخواست خرید</label><select id="rfq-pr-select"></select></div>
-                  <div class="field col-6"><label>تاریخ صدور</label><input id="rfq-issue-date" type="date" /></div>
-                  <div class="field col-6"><label>تاریخ بسته‌شدن</label><input id="rfq-close-date" type="date" /></div>
-                  <div class="field col-6"><label>حداقل تعداد پیشنهاد</label><input id="rfq-min-quotes" type="number" min="1" value="3" /></div>
-                  <div class="field col-12"><button class="primary" type="submit">ایجاد RFQ</button></div>
-                </form>
-              </article>
+            <div id="sec-incidents" class="subpanel security-panel hidden">
+              <h3>رخدادهای امنیتی</h3>
+              <div class="grid-2">
+                <div class="soft-box">
+                  <h4>ثبت رخداد جدید</h4>
+                  <form id="incident-create-form" class="forms-grid">
+                    <div class="field col-6"><label>عنوان رخداد</label><input id="incident-title" value="تلاش ورود مشکوک" /></div>
+                    <div class="field col-6"><label>نوع رخداد</label><input id="incident-type" value="authentication" /></div>
+                    <div class="field col-4"><label>شدت</label><select id="incident-severity"><option>low</option><option selected>medium</option><option>high</option><option>critical</option></select></div>
+                    <div class="field col-4"><label>کاربر مرتبط</label><input id="incident-related-user" /></div>
+                    <div class="field col-4"><label>کارشناس مسئول</label><input id="incident-assigned-to" /></div>
+                    <div class="field col-6"><label>نام موجودیت منبع</label><input id="incident-source-entity" value="auth" /></div>
+                    <div class="field col-6"><label>شناسه منبع</label><input id="incident-source-id" /></div>
+                    <div class="field col-12"><label>خلاصه</label><textarea id="incident-summary">ثبت و بررسی یک رفتار مشکوک در لایه احراز هویت</textarea></div>
+                    <div class="field col-12"><button class="primary" type="submit">ثبت رخداد</button></div>
+                  </form>
+                </div>
+                <div class="soft-box">
+                  <h4>اقدام روی رخداد منتخب</h4>
+                  <form id="incident-action-form" class="forms-grid">
+                    <div class="field col-12"><label>رخداد منتخب</label><input id="incident-selected-id" readonly /></div>
+                    <div class="field col-6"><label>مسئول رسیدگی</label><input id="incident-action-assigned" /></div>
+                    <div class="field col-6"><label>اقدام مهاری</label><input id="incident-containment" /></div>
+                    <div class="field col-12"><label>یادداشت تصمیم</label><textarea id="incident-note">بررسی اولیه انجام شد.</textarea></div>
+                    <div class="field col-12"><label>یادداشت رفع رخداد</label><textarea id="incident-resolution">ریشه رخداد تحلیل و کنترل اصلاحی اعمال شد.</textarea></div>
+                    <div class="field col-12 actions">
+                      <button class="secondary" id="incident-triage-btn" type="button">Triage</button>
+                      <button class="secondary" id="incident-contain-btn" type="button">Contain</button>
+                      <button class="secondary" id="incident-resolve-btn" type="button">Resolve</button>
+                      <button class="primary" id="incident-close-btn" type="button">Close</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div class="soft-box" style="margin-top:16px;">
+                <h4>فهرست رخدادها</h4>
+                <div id="incidents-wrap" class="table-wrap" style="margin-top:10px;"></div>
+              </div>
+            </div>
 
-              <article class="card role-card" data-roles="Procurement Officer" style="padding:18px; box-shadow:none;">
-                <h3>ثبت پیشنهاد تأمین‌کننده</h3>
-                <form id="quote-form" class="form-grid">
-                  <div class="field col-12"><label>RFQ</label><select id="quote-rfq-select"></select></div>
-                  <div class="field col-12"><label>تأمین‌کننده</label><select id="quote-supplier-select"></select></div>
-                  <div class="field col-6"><label>شماره پیشنهاد</label><input id="quote-no" value="Q-001" /></div>
-                  <div class="field col-6"><label>تاریخ پیشنهاد</label><input id="quote-date" type="date" /></div>
-                  <div class="field col-6"><label>مبلغ کل</label><input id="quote-amount" type="number" min="0.01" step="0.01" value="950000" /></div>
-                  <div class="field col-6"><label>شرایط پرداخت</label><input id="quote-payment-terms" value="30 days" /></div>
-                  <div class="field col-6"><label>روز تحویل</label><input id="quote-delivery-days" type="number" min="0" value="7" /></div>
-                  <div class="field col-6"><label>واریانس قیمت %</label><input id="quote-variance" type="number" step="0.01" value="-5" /></div>
-                  <div class="field col-12"><button class="primary" type="submit">ثبت پیشنهاد</button></div>
-                </form>
-              </article>
-
-              <article class="card role-card" data-roles="Procurement Officer" style="padding:18px; box-shadow:none;">
-                <h3>تکمیل مرحله RFQ</h3>
-                <form id="record-quotes-form" class="form-grid">
-                  <div class="field col-12"><label>RFQ</label><select id="record-rfq-select"></select></div>
-                  <div class="field col-12"><label>ثبت رسیدن پیشنهادها</label><button class="secondary" type="submit">ثبت دریافت پیشنهادها</button></div>
-                </form>
-                <hr style="border:none;border-top:1px solid var(--line);margin:16px 0;" />
-                <form id="commercial-form" class="form-grid">
-                  <div class="field col-6"><label>RFQ برای ارزیابی بازرگانی</label><select id="commercial-rfq-select"></select></div>
-                  <div class="field col-6"><label>پیشنهاد منتخب</label><select id="commercial-quote-select"></select></div>
-                  <div class="field col-12"><label>یادداشت</label><textarea id="commercial-note">پیشنهاد منتخب از نظر قیمت و شرایط پرداخت مناسب‌تر است.</textarea></div>
-                  <div class="field col-12"><button class="primary" type="submit">ثبت ارزیابی بازرگانی</button></div>
-                </form>
-              </article>
-
-              <article class="card role-card" data-roles="Procurement Officer" style="padding:18px; box-shadow:none;">
-                <h3>صدور سفارش خرید</h3>
-                <form id="po-form" class="form-grid">
-                  <div class="field col-6"><label>RFQ</label><select id="po-rfq-select"></select></div>
-                  <div class="field col-6"><label>پیشنهاد منتخب</label><select id="po-quote-select"></select></div>
-                  <div class="field col-6"><label>تاریخ سفارش</label><input id="po-order-date" type="date" /></div>
-                  <div class="field col-6"><label>تاریخ تحویل</label><input id="po-delivery-date" type="date" /></div>
-                  <div class="field col-12"><button class="primary" type="submit">صدور سفارش خرید</button></div>
-                </form>
-              </article>
-
-              <article class="card role-card" data-roles="Warehouse Receiver" style="padding:18px; box-shadow:none;">
-                <h3>ثبت دریافت کالا</h3>
-                <form id="receipt-form" class="form-grid">
-                  <div class="field col-12"><label>سفارش خرید</label><select id="receipt-po-select"></select></div>
-                  <div class="field col-6"><label>تاریخ دریافت</label><input id="receipt-date" type="date" /></div>
-                  <div class="field col-6"><label>انبار</label><input id="receipt-warehouse" value="WH-01" /></div>
-                  <div class="field col-6"><label>مرجع تحویل تأمین‌کننده</label><input id="receipt-ref" value="DEL-01" /></div>
-                  <div class="field col-6"><label>مقدار دریافتی</label><input id="receipt-qty" type="number" min="0.01" step="0.01" value="10" /></div>
-                  <div class="field col-12"><button class="primary" type="submit">ثبت دریافت کالا</button></div>
-                </form>
-              </article>
-
-              <article class="card role-card" data-roles="QC Inspector" style="padding:18px; box-shadow:none;">
-                <h3>کنترل کیفیت</h3>
-                <form id="qc-create-form" class="form-grid">
-                  <div class="field col-12"><label>رسید کالا</label><select id="qc-gr-select"></select></div>
-                  <div class="field col-12"><label>تاریخ بازرسی</label><input id="qc-date" type="date" /></div>
-                  <div class="field col-12"><button class="secondary" type="submit">ایجاد بازرسی QC</button></div>
-                </form>
-                <hr style="border:none;border-top:1px solid var(--line);margin:16px 0;" />
-                <form id="qc-finalize-form" class="form-grid">
-                  <div class="field col-12"><label>پرونده QC</label><select id="qc-finalize-select"></select></div>
-                  <div class="field col-6"><label>نتیجه</label><select id="qc-result"><option value="accepted">قبول</option><option value="rejected">رد</option></select></div>
-                  <div class="field col-3"><label>تعداد قبول</label><input id="qc-accepted" type="number" min="0" step="0.01" value="10" /></div>
-                  <div class="field col-3"><label>تعداد رد</label><input id="qc-rejected" type="number" min="0" step="0.01" value="0" /></div>
-                  <div class="field col-6"><label>کد عیب</label><input id="qc-defect" /></div>
-                  <div class="field col-6"><label>اقدام اصلاحی</label><input id="qc-corrective" /></div>
-                  <div class="field col-12"><label>یادداشت</label><textarea id="qc-note">کنترل کیفیت تکمیل شد.</textarea></div>
-                  <div class="field col-12"><button class="primary" type="submit">نهایی‌سازی QC</button></div>
-                </form>
-              </article>
-
-              <article class="card role-card" data-roles="AP Accountant" style="padding:18px; box-shadow:none;">
-                <h3>فاکتور تأمین‌کننده و پرداخت</h3>
-                <form id="invoice-form" class="form-grid">
-                  <div class="field col-4"><label>تأمین‌کننده</label><select id="invoice-supplier-select"></select></div>
-                  <div class="field col-4"><label>سفارش خرید</label><select id="invoice-po-select"></select></div>
-                  <div class="field col-4"><label>رسید کالا</label><select id="invoice-gr-select"></select></div>
-                  <div class="field col-6"><label>شماره فاکتور</label><input id="invoice-no" value="INV-001" /></div>
-                  <div class="field col-6"><label>تاریخ فاکتور</label><input id="invoice-date" type="date" /></div>
-                  <div class="field col-6"><label>سررسید</label><input id="invoice-due-date" type="date" /></div>
-                  <div class="field col-6"><label>مبلغ</label><input id="invoice-amount" type="number" min="0.01" step="0.01" value="950000" /></div>
-                  <div class="field col-12"><button class="secondary" type="submit">ثبت فاکتور</button></div>
-                </form>
-                <hr style="border:none;border-top:1px solid var(--line);margin:16px 0;" />
-                <form id="invoice-match-form" class="form-grid">
-                  <div class="field col-12"><label>فاکتور برای تطبیق</label><select id="match-invoice-select"></select></div>
-                  <div class="field col-12"><button class="secondary" type="submit">ثبت تطبیق فاکتور</button></div>
-                </form>
-                <hr style="border:none;border-top:1px solid var(--line);margin:16px 0;" />
-                <form id="payment-form" class="form-grid">
-                  <div class="field col-6"><label>فاکتور برای ایجاد پرداخت</label><select id="payment-invoice-select"></select></div>
-                  <div class="field col-6"><label>مبلغ پرداخت</label><input id="payment-amount" type="number" min="0.01" step="0.01" value="950000" /></div>
-                  <div class="field col-6"><label>تاریخ پرداخت</label><input id="payment-date" type="date" /></div>
-                  <div class="field col-6"><label>روش پرداخت</label><input id="payment-method" value="bank_transfer" /></div>
-                  <div class="field col-12"><label>مرجع بانکی</label><input id="payment-reference" value="BANK-REF-001" /></div>
-                  <div class="field col-12"><button class="primary" type="submit">ایجاد درخواست پرداخت</button></div>
-                </form>
-              </article>
+            <div id="sec-audit" class="subpanel security-panel hidden">
+              <h3>جست‌وجوی لاگ و رد پای کنترل</h3>
+              <form id="audit-search-form" class="forms-grid">
+                <div class="field col-4"><label>جست‌وجوی متن</label><input id="audit-q" placeholder="کاربر / رخداد / دلیل / موجودیت" /></div>
+                <div class="field col-3"><label>نام کاربر</label><input id="audit-user" placeholder="user_name" /></div>
+                <div class="field col-3"><label>موجودیت</label><input id="audit-entity" placeholder="auth / users / security_incidents" /></div>
+                <div class="field col-2"><label>حداکثر</label><input id="audit-limit" type="number" min="1" max="500" value="50" /></div>
+                <div class="field col-12 actions">
+                  <button class="primary" type="submit">جست‌وجو</button>
+                  <button class="secondary" id="audit-default-btn" type="button">نمایش لاگ‌های اخیر</button>
+                </div>
+              </form>
+              <div id="audit-wrap" class="table-wrap" style="margin-top:16px;"></div>
             </div>
           </section>
 
-          <section id="records-section" class="card anchor-offset">
-            <div class="card-head">
+          <section id="page-trace" class="page hidden" data-page="trace">
+            <div class="page-head">
               <div>
-                <h3>اسناد و ارتباط بین فرایندها</h3>
-                <div class="muted">در این بخش هم اسناد اخیر را می‌بینی و هم می‌توانی شناسه هر سند را برای مرحله بعدی انتخاب کنی</div>
+                <h2>رهگیری ارتباط فرایندها</h2>
+                <div class="muted">مشاهده زنجیره اسناد، مالک جاری، وضعیت، تایم‌لاین و ارتباط بین اسناد بالادست و پایین‌دست</div>
               </div>
             </div>
-            <div class="record-grid">
-              <div class="soft-box">
-                <strong>درخواست‌های خرید</strong>
-                <div id="purchase-requests-wrap" class="table-wrap" style="margin-top:10px;"></div>
-              </div>
-              <div class="soft-box">
-                <strong>RFQ و پیشنهادها</strong>
-                <div id="rfqs-wrap" class="table-wrap" style="margin-top:10px;"></div>
-              </div>
-              <div class="soft-box">
-                <strong>سفارش‌های خرید و دریافت‌ها</strong>
-                <div id="purchase-orders-wrap" class="table-wrap" style="margin-top:10px;"></div>
-                <div id="goods-receipts-wrap" class="table-wrap" style="margin-top:12px;"></div>
-              </div>
-              <div class="soft-box">
-                <strong>QC، فاکتور و پرداخت</strong>
-                <div id="quality-wrap" class="table-wrap" style="margin-top:10px;"></div>
-                <div id="invoices-wrap" class="table-wrap" style="margin-top:12px;"></div>
-                <div id="payments-wrap" class="table-wrap" style="margin-top:12px;"></div>
-              </div>
-            </div>
-          </section>
-
-          <section id="trace-section" class="card anchor-offset">
-            <div class="card-head">
-              <div>
-                <h3>رهگیری ارتباط فرایندها</h3>
-                <div class="muted">برای دیدن زنجیره کامل اسناد از هر نقطه، نوع سند و شناسه آن را وارد کن</div>
-              </div>
-            </div>
-            <form id="trace-form" class="form-grid">
+            <form id="trace-form" class="forms-grid">
               <div class="field col-4">
                 <label>نوع سند</label>
                 <select id="trace-object-type">
@@ -736,7 +785,7 @@
                   <option value="PO">سفارش خرید</option>
                   <option value="GoodsReceipt">رسید کالا</option>
                   <option value="QualityInspection">کنترل کیفیت</option>
-                  <option value="SupplierInvoice">فاکتور تأمین‌کننده</option>
+                  <option value="SupplierInvoice">فاکتور تامین‌کننده</option>
                   <option value="Payment">پرداخت</option>
                   <option value="SalesOrder">سفارش فروش</option>
                 </select>
@@ -744,95 +793,45 @@
               <div class="field col-4"><label>شناسه سند</label><input id="trace-object-id" type="number" min="1" /></div>
               <div class="field col-4" style="align-self:end;"><button class="primary" type="submit">نمایش رهگیری</button></div>
             </form>
-            <div id="trace-overview" class="grid-3" style="margin-top:16px;"></div>
+            <div id="trace-overview" class="stats-grid" style="margin-top:16px;"></div>
             <div class="grid-2" style="margin-top:16px;">
               <div class="soft-box">
-                <strong>اسناد مرتبط</strong>
+                <h4>اسناد مرتبط</h4>
                 <div id="trace-docs-wrap" class="table-wrap" style="margin-top:10px;"></div>
               </div>
               <div class="soft-box">
-                <strong>تایم‌لاین و اتفاقات</strong>
+                <h4>تایم‌لاین رخدادها و تصمیم‌ها</h4>
                 <div id="trace-timeline" class="timeline" style="margin-top:10px;"></div>
               </div>
             </div>
           </section>
 
-          <section id="master-section" class="card anchor-offset" data-roles="Master Data Admin|Security Officer">
-            <div class="card-head">
+          <section id="page-profile" class="page hidden" data-page="profile">
+            <div class="page-head">
               <div>
-                <h3>مدیریت پایه و دسترسی</h3>
-                <div class="muted">ایجاد کاربر، تعریف نقش، و ثبت تأمین‌کننده برای شروع کار عملیاتی</div>
+                <h2>حساب کاربری</h2>
+                <div class="muted">مشخصات کاربر، تغییر رمز عبور و نشست‌های فعال</div>
               </div>
             </div>
             <div class="grid-2">
               <div class="soft-box">
-                <strong>ایجاد کاربر</strong>
-                <form id="user-form" class="form-grid" style="margin-top:12px;">
-                  <div class="field col-6"><label>نام کاربری</label><input id="user-username" /></div>
-                  <div class="field col-6"><label>نام کامل</label><input id="user-full-name" /></div>
-                  <div class="field col-6"><label>رمز اولیه</label><input id="user-password" /></div>
-                  <div class="field col-6"><label>واحد</label><input id="user-department" value="ops" /></div>
-                  <div class="field col-12"><label>نقش</label><select id="user-role-select"></select></div>
-                  <div class="field col-12"><button class="primary" type="submit">ایجاد کاربر</button></div>
-                </form>
+                <h4>مشخصات کاربر جاری</h4>
+                <div id="profile-kv" class="kv" style="margin-top:10px;"></div>
               </div>
               <div class="soft-box">
-                <strong>ایجاد تأمین‌کننده</strong>
-                <form id="supplier-form" class="form-grid" style="margin-top:12px;">
-                  <div class="field col-6"><label>کد</label><input id="supplier-code" value="SUP-001" /></div>
-                  <div class="field col-6"><label>نام</label><input id="supplier-name" value="تأمین‌کننده نمونه" /></div>
-                  <div class="field col-6"><label>سطح ریسک</label><select id="supplier-risk"><option value="low">کم</option><option value="medium" selected>متوسط</option><option value="high">زیاد</option></select></div>
-                  <div class="field col-6"><label>شرایط پرداخت</label><input id="supplier-payment-terms" value="30 days" /></div>
-                  <div class="field col-12"><button class="primary" type="submit">ثبت تأمین‌کننده</button></div>
+                <h4>تغییر کلمه عبور</h4>
+                <form id="password-form" class="forms-grid" style="margin-top:12px;">
+                  <div class="field col-12"><label>رمز فعلی</label><input id="current-password" type="password" /></div>
+                  <div class="field col-6"><label>رمز جدید</label><input id="new-password" type="password" /></div>
+                  <div class="field col-6"><label>تکرار رمز جدید</label><input id="new-password-repeat" type="password" /></div>
+                  <div class="field col-12"><button class="primary" type="submit">ثبت تغییر رمز</button></div>
                 </form>
               </div>
             </div>
-            <div class="soft-box" style="margin-top:16px;">
-              <strong>کاربران</strong>
-              <div id="users-wrap" class="table-wrap" style="margin-top:10px;"></div>
+            <div class="subpanel" style="margin-top:16px;">
+              <h3>نشست‌های کاربر جاری</h3>
+              <div id="profile-sessions-wrap" class="table-wrap" style="margin-top:10px;"></div>
             </div>
-          </section>
-
-          <section id="security-section" class="card anchor-offset" data-roles="Master Data Admin|Security Officer">
-            <div class="card-head">
-              <div>
-                <h3>امنیت و نشست‌ها</h3>
-                <div class="muted">مرور نشست‌های فعال، داشبورد امنیت، و امکان پاکسازی توکن‌ها برای نقش‌های مجاز</div>
-              </div>
-              <div class="actions">
-                <button class="secondary" id="cleanup-tokens-btn">پاکسازی توکن‌های منقضی/ابطال‌شده</button>
-              </div>
-            </div>
-            <div id="security-cards" class="stats-grid"></div>
-            <div class="grid-2" style="margin-top:16px;">
-              <div class="soft-box">
-                <strong>نشست‌های من</strong>
-                <div id="my-sessions-wrap" class="table-wrap" style="margin-top:10px;"></div>
-              </div>
-              <div class="soft-box">
-                <strong>جست‌وجوی نشست کاربر</strong>
-                <div class="actions" style="margin-top:10px;">
-                  <input id="session-lookup-username" placeholder="username" style="flex:1; min-width:180px;" />
-                  <button class="secondary" id="lookup-sessions-btn">نمایش نشست‌ها</button>
-                </div>
-                <div id="user-sessions-wrap" class="table-wrap" style="margin-top:12px;"></div>
-              </div>
-            </div>
-          </section>
-
-          <section id="password-section" class="card anchor-offset">
-            <div class="card-head">
-              <div>
-                <h3>تغییر کلمه عبور</h3>
-                <div class="muted">اگر مدیر سیستم الزام کند یا کاربر بخواهد، کلمه عبور از اینجا تغییر می‌کند</div>
-              </div>
-            </div>
-            <form id="password-form" class="form-grid">
-              <div class="field col-4"><label>رمز فعلی</label><input id="current-password" type="password" /></div>
-              <div class="field col-4"><label>رمز جدید</label><input id="new-password" type="password" /></div>
-              <div class="field col-4"><label>تکرار رمز جدید</label><input id="new-password-repeat" type="password" /></div>
-              <div class="field col-12"><button class="primary" type="submit">ثبت تغییر رمز</button></div>
-            </form>
           </section>
         </main>
       </div>
@@ -840,7 +839,7 @@
 
     <script>
       const API = '/api/v1';
-      const TOKEN_KEY = 'borna_portal_token';
+      const TOKEN_KEY = 'borna_operational_token';
       const ROLE_LABELS = {
         'Requester': 'درخواست‌کننده',
         'Department Manager': 'مدیر واحد',
@@ -858,286 +857,483 @@
         'Sales Officer': 'کارشناس فروش',
         'Sales Manager': 'مدیر فروش',
         'Credit Controller': 'کنترل اعتبار',
-        'Planning Officer': 'برنامه‌ریز',
-        'Logistics Officer': 'مسئول لجستیک',
+        'Planning Officer': 'کارشناس برنامه‌ریزی',
+        'Logistics Officer': 'کارشناس لجستیک',
         'AR Accountant': 'حسابدار دریافتنی',
-        'Collections Officer': 'مسئول وصول',
+        'Collections Officer': 'کارشناس وصول',
       };
       const ROLE_GUIDANCE = {
-        'Requester': 'درخواست خرید را ثبت و از جدول اسناد، آن را ارسال کن. سپس با رهگیری می‌توانی ببینی پرونده به چه مرحله‌ای رسیده است.',
-        'Department Manager': 'کارتابل تأیید را بررسی کن و درخواست‌های رسیده را ارجاع یا تأیید کن.',
-        'Procurement Officer': 'پس از تأیید درخواست، RFQ ایجاد کن، پیشنهادها را ثبت کن، ارزیابی بازرگانی انجام بده و سفارش خرید صادر کن.',
-        'Technical Evaluator': 'RFQهای رسیده به تأیید فنی را از کارتابل باز کن و تأیید فنی انجام بده.',
-        'Finance Manager': 'هم در تأیید درخواست/قیمت و هم در تأیید پرداخت از کارتابل خود اقدام کن.',
-        'Warehouse Receiver': 'بعد از صدور سفارش خرید، دریافت کالا را ثبت کن تا پرونده به QC برود.',
-        'QC Inspector': 'رسیدهای دریافتی را به QC تبدیل کن و نتیجه قبول/رد را ثبت کن.',
-        'AP Accountant': 'پس از تکمیل QC و آزادسازی موجودی، فاکتور تأمین‌کننده را ثبت، تطبیق و برای پرداخت آماده کن.',
-        'Treasury Officer': 'آیتم‌های تأییدشده برای پرداخت را از کارتابل اجرا کن.',
-        'Master Data Admin': 'کاربران، نقش‌ها، تأمین‌کننده‌ها و شاخص‌های امنیتی را مدیریت کن.',
-        'Security Officer': 'نشست‌ها، رویدادهای امنیتی و کاربران نیازمند بازنشانی رمز را پایش کن.',
+        'Requester': 'ثبت درخواست خرید، ارسال آن و پیگیری وضعیت پرونده تا تحویل نهایی از طریق رهگیری فرایند.',
+        'Department Manager': 'بررسی درخواست‌های رسیده در کارتابل و تصمیم‌گیری درباره ارجاع یا تایید آنها.',
+        'Procurement Officer': 'ایجاد RFQ، ثبت پیشنهادها، ارزیابی بازرگانی و صدور سفارش خرید.',
+        'Technical Evaluator': 'بررسی و تایید فنی پیشنهادها از داخل کارتابل.',
+        'Warehouse Receiver': 'ثبت دریافت کالا و تحویل پرونده به کنترل کیفیت.',
+        'QC Inspector': 'ایجاد پرونده QC و ثبت نتیجه نهایی قبول یا رد.',
+        'AP Accountant': 'ثبت فاکتور تامین‌کننده، تطبیق و ایجاد درخواست پرداخت.',
+        'Finance Manager': 'کنترل تاییدهای مالی در مراحل درخواست، قیمت و پرداخت.',
+        'Treasury Officer': 'اجرای پرداخت‌های تاییدشده از کارتابل.',
+        'Master Data Admin': 'مدیریت کاربران، دسترسی، نشست‌ها، تامین‌کنندگان و پایش امنیت.',
+        'Security Officer': 'پایش رخدادهای امنیتی، نشست‌ها، کاربران قفل‌شده و ردپای کنترل.',
       };
+      const NAV_ITEMS = [
+        { id: 'dashboard', label: 'خانه نقش', roles: '*' },
+        { id: 'inbox', label: 'کارتابل', roles: '*' },
+        { id: 'procurement', label: 'میزکار عملیات', roles: '*' },
+        { id: 'security', label: 'امنیت و کاربران', roles: ['Master Data Admin', 'Security Officer'] },
+        { id: 'trace', label: 'رهگیری فرایند', roles: '*' },
+        { id: 'profile', label: 'حساب کاربری', roles: '*' },
+      ];
       const USER_ROLE_OPTIONS = [
         'Requester', 'Department Manager', 'Procurement Officer', 'Procurement Manager', 'Technical Evaluator',
         'Warehouse Receiver', 'QC Inspector', 'AP Accountant', 'Finance Manager', 'Treasury Officer',
         'Master Data Admin', 'Security Officer', 'Pricing Analyst', 'Sales Officer', 'Sales Manager',
         'Credit Controller', 'Planning Officer', 'Logistics Officer', 'AR Accountant', 'Collections Officer'
       ];
-      const SECTION_CONFIG = [
-        { id: 'dashboard-section', label: 'داشبورد', roles: '*' },
-        { id: 'tasks-section', label: 'کارتابل من', roles: '*' },
-        { id: 'workspace-section', label: 'عملیات نقش من', roles: '*' },
-        { id: 'records-section', label: 'اسناد و ارتباطات', roles: '*' },
-        { id: 'trace-section', label: 'رهگیری', roles: '*' },
-        { id: 'master-section', label: 'مدیریت پایه', roles: ['Master Data Admin', 'Security Officer'] },
-        { id: 'security-section', label: 'امنیت و نشست‌ها', roles: ['Master Data Admin', 'Security Officer'] },
-        { id: 'password-section', label: 'تغییر رمز', roles: '*' },
+      const PROC_TABS = [
+        { id: 'request', label: 'درخواست خرید', roles: ['Requester'] },
+        { id: 'sourcing', label: 'RFQ و تدارکات', roles: ['Procurement Officer'] },
+        { id: 'receiving', label: 'دریافت و QC', roles: ['Warehouse Receiver', 'QC Inspector'] },
+        { id: 'finance', label: 'فاکتور و پرداخت', roles: ['AP Accountant', 'Finance Manager', 'Treasury Officer'] },
+      ];
+      const SECURITY_TABS = [
+        { id: 'overview', label: 'داشبورد امنیت' },
+        { id: 'users', label: 'کاربران' },
+        { id: 'sessions', label: 'نشست‌ها' },
+        { id: 'incidents', label: 'رخدادها' },
+        { id: 'audit', label: 'لاگ و رهگیری' },
       ];
 
-      const appState = {
+      const state = {
         token: '',
         user: null,
+        activePage: 'dashboard',
+        activeProcTab: 'request',
+        activeSecurityTab: 'overview',
         dashboard: null,
         securityDashboard: null,
-        records: {
-          purchaseRequests: [],
-          rfqs: [],
-          purchaseOrders: [],
-          goodsReceipts: [],
-          qualityInspections: [],
-          supplierInvoices: [],
-          payments: [],
-          suppliers: [],
-          alerts: [],
-          users: [],
-        },
         tasks: [],
         approvals: [],
+        purchaseRequests: [],
+        rfqs: [],
+        purchaseOrders: [],
+        goodsReceipts: [],
+        qualityInspections: [],
+        supplierInvoices: [],
+        payments: [],
+        suppliers: [],
+        alerts: [],
+        users: [],
+        incidents: [],
         mySessions: [],
-        lookedUpSessions: [],
+        userSessions: [],
+        auditResults: [],
+        auditCount: 0,
         rfqDetails: {},
+        trace: null,
       };
-
-      const authView = document.getElementById('auth-view');
-      const workspaceView = document.getElementById('workspace-view');
-      const authStatus = document.getElementById('auth-status');
-      const globalStatus = document.getElementById('global-status');
 
       function $(id) { return document.getElementById(id); }
       function getToken() { return localStorage.getItem(TOKEN_KEY) || ''; }
       function setToken(token) {
-        appState.token = token || '';
-        if (appState.token) localStorage.setItem(TOKEN_KEY, appState.token);
+        state.token = token || '';
+        if (state.token) localStorage.setItem(TOKEN_KEY, state.token);
         else localStorage.removeItem(TOKEN_KEY);
       }
       function roleLabel(role) { return ROLE_LABELS[role] || role || '-'; }
-      function valueLabel(value) {
-        if (value === null || value === undefined || value === '') return '-';
-        return String(value).replace(/_/g, ' ');
-      }
-      function numberLabel(value) {
-        if (value === null || value === undefined || Number.isNaN(Number(value))) return '-';
-        return new Intl.NumberFormat('fa-IR').format(Number(value));
-      }
-      function isoDate(offsetDays = 0) {
-        const now = new Date();
-        now.setDate(now.getDate() + offsetDays);
-        return now.toISOString().slice(0, 10);
-      }
-      function showStatus(target, text, type = 'success') {
-        target.textContent = text;
-        target.className = `status ${type}`;
-        target.classList.remove('hidden');
-      }
-      function hideStatus(target) {
-        target.classList.add('hidden');
-        target.textContent = '';
-      }
-      function escapeHtml(value) {
-        return String(value ?? '')
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&#39;');
-      }
-      function sectionAllowed(section, role) {
-        if (section.roles === '*') return true;
-        return section.roles.includes(role);
-      }
-      function roleAllowed(attr, role) {
-        if (!attr || attr === '*') return true;
-        return attr.split('|').includes(role);
-      }
-      function setBusy(button, busy) {
-        if (!button) return;
-        button.disabled = busy;
+      function valueLabel(v) { return v === null || v === undefined || v === '' ? '-' : String(v).replace(/_/g, ' '); }
+      function numberLabel(v) { return v === null || v === undefined || Number.isNaN(Number(v)) ? '-' : new Intl.NumberFormat('fa-IR').format(Number(v)); }
+      function escapeHtml(v) { return String(v ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+      function isoDate(offset = 0) { const d = new Date(); d.setDate(d.getDate() + offset); return d.toISOString().slice(0,10); }
+      function showStatus(target, message, type='success') { target.textContent = message; target.className = `status ${type}`; target.classList.remove('hidden'); }
+      function hideStatus(target) { target.classList.add('hidden'); target.textContent = ''; }
+      function setBusy(btn, busy) { if (btn) btn.disabled = busy; }
+      function isSecurityRole() { return ['Master Data Admin', 'Security Officer'].includes(state.user?.role_code); }
+      function canSeeNav(item) { return item.roles === '*' || item.roles.includes(state.user?.role_code); }
+      function actionLabel(action) {
+        return {
+          submit: 'ارسال', route_review: 'ارجاع/بررسی', approve: 'تایید', create_rfq: 'ایجاد RFQ',
+          record_quotes: 'ثبت پیشنهادها', commercial_eval: 'ارزیابی بازرگانی', technical_eval: 'تایید فنی',
+          approve_price: 'تایید قیمت', issue_po: 'صدور سفارش خرید', record_receipt: 'ثبت دریافت',
+          accept_qc: 'قبول QC', reject_qc: 'رد QC', match_invoice: 'تطبیق فاکتور',
+          approve_payment: 'تایید پرداخت', execute_payment: 'اجرای پرداخت'
+        }[action] || action;
       }
 
-      async function api(path, { method = 'GET', body = undefined, auth = true } = {}) {
+      async function api(path, { method='GET', body=undefined, auth=true } = {}) {
         const headers = { 'Content-Type': 'application/json' };
-        if (auth && appState.token) {
-          headers['Authorization'] = `Bearer ${appState.token}`;
-          headers['X-Access-Token'] = appState.token;
+        if (auth && state.token) {
+          headers['Authorization'] = `Bearer ${state.token}`;
+          headers['X-Access-Token'] = state.token;
         }
-        const response = await fetch(`${API}${path}`, {
+        const resp = await fetch(`${API}${path}`, {
           method,
           headers,
           body: body === undefined ? undefined : JSON.stringify(body),
         });
-        const contentType = response.headers.get('content-type') || '';
-        const payload = contentType.includes('application/json') ? await response.json() : await response.text();
-        if (!response.ok) {
-          const detail = typeof payload === 'string' ? payload : (payload.detail || JSON.stringify(payload));
-          throw new Error(detail);
+        const contentType = resp.headers.get('content-type') || '';
+        const payload = contentType.includes('application/json') ? await resp.json() : await resp.text();
+        if (!resp.ok) {
+          throw new Error(typeof payload === 'string' ? payload : (payload.detail || JSON.stringify(payload)));
         }
         return payload;
       }
 
-      function switchToAuth() {
-        workspaceView.classList.add('hidden');
-        authView.classList.remove('hidden');
-      }
-      function switchToWorkspace() {
-        authView.classList.add('hidden');
-        workspaceView.classList.remove('hidden');
-      }
+      function switchToAuth() { $('app-view').classList.add('hidden'); $('auth-view').classList.remove('hidden'); }
+      function switchToApp() { $('auth-view').classList.add('hidden'); $('app-view').classList.remove('hidden'); }
 
-      function buildMenu() {
-        const role = appState.user?.role_code;
-        const passwordGate = Boolean(appState.user?.password_reset_required);
-        const menu = $('main-menu');
-        const items = SECTION_CONFIG.filter((section) => {
-          if (passwordGate) return section.id === 'password-section';
-          return sectionAllowed(section, role);
-        });
-        menu.innerHTML = items.map((section) => `<a class="menu-item" href="#${section.id}">${section.label}</a>`).join('');
-      }
-
-      function toggleSectionsForRole() {
-        const role = appState.user?.role_code;
-        const passwordGate = Boolean(appState.user?.password_reset_required);
-        document.querySelectorAll('[data-roles]').forEach((el) => {
-          const allowed = roleAllowed(el.getAttribute('data-roles'), role);
-          el.classList.toggle('hidden', passwordGate ? el.id !== 'password-section' : !allowed);
-        });
-        document.querySelectorAll('.role-card').forEach((el) => {
-          const allowed = roleAllowed(el.getAttribute('data-roles'), role);
-          el.classList.toggle('hidden', passwordGate ? el.getAttribute('data-roles') !== '*' : !allowed);
-        });
+      function buildNav() {
+        const nav = $('nav-menu');
+        const items = NAV_ITEMS.filter(canSeeNav);
+        nav.innerHTML = items.map(item => `<button class="nav-link ${state.activePage===item.id?'active':''}" onclick="portalOpenPage('${item.id}')">${item.label}</button>`).join('');
       }
 
       function renderHeader() {
-        $('header-name').textContent = appState.user?.full_name || appState.user?.username || '-';
-        $('header-role').textContent = `${roleLabel(appState.user?.role_code)} | ${appState.user?.username || '-'}`;
-        $('role-guidance-main').textContent = ROLE_GUIDANCE[appState.user?.role_code] || 'منوی نقش فعلی را انتخاب کن و فقط عملیات مجاز همان نقش را انجام بده.';
-        $('role-guidance-side').textContent = ROLE_GUIDANCE[appState.user?.role_code] || 'با کارتابل و رهگیری کار کن.';
-        $('role-summary').innerHTML = `
-          <strong>نام</strong><span>${escapeHtml(appState.user?.full_name || '-')}</span>
-          <strong>نام کاربری</strong><span>${escapeHtml(appState.user?.username || '-')}</span>
-          <strong>نقش</strong><span>${escapeHtml(roleLabel(appState.user?.role_code))}</span>
-          <strong>واحد</strong><span>${escapeHtml(appState.user?.department_code || '-')}</span>
-          <strong>نیاز به تغییر رمز</strong><span>${appState.user?.password_reset_required ? 'بله' : 'خیر'}</span>
+        $('header-name').textContent = state.user?.full_name || state.user?.username || '-';
+        $('header-role').textContent = `${roleLabel(state.user?.role_code)} | ${state.user?.username || '-'} | ${state.user?.department_code || 'بدون واحد'}`;
+        $('role-guidance').textContent = ROLE_GUIDANCE[state.user?.role_code] || 'منوی مناسب نقش جاری نمایش داده شده است. عملیات روزانه را از کارتابل یا میزکار عملیات انجام بده.';
+        $('role-description').textContent = ROLE_GUIDANCE[state.user?.role_code] || 'کاربر جاری می‌تواند با توجه به سطح دسترسی تخصیص‌یافته، عملیات مجاز خود را انجام دهد.';
+        $('profile-kv').innerHTML = `
+          <strong>نام کامل</strong><span>${escapeHtml(state.user?.full_name || '-')}</span>
+          <strong>نام کاربری</strong><span>${escapeHtml(state.user?.username || '-')}</span>
+          <strong>نقش</strong><span>${escapeHtml(roleLabel(state.user?.role_code))}</span>
+          <strong>واحد</strong><span>${escapeHtml(state.user?.department_code || '-')}</span>
+          <strong>وضعیت</strong><span>${escapeHtml(state.user?.status || '-')}</span>
+          <strong>نیاز به تغییر رمز</strong><span>${state.user?.password_reset_required ? 'بله' : 'خیر'}</span>
         `;
-        $('role-chips').innerHTML = `
-          <span class="chip">${escapeHtml(roleLabel(appState.user?.role_code))}</span>
-          <span class="chip">${escapeHtml(appState.user?.department_code || 'بدون واحد')}</span>
-          <span class="chip">${appState.user?.password_reset_required ? 'تغییر رمز اجباری' : 'وضعیت ورود عادی'}</span>
+        $('role-badges').innerHTML = `
+          <span class="chip">${escapeHtml(roleLabel(state.user?.role_code))}</span>
+          <span class="chip">${escapeHtml(state.user?.department_code || 'بدون واحد')}</span>
+          <span class="chip">${state.user?.password_reset_required ? 'تغییر رمز اجباری' : 'ورود عادی'}</span>
         `;
       }
 
-      function renderDashboard() {
-        const cards = $('dashboard-cards');
-        const dash = appState.dashboard;
-        if (!dash) {
-          cards.innerHTML = '<div class="empty">داشبورد هنوز بارگذاری نشده است.</div>';
+      function setPage(pageId) {
+        state.activePage = pageId;
+        document.querySelectorAll('[data-page]').forEach(el => el.classList.toggle('hidden', el.dataset.page !== pageId));
+        buildNav();
+      }
+
+      function defaultPageForRole() {
+        if (state.user?.password_reset_required) return 'profile';
+        if (isSecurityRole()) return 'security';
+        if (['Requester','Procurement Officer','Warehouse Receiver','QC Inspector','AP Accountant'].includes(state.user?.role_code)) return 'procurement';
+        return 'dashboard';
+      }
+
+      function renderTable(containerId, columns, rows, emptyText='موردی یافت نشد') {
+        const el = $(containerId);
+        if (!rows || !rows.length) {
+          el.innerHTML = `<div class="empty">${emptyText}</div>`;
           return;
         }
-        const totalPR = Object.values(dash.purchase_requests_by_status || {}).reduce((a, b) => a + b, 0);
-        const totalRFQ = Object.values(dash.rfqs_by_status || {}).reduce((a, b) => a + b, 0);
-        const totalPO = Object.values(dash.purchase_orders_by_status || {}).reduce((a, b) => a + b, 0);
-        const totalPay = Object.values(dash.collections_by_status || {}).reduce((a, b) => a + b, 0) + Object.values(dash.sales_invoices_by_status || {}).reduce((a, b) => a + b, 0);
-        const entries = [
-          ['درخواست خرید', totalPR],
-          ['RFQ', totalRFQ],
-          ['سفارش خرید', totalPO],
-          ['آلارم باز', dash.open_alerts],
-          ['جریان باز', dash.workflow_instances],
-          ['موارد معوق', dash.overdue_workflow_instances],
-          ['موارد Escalated', dash.escalated_workflow_instances],
-          ['سفارش فروش', Object.values(dash.sales_orders_by_status || {}).reduce((a, b) => a + b, 0)],
-          ['تحویل فروش', Object.values(dash.sales_deliveries_by_status || {}).reduce((a, b) => a + b, 0)],
-          ['اسناد مالی/وصول', totalPay],
-        ];
-        cards.innerHTML = entries.map(([label, value]) => `
-          <div class="stat">
-            <div class="stat-label">${label}</div>
-            <div class="stat-value">${numberLabel(value)}</div>
-          </div>
-        `).join('');
-
-        if (appState.securityDashboard) {
-          renderSecurityDashboard();
-        }
+        const head = columns.map(c => `<th>${c.label}</th>`).join('');
+        const body = rows.map(row => `<tr>${columns.map(c => `<td>${c.render(row)}</td>`).join('')}</tr>`).join('');
+        el.innerHTML = `<table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>`;
       }
 
-      function renderTable(containerId, columns, rows, emptyText = 'موردی یافت نشد') {
-        const container = $(containerId);
-        if (!rows.length) {
-          container.innerHTML = `<div class="empty">${emptyText}</div>`;
-          return;
+      function renderHome() {
+        const dash = state.dashboard;
+        const stats = [];
+        stats.push(['کارهای منتسب', state.tasks.length]);
+        stats.push(['اقدام‌های مجاز', state.approvals.length]);
+        stats.push(['درخواست خرید', state.purchaseRequests.length]);
+        stats.push(['RFQ', state.rfqs.length]);
+        stats.push(['سفارش خرید', state.purchaseOrders.length]);
+        if (dash) {
+          stats.push(['موارد معوق', dash.overdue_workflow_instances]);
+          stats.push(['جریان باز', dash.workflow_instances]);
+          stats.push(['هشدار باز', dash.open_alerts]);
         }
-        const head = columns.map((col) => `<th>${col.label}</th>`).join('');
-        const body = rows.map((row) => `<tr>${columns.map((col) => `<td>${col.render(row)}</td>`).join('')}</tr>`).join('');
-        container.innerHTML = `<table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>`;
-      }
+        if (isSecurityRole() && state.securityDashboard) {
+          stats.push(['رخداد امنیتی باز', state.securityDashboard.open_incidents]);
+          stats.push(['کاربران قفل‌شده', state.securityDashboard.locked_usernames.length]);
+        }
+        $('home-stats').innerHTML = stats.map(([label, value]) => `<div class="stat"><div class="stat-label">${label}</div><div class="stat-value">${numberLabel(value)}</div></div>`).join('');
 
-      function renderTasks() {
-        renderTable('my-tasks-wrap', [
-          { label: 'فرایند', render: (item) => escapeHtml(item.process_name) },
-          { label: 'سند', render: (item) => `${escapeHtml(item.object_type)} #${item.object_id}` },
-          { label: 'وضعیت جاری', render: (item) => escapeHtml(valueLabel(item.current_state)) },
-          { label: 'مالک فعلی', render: (item) => escapeHtml(item.current_owner || '-') },
-          { label: 'رهگیری', render: (item) => `<button class="mini-btn secondary" onclick="portalOpenTrace('${item.object_type}', ${item.object_id})">رهگیری</button>` },
-        ], appState.tasks, 'فعلاً کاری به نام شما باز نیست.');
+        const quick = [];
+        if (state.approvals.length) quick.push(['کارتابل', 'inbox']);
+        if (['Requester','Procurement Officer','Warehouse Receiver','QC Inspector','AP Accountant'].includes(state.user?.role_code)) quick.push(['میزکار عملیات', 'procurement']);
+        if (isSecurityRole()) quick.push(['امنیت و کاربران', 'security']);
+        quick.push(['رهگیری فرایند', 'trace']);
+        $('role-quick-actions').innerHTML = quick.map(([label, page]) => `<button class="secondary" onclick="portalOpenPage('${page}')">${label}</button>`).join('');
 
-        renderTable('approvals-wrap', [
-          { label: 'فرایند', render: (item) => escapeHtml(item.process_name) },
-          { label: 'سند', render: (item) => `${escapeHtml(item.object_type)} #${item.object_id}` },
-          { label: 'مرحله', render: (item) => escapeHtml(valueLabel(item.current_state)) },
-          { label: 'اقدام‌های مجاز', render: (item) => approvalButtons(item) },
-        ], appState.approvals, 'طبق نقش فعلی، فعلاً موردی برای اقدام وجود ندارد.');
+        renderTable('home-inbox-wrap', [
+          { label: 'فرایند', render: row => escapeHtml(row.process_name) },
+          { label: 'سند', render: row => `${escapeHtml(row.object_type)} #${row.object_id}` },
+          { label: 'وضعیت', render: row => escapeHtml(valueLabel(row.current_state)) },
+          { label: 'اقدام', render: row => `<button class="mini-btn secondary" onclick="portalOpenPage('inbox')">ورود به کارتابل</button>` },
+        ], state.tasks.slice(0, 5), 'در حال حاضر مورد منتسبی به کاربر جاری وجود ندارد.');
       }
 
       function approvalButtons(item) {
-        return (item.available_actions || []).map((action) => {
-          const direct = directActionSupported(action, item.object_type);
-          const label = actionLabel(action);
-          if (direct) {
-            return `<button class="mini-btn primary" onclick="portalRunAction('${action}', '${item.object_type}', ${item.object_id})">${label}</button>`;
+        return (item.available_actions || []).map(action => {
+          if (directActionSupported(action, item.object_type)) {
+            return `<button class="mini-btn primary" onclick="portalRunAction('${action}', '${item.object_type}', ${item.object_id})">${actionLabel(action)}</button>`;
           }
-          return `<button class="mini-btn secondary" onclick="portalPrefillAction('${action}', '${item.object_type}', ${item.object_id})">${label}</button>`;
+          return `<button class="mini-btn secondary" onclick="portalPrepareAction('${action}', '${item.object_type}', ${item.object_id})">${actionLabel(action)}</button>`;
         }).join(' ');
       }
 
-      function actionLabel(action) {
-        const labels = {
-          submit: 'ارسال',
-          route_review: 'ارجاع/بررسی',
-          approve: 'تأیید',
-          create_rfq: 'فرم RFQ',
-          record_quotes: 'فرم ثبت پیشنهادها',
-          commercial_eval: 'فرم ارزیابی بازرگانی',
-          technical_eval: 'تأیید فنی',
-          approve_price: 'تأیید قیمت',
-          issue_po: 'فرم صدور PO',
-          record_receipt: 'فرم دریافت',
-          accept_qc: 'فرم QC',
-          reject_qc: 'فرم QC',
-          match_invoice: 'فرم تطبیق فاکتور',
-          approve_payment: 'تأیید پرداخت',
-          execute_payment: 'اجرای پرداخت',
-        };
-        return labels[action] || action;
+      function renderInbox() {
+        renderTable('my-tasks-wrap', [
+          { label: 'فرایند', render: r => escapeHtml(r.process_name) },
+          { label: 'سند', render: r => `${escapeHtml(r.object_type)} #${r.object_id}` },
+          { label: 'مرحله', render: r => escapeHtml(valueLabel(r.current_state)) },
+          { label: 'مالک', render: r => escapeHtml(r.current_owner || '-') },
+          { label: 'رهگیری', render: r => `<button class="mini-btn ghost" onclick="portalTrace('${r.object_type}', ${r.object_id})">رهگیری</button>` },
+        ], state.tasks, 'در حال حاضر موردی در کارتابل این کاربر وجود ندارد.');
+
+        renderTable('approvals-wrap', [
+          { label: 'فرایند', render: r => escapeHtml(r.process_name) },
+          { label: 'سند', render: r => `${escapeHtml(r.object_type)} #${r.object_id}` },
+          { label: 'مرحله', render: r => escapeHtml(valueLabel(r.current_state)) },
+          { label: 'اقدام‌ها', render: r => approvalButtons(r) },
+        ], state.approvals, 'برای نقش جاری فعلاً موردی برای اقدام موجود نیست.');
+      }
+
+      function buildProcTabs() {
+        const role = state.user?.role_code;
+        const visible = PROC_TABS.filter(tab => tab.roles.includes(role));
+        const container = $('proc-tabs');
+        if (!visible.length) {
+          container.innerHTML = '<div class="empty">برای این نقش، عملیات تخصصی در این بخش تعریف نشده و مسیر اصلی از کارتابل انجام می‌شود.</div>';
+          document.querySelectorAll('.proc-panel').forEach(el => el.classList.add('hidden'));
+          return;
+        }
+        if (!visible.some(tab => tab.id === state.activeProcTab)) state.activeProcTab = visible[0].id;
+        container.innerHTML = visible.map(tab => `<button class="secondary ${state.activeProcTab===tab.id?'active':''}" onclick="portalOpenProcTab('${tab.id}')">${tab.label}</button>`).join('');
+        document.querySelectorAll('.proc-panel').forEach(el => el.classList.toggle('hidden', el.id !== `proc-${state.activeProcTab}`));
+      }
+
+      function buildSecurityTabs() {
+        const container = $('security-tabs');
+        if (!isSecurityRole()) {
+          container.innerHTML = '';
+          document.querySelectorAll('.security-panel').forEach(el => el.classList.add('hidden'));
+          return;
+        }
+        container.innerHTML = SECURITY_TABS.map(tab => `<button class="secondary ${state.activeSecurityTab===tab.id?'active':''}" onclick="portalOpenSecurityTab('${tab.id}')">${tab.label}</button>`).join('');
+        document.querySelectorAll('.security-panel').forEach(el => el.classList.toggle('hidden', el.id !== `sec-${state.activeSecurityTab}`));
+      }
+
+      function purchaseRequestActions(item) {
+        const buttons = [`<button class="mini-btn ghost" onclick="portalTrace('PurchaseRequest', ${item.id})">رهگیری</button>`];
+        if (state.user?.role_code === 'Requester' && item.requester === state.user.username && item.status === 'draft') {
+          buttons.unshift(`<button class="mini-btn primary" onclick="portalSubmitPR(${item.id})">ارسال</button>`);
+        }
+        if (state.user?.role_code === 'Procurement Officer') {
+          buttons.unshift(`<button class="mini-btn secondary" onclick="portalPrepareAction('create_rfq', 'PurchaseRequest', ${item.id})">به RFQ</button>`);
+        }
+        return buttons.join(' ');
+      }
+
+      function rfqActions(item) {
+        const buttons = [`<button class="mini-btn ghost" onclick="portalTrace('RFQ', ${item.id})">رهگیری</button>`];
+        if (state.user?.role_code === 'Procurement Officer') {
+          buttons.unshift(`<button class="mini-btn secondary" onclick="portalPrepareAction('issue_po', 'RFQ', ${item.id})">صدور PO</button>`);
+          buttons.unshift(`<button class="mini-btn secondary" onclick="portalPrepareAction('commercial_eval', 'RFQ', ${item.id})">ارزیابی</button>`);
+          buttons.unshift(`<button class="mini-btn secondary" onclick="portalPrepareAction('record_quotes', 'RFQ', ${item.id})">ثبت پیشنهادها</button>`);
+        }
+        return buttons.join(' ');
+      }
+
+      function renderOperationsTables() {
+        renderTable('purchase-requests-wrap', [
+          { label: 'درخواست', render: r => `PR #${r.id}<br><span class="muted">${escapeHtml(r.code)}</span>` },
+          { label: 'درخواست‌کننده', render: r => escapeHtml(r.requester) },
+          { label: 'وضعیت', render: r => escapeHtml(valueLabel(r.status)) },
+          { label: 'مبلغ', render: r => numberLabel(r.total_estimated_amount) },
+          { label: 'عملیات', render: r => purchaseRequestActions(r) },
+        ], state.purchaseRequests.slice().sort((a,b)=>b.id-a.id), 'درخواست خریدی ثبت نشده است.');
+
+        renderTable('rfqs-wrap', [
+          { label: 'RFQ', render: r => `RFQ #${r.id}<br><span class="muted">${escapeHtml(r.code)}</span>` },
+          { label: 'PR', render: r => r.purchase_request_id },
+          { label: 'خریدار', render: r => escapeHtml(r.buyer) },
+          { label: 'وضعیت', render: r => escapeHtml(valueLabel(r.status)) },
+          { label: 'عملیات', render: r => rfqActions(r) },
+        ], state.rfqs.slice().sort((a,b)=>b.id-a.id), 'RFQی ثبت نشده است.');
+
+        renderTable('purchase-orders-wrap', [
+          { label: 'PO', render: r => `PO #${r.id}<br><span class="muted">${escapeHtml(r.code)}</span>` },
+          { label: 'RFQ', render: r => r.rfq_id },
+          { label: 'تامین‌کننده', render: r => r.supplier_id },
+          { label: 'وضعیت', render: r => escapeHtml(valueLabel(r.status)) },
+          { label: 'عملیات', render: r => `<button class="mini-btn secondary" onclick="portalPrepareAction('record_receipt', 'PO', ${r.id})">دریافت</button> <button class="mini-btn ghost" onclick="portalTrace('PO', ${r.id})">رهگیری</button>` },
+        ], state.purchaseOrders.slice().sort((a,b)=>b.id-a.id), 'سفارش خریدی ثبت نشده است.');
+
+        renderTable('goods-receipts-wrap', [
+          { label: 'رسید', render: r => `GR #${r.id}<br><span class="muted">${escapeHtml(r.code)}</span>` },
+          { label: 'PO', render: r => r.purchase_order_id },
+          { label: 'مقدار', render: r => numberLabel(r.received_qty) },
+          { label: 'وضعیت', render: r => escapeHtml(valueLabel(r.status)) },
+          { label: 'عملیات', render: r => `<button class="mini-btn secondary" onclick="portalPrepareAction('accept_qc', 'GoodsReceipt', ${r.id})">QC</button> <button class="mini-btn ghost" onclick="portalTrace('GoodsReceipt', ${r.id})">رهگیری</button>` },
+        ], state.goodsReceipts.slice().sort((a,b)=>b.id-a.id), 'رسید کالایی ثبت نشده است.');
+
+        renderTable('quality-wrap', [
+          { label: 'QC', render: r => `QC #${r.id}<br><span class="muted">${escapeHtml(r.code)}</span>` },
+          { label: 'رسید', render: r => r.goods_receipt_id },
+          { label: 'نتیجه', render: r => escapeHtml(valueLabel(r.result)) },
+          { label: 'وضعیت', render: r => escapeHtml(valueLabel(r.status)) },
+          { label: 'رهگیری', render: r => `<button class="mini-btn ghost" onclick="portalTrace('QualityInspection', ${r.id})">رهگیری</button>` },
+        ], state.qualityInspections.slice().sort((a,b)=>b.id-a.id), 'پرونده QC وجود ندارد.');
+
+        renderTable('invoices-wrap', [
+          { label: 'فاکتور', render: r => `INV #${r.id}<br><span class="muted">${escapeHtml(r.invoice_no)}</span>` },
+          { label: 'PO/GR', render: r => `${r.purchase_order_id} / ${r.goods_receipt_id}` },
+          { label: 'مبلغ', render: r => numberLabel(r.total_amount) },
+          { label: 'وضعیت', render: r => escapeHtml(valueLabel(r.status)) },
+          { label: 'عملیات', render: r => `<button class="mini-btn secondary" onclick="portalPrepareAction('match_invoice', 'SupplierInvoice', ${r.id})">تطبیق/پرداخت</button> <button class="mini-btn ghost" onclick="portalTrace('SupplierInvoice', ${r.id})">رهگیری</button>` },
+        ], state.supplierInvoices.slice().sort((a,b)=>b.id-a.id), 'فاکتور تامین‌کننده ثبت نشده است.');
+
+        renderTable('payments-wrap', [
+          { label: 'پرداخت', render: r => `PAY #${r.id}<br><span class="muted">${escapeHtml(r.code)}</span>` },
+          { label: 'فاکتور', render: r => r.supplier_invoice_id },
+          { label: 'مبلغ', render: r => numberLabel(r.amount) },
+          { label: 'وضعیت', render: r => escapeHtml(valueLabel(r.status)) },
+          { label: 'اقدام', render: r => `<button class="mini-btn ghost" onclick="portalTrace('Payment', ${r.id})">رهگیری</button>` },
+        ], state.payments.slice().sort((a,b)=>b.id-a.id), 'پرداختی ثبت نشده است.');
+      }
+
+      function renderSessions(containerId, sessions, emptyText) {
+        renderTable(containerId, [
+          { label: 'شناسه', render: s => s.id },
+          { label: 'کاربر', render: s => escapeHtml(s.username) },
+          { label: 'ایجاد', render: s => escapeHtml(s.created_at) },
+          { label: 'انقضا', render: s => escapeHtml(s.expires_at) },
+          { label: 'وضعیت', render: s => s.is_active ? 'فعال' : 'غیرفعال' },
+          { label: 'عملیات', render: s => s.is_active ? `<button class="mini-btn danger" onclick="portalRevokeSession(${s.id})">ابطال نشست</button>` : '-' },
+        ], sessions, emptyText);
+      }
+
+      function renderUsers() {
+        renderTable('users-wrap', [
+          { label: 'کاربر', render: u => `${escapeHtml(u.username)}<br><span class="muted">${escapeHtml(u.full_name)}</span>` },
+          { label: 'نقش', render: u => escapeHtml(roleLabel(u.role_code)) },
+          { label: 'واحد', render: u => escapeHtml(u.department_code || '-') },
+          { label: 'وضعیت', render: u => escapeHtml(u.status) },
+          { label: 'اقدام', render: u => `<button class="mini-btn secondary" onclick="portalSelectUser('${u.username}')">انتخاب</button>` },
+        ], state.users, 'کاربری برای نمایش وجود ندارد.');
+      }
+
+      function renderSecurityOverview() {
+        const sec = state.securityDashboard;
+        if (!sec) {
+          $('security-cards').innerHTML = '<div class="empty">داشبورد امنیت برای این نقش قابل دسترس نیست.</div>';
+          $('security-summary-box').innerHTML = '';
+          $('security-events-wrap').innerHTML = '<div class="empty">-</div>';
+          return;
+        }
+        const cards = [
+          ['توکن فعال', sec.active_tokens],
+          ['توکن ابطال‌شده', sec.revoked_tokens],
+          ['توکن منقضی', sec.expired_tokens],
+          ['رخداد باز', sec.open_incidents],
+          ['رخداد بحرانی', sec.critical_open_incidents],
+          ['ورود موفق 24h', sec.login_successes_24h],
+          ['ورود ناموفق 24h', sec.login_failures_24h],
+          ['Blockهای نرخ', sec.rate_limit_blocks_24h],
+          ['توکن نامعتبر', sec.invalid_token_events_24h],
+          ['رفتار مشکوک', sec.suspicious_events_24h],
+        ];
+        $('security-cards').innerHTML = cards.map(([label, value]) => `<div class="stat"><div class="stat-label">${label}</div><div class="stat-value">${numberLabel(value)}</div></div>`).join('');
+        $('security-summary-box').innerHTML = `
+          <div>کاربران قفل‌شده: <strong>${sec.locked_usernames.length ? sec.locked_usernames.map(escapeHtml).join('، ') : 'هیچ‌کدام'}</strong></div>
+          <div style="margin-top:8px;">رخداد امنیتی باز: <strong>${numberLabel(sec.open_incidents)}</strong></div>
+        `;
+        renderTable('security-events-wrap', [
+          { label: 'زمان', render: r => escapeHtml(r.event_time) },
+          { label: 'کاربر', render: r => escapeHtml(r.username || '-') },
+          { label: 'رویداد', render: r => escapeHtml(r.action) },
+          { label: 'توضیح', render: r => escapeHtml(r.reason || '-') },
+        ], sec.recent_events || [], 'رویداد امنیتی اخیر موجود نیست.');
+      }
+
+      function renderIncidents() {
+        renderTable('incidents-wrap', [
+          { label: 'رخداد', render: i => `${escapeHtml(i.code)}<br><span class="muted">${escapeHtml(i.title)}</span>` },
+          { label: 'نوع/شدت', render: i => `${escapeHtml(i.incident_type)}<br><span class="muted">${escapeHtml(i.severity)}</span>` },
+          { label: 'مسئول', render: i => escapeHtml(i.assigned_to || '-') },
+          { label: 'وضعیت', render: i => escapeHtml(valueLabel(i.status)) },
+          { label: 'اقدام', render: i => `<button class="mini-btn secondary" onclick="portalSelectIncident(${i.id})">انتخاب</button>` },
+        ], state.incidents, 'رخداد امنیتی ثبت نشده است.');
+      }
+
+      function renderAudit() {
+        renderTable('audit-wrap', [
+          { label: 'زمان', render: a => escapeHtml(a.event_time) },
+          { label: 'کاربر', render: a => escapeHtml(a.user_name || '-') },
+          { label: 'موجودیت', render: a => `${escapeHtml(a.entity_name)}<br><span class="muted">${escapeHtml(a.entity_id)}</span>` },
+          { label: 'اقدام', render: a => escapeHtml(a.action) },
+          { label: 'توضیح', render: a => escapeHtml(a.reason || a.new_value || a.old_value || '-') },
+        ], state.auditResults, state.auditCount === 0 ? 'نتیجه‌ای یافت نشد.' : '');
+      }
+
+      function renderTrace() {
+        const response = state.trace;
+        if (!response || !response.overview) {
+          $('trace-overview').innerHTML = '<div class="empty">ابتدا نوع سند و شناسه را وارد کن.</div>';
+          $('trace-docs-wrap').innerHTML = '<div class="empty">-</div>';
+          $('trace-timeline').innerHTML = '<div class="empty">-</div>';
+          return;
+        }
+        const o = response.overview;
+        const cards = [
+          ['فرایند', o.process_name], ['سند ریشه', `${o.root_object_type} #${o.root_object_id}`], ['سند فعال', o.active_object_type ? `${o.active_object_type} #${o.active_object_id}` : '-'],
+          ['مرحله جاری', valueLabel(o.current_state)], ['مالک جاری', o.current_owner || '-'], ['نقش جاری', roleLabel(o.current_role)],
+          ['هشدار باز', o.open_alerts], ['اسناد مرتبط', o.linked_document_count], ['وضعیت معوق', o.is_overdue ? 'بله' : 'خیر']
+        ];
+        $('trace-overview').innerHTML = cards.map(([l,v]) => `<div class="stat"><div class="stat-label">${escapeHtml(l)}</div><div class="stat-value" style="font-size:18px;">${escapeHtml(String(v ?? '-'))}</div></div>`).join('');
+        renderTable('trace-docs-wrap', [
+          { label: 'سند', render: d => `${escapeHtml(d.object_type)} #${d.object_id}<br><span class="muted">${escapeHtml(d.code)}</span>` },
+          { label: 'رابطه', render: d => escapeHtml(valueLabel(d.relation)) },
+          { label: 'وضعیت', render: d => escapeHtml(valueLabel(d.status)) },
+          { label: 'مرحله', render: d => escapeHtml(valueLabel(d.current_state)) },
+          { label: 'مالک', render: d => escapeHtml(d.current_owner || '-') },
+        ], response.linked_documents || [], 'سند مرتبطی یافت نشد.');
+        const timeline = response.timeline || [];
+        $('trace-timeline').innerHTML = timeline.length ? timeline.map(t => `
+          <div class="timeline-item">
+            <strong>${escapeHtml(t.event_type)}</strong>
+            <div class="muted small">${escapeHtml(t.event_time || '-')} | ${escapeHtml(t.source_type || '-')} ${t.source_id ? '#' + t.source_id : ''}</div>
+            <div>${escapeHtml(t.actor || '-')} ${t.status ? '| ' + escapeHtml(t.status) : ''}</div>
+            <div class="muted">${escapeHtml(t.message || '')}</div>
+          </div>
+        `).join('') : '<div class="empty">تایم‌لاین برای این مورد خالی است.</div>';
+      }
+
+      function populateSelect(id, items, mapper, placeholder='انتخاب کنید') {
+        const select = $(id); if (!select) return;
+        select.innerHTML = [`<option value="">${placeholder}</option>`, ...items.map(mapper)].join('');
+      }
+
+      function refreshSelectors() {
+        populateSelect('rfq-pr-select', state.purchaseRequests.filter(x => x.status === 'approved'), item => `<option value="${item.id}">PR #${item.id} | ${escapeHtml(item.code)} | ${escapeHtml(item.status)}</option>`, 'درخواست خرید تاییدشده را انتخاب کنید');
+        populateSelect('quote-rfq-select', state.rfqs, item => `<option value="${item.id}">RFQ #${item.id} | ${escapeHtml(item.code)}</option>`, 'RFQ را انتخاب کنید');
+        populateSelect('record-rfq-select', state.rfqs, item => `<option value="${item.id}">RFQ #${item.id} | ${escapeHtml(item.code)}</option>`, 'RFQ را انتخاب کنید');
+        populateSelect('commercial-rfq-select', state.rfqs, item => `<option value="${item.id}">RFQ #${item.id} | ${escapeHtml(item.code)}</option>`, 'RFQ را انتخاب کنید');
+        populateSelect('po-rfq-select', state.rfqs, item => `<option value="${item.id}">RFQ #${item.id} | ${escapeHtml(item.code)}</option>`, 'RFQ را انتخاب کنید');
+        populateSelect('receipt-po-select', state.purchaseOrders, item => `<option value="${item.id}">PO #${item.id} | ${escapeHtml(item.code)}</option>`, 'سفارش خرید را انتخاب کنید');
+        populateSelect('qc-gr-select', state.goodsReceipts, item => `<option value="${item.id}">GR #${item.id} | ${escapeHtml(item.code)}</option>`, 'رسید کالا را انتخاب کنید');
+        populateSelect('qc-finalize-select', state.qualityInspections, item => `<option value="${item.id}">QC #${item.id} | ${escapeHtml(item.code)} | ${escapeHtml(item.status)}</option>`, 'پرونده QC را انتخاب کنید');
+        populateSelect('invoice-po-select', state.purchaseOrders, item => `<option value="${item.id}">PO #${item.id} | ${escapeHtml(item.code)}</option>`, 'PO را انتخاب کنید');
+        populateSelect('invoice-gr-select', state.goodsReceipts, item => `<option value="${item.id}">GR #${item.id} | ${escapeHtml(item.code)}</option>`, 'رسید را انتخاب کنید');
+        populateSelect('match-invoice-select', state.supplierInvoices, item => `<option value="${item.id}">INV #${item.id} | ${escapeHtml(item.invoice_no)} | ${escapeHtml(item.status)}</option>`, 'فاکتور را انتخاب کنید');
+        populateSelect('payment-invoice-select', state.supplierInvoices, item => `<option value="${item.id}">INV #${item.id} | ${escapeHtml(item.invoice_no)}</option>`, 'فاکتور را انتخاب کنید');
+        populateSelect('quote-supplier-select', state.suppliers, item => `<option value="${item.id}">${escapeHtml(item.code)} | ${escapeHtml(item.name)}</option>`, 'تامین‌کننده را انتخاب کنید');
+        populateSelect('invoice-supplier-select', state.suppliers, item => `<option value="${item.id}">${escapeHtml(item.code)} | ${escapeHtml(item.name)}</option>`, 'تامین‌کننده را انتخاب کنید');
+        populateSelect('user-role-select', USER_ROLE_OPTIONS, role => `<option value="${role}">${escapeHtml(roleLabel(role))}</option>`, 'نقش را انتخاب کنید');
+        populateSelect('edit-role-select', USER_ROLE_OPTIONS, role => `<option value="${role}">${escapeHtml(roleLabel(role))}</option>`, 'نقش را انتخاب کنید');
+      }
+
+      async function loadRfqDetailToSelects(rfqId, selectIds) {
+        if (!rfqId) {
+          selectIds.forEach(id => populateSelect(id, [], () => '', 'ابتدا RFQ را انتخاب کنید'));
+          return;
+        }
+        if (!state.rfqDetails[rfqId]) state.rfqDetails[rfqId] = await api(`/rfqs/${rfqId}`);
+        const detail = state.rfqDetails[rfqId];
+        selectIds.forEach(id => populateSelect(id, detail.quotations || [], quote => `<option value="${quote.id}">Quote #${quote.id} | مبلغ ${numberLabel(quote.total_amount)} | تامین‌کننده ${quote.supplier_id}</option>`, 'پیشنهاد را انتخاب کنید'));
       }
 
       function directActionSupported(action, objectType) {
@@ -1147,245 +1343,52 @@
       }
 
       async function runDirectAction(action, objectType, objectId) {
-        const actor = appState.user.username;
-        const actorRole = appState.user.role_code;
-        const note = $('approval-note').value || undefined;
+        const body = { actor: state.user.username, actor_role: state.user.role_code, note: $('approval-note').value || undefined };
         let path = null;
-        let body = { actor, actor_role: actorRole, note };
-
         if (action === 'route_review' && objectType === 'PurchaseRequest') path = `/purchase-requests/${objectId}/route-review`;
         if (action === 'approve' && objectType === 'PurchaseRequest') path = `/purchase-requests/${objectId}/approve`;
         if (action === 'technical_eval' && objectType === 'RFQ') path = `/rfqs/${objectId}/technical-approve`;
         if (action === 'approve_price' && objectType === 'RFQ') path = `/rfqs/${objectId}/price-approve`;
         if (action === 'approve_payment' && objectType === 'Payment') path = `/payments/${objectId}/approve`;
         if (action === 'execute_payment' && objectType === 'Payment') path = `/payments/${objectId}/execute`;
-
-        if (!path) {
-          throw new Error('برای این اقدام باید از فرم اختصاصی همان مرحله استفاده شود.');
-        }
+        if (!path) throw new Error('برای این اقدام باید از فرم تخصصی همان مرحله استفاده شود.');
         await api(path, { method: 'POST', body });
       }
 
-      function renderProcurementTables() {
-        const prs = appState.records.purchaseRequests.slice().sort((a, b) => b.id - a.id);
-        const rfqs = appState.records.rfqs.slice().sort((a, b) => b.id - a.id);
-        const pos = appState.records.purchaseOrders.slice().sort((a, b) => b.id - a.id);
-        const receipts = appState.records.goodsReceipts.slice().sort((a, b) => b.id - a.id);
-        const qcs = appState.records.qualityInspections.slice().sort((a, b) => b.id - a.id);
-        const invoices = appState.records.supplierInvoices.slice().sort((a, b) => b.id - a.id);
-        const payments = appState.records.payments.slice().sort((a, b) => b.id - a.id);
-
-        renderTable('purchase-requests-wrap', [
-          { label: 'شناسه', render: (item) => `PR #${item.id}<br><span class="muted">${escapeHtml(item.code)}</span>` },
-          { label: 'درخواست‌کننده', render: (item) => escapeHtml(item.requester) },
-          { label: 'وضعیت', render: (item) => escapeHtml(valueLabel(item.status)) },
-          { label: 'مبلغ', render: (item) => numberLabel(item.total_estimated_amount) },
-          { label: 'عملیات', render: (item) => purchaseRequestActions(item) },
-        ], prs, 'درخواست خریدی ثبت نشده است.');
-
-        renderTable('rfqs-wrap', [
-          { label: 'شناسه', render: (item) => `RFQ #${item.id}<br><span class="muted">${escapeHtml(item.code)}</span>` },
-          { label: 'PR', render: (item) => item.purchase_request_id },
-          { label: 'خریدار', render: (item) => escapeHtml(item.buyer) },
-          { label: 'وضعیت', render: (item) => escapeHtml(valueLabel(item.status)) },
-          { label: 'عملیات', render: (item) => rfqActions(item) },
-        ], rfqs, 'RFQای ثبت نشده است.');
-
-        renderTable('purchase-orders-wrap', [
-          { label: 'شناسه', render: (item) => `PO #${item.id}<br><span class="muted">${escapeHtml(item.code)}</span>` },
-          { label: 'RFQ', render: (item) => item.rfq_id },
-          { label: 'تأمین‌کننده', render: (item) => item.supplier_id },
-          { label: 'وضعیت', render: (item) => escapeHtml(valueLabel(item.status)) },
-          { label: 'عملیات', render: (item) => `<button class="mini-btn secondary" onclick="portalPrefillAction('record_receipt', 'PO', ${item.id})">استفاده در دریافت</button> <button class="mini-btn ghost" onclick="portalOpenTrace('PO', ${item.id})">رهگیری</button>` },
-        ], pos, 'سفارش خریدی ثبت نشده است.');
-
-        renderTable('goods-receipts-wrap', [
-          { label: 'رسید', render: (item) => `GR #${item.id}<br><span class="muted">${escapeHtml(item.code)}</span>` },
-          { label: 'PO', render: (item) => item.purchase_order_id },
-          { label: 'مقدار', render: (item) => numberLabel(item.received_qty) },
-          { label: 'وضعیت', render: (item) => escapeHtml(valueLabel(item.status)) },
-          { label: 'عملیات', render: (item) => `<button class="mini-btn secondary" onclick="portalPrefillAction('accept_qc', 'GoodsReceipt', ${item.id})">استفاده در QC</button> <button class="mini-btn ghost" onclick="portalOpenTrace('GoodsReceipt', ${item.id})">رهگیری</button>` },
-        ], receipts, 'رسید کالایی ثبت نشده است.');
-
-        renderTable('quality-wrap', [
-          { label: 'QC', render: (item) => `QC #${item.id}<br><span class="muted">${escapeHtml(item.code)}</span>` },
-          { label: 'رسید', render: (item) => item.goods_receipt_id },
-          { label: 'نتیجه', render: (item) => escapeHtml(valueLabel(item.result || '-')) },
-          { label: 'وضعیت', render: (item) => escapeHtml(valueLabel(item.status)) },
-          { label: 'رهگیری', render: (item) => `<button class="mini-btn ghost" onclick="portalOpenTrace('QualityInspection', ${item.id})">رهگیری</button>` },
-        ], qcs, 'پرونده QCای وجود ندارد.');
-
-        renderTable('invoices-wrap', [
-          { label: 'فاکتور', render: (item) => `INV #${item.id}<br><span class="muted">${escapeHtml(item.invoice_no)}</span>` },
-          { label: 'PO/GR', render: (item) => `${item.purchase_order_id} / ${item.goods_receipt_id}` },
-          { label: 'مبلغ', render: (item) => numberLabel(item.total_amount) },
-          { label: 'وضعیت', render: (item) => escapeHtml(valueLabel(item.status)) },
-          { label: 'عملیات', render: (item) => `<button class="mini-btn secondary" onclick="portalPrefillAction('match_invoice', 'SupplierInvoice', ${item.id})">تطبیق/پرداخت</button> <button class="mini-btn ghost" onclick="portalOpenTrace('SupplierInvoice', ${item.id})">رهگیری</button>` },
-        ], invoices, 'فاکتوری ثبت نشده است.');
-
-        renderTable('payments-wrap', [
-          { label: 'پرداخت', render: (item) => `PAY #${item.id}<br><span class="muted">${escapeHtml(item.code)}</span>` },
-          { label: 'فاکتور', render: (item) => item.supplier_invoice_id },
-          { label: 'مبلغ', render: (item) => numberLabel(item.amount) },
-          { label: 'وضعیت', render: (item) => escapeHtml(valueLabel(item.status)) },
-          { label: 'رهگیری', render: (item) => `<button class="mini-btn ghost" onclick="portalOpenTrace('Payment', ${item.id})">رهگیری</button>` },
-        ], payments, 'پرداختی ثبت نشده است.');
+      function prepareAction(action, objectType, objectId) {
+        setPage('procurement');
+        if (action === 'create_rfq' && objectType === 'PurchaseRequest') { state.activeProcTab = 'sourcing'; $('rfq-pr-select').value = String(objectId); }
+        if (action === 'record_quotes' && objectType === 'RFQ') { state.activeProcTab = 'sourcing'; $('record-rfq-select').value = String(objectId); $('quote-rfq-select').value = String(objectId); }
+        if (action === 'commercial_eval' && objectType === 'RFQ') { state.activeProcTab = 'sourcing'; $('commercial-rfq-select').value = String(objectId); loadRfqDetailToSelects(String(objectId), ['commercial-quote-select']).catch(console.error); }
+        if (action === 'issue_po' && objectType === 'RFQ') { state.activeProcTab = 'sourcing'; $('po-rfq-select').value = String(objectId); loadRfqDetailToSelects(String(objectId), ['po-quote-select']).catch(console.error); }
+        if (action === 'record_receipt' && objectType === 'PO') { state.activeProcTab = 'receiving'; $('receipt-po-select').value = String(objectId); }
+        if ((action === 'accept_qc' || action === 'reject_qc') && objectType === 'GoodsReceipt') { state.activeProcTab = 'receiving'; $('qc-gr-select').value = String(objectId); }
+        if (action === 'match_invoice' && objectType === 'SupplierInvoice') { state.activeProcTab = 'finance'; $('match-invoice-select').value = String(objectId); $('payment-invoice-select').value = String(objectId); }
+        buildProcTabs();
+        showStatus($('global-status'), 'فرم مرحله مربوطه آماده شد. عملیات را از میزکار عملیات ادامه بده.', 'success');
       }
 
-      function purchaseRequestActions(item) {
-        const buttons = [`<button class="mini-btn ghost" onclick="portalOpenTrace('PurchaseRequest', ${item.id})">رهگیری</button>`];
-        if (appState.user?.role_code === 'Requester' && item.requester === appState.user.username && item.status === 'draft') {
-          buttons.unshift(`<button class="mini-btn primary" onclick="portalSubmitPurchaseRequest(${item.id})">ارسال</button>`);
-        }
-        if (appState.user?.role_code === 'Procurement Officer') {
-          buttons.unshift(`<button class="mini-btn secondary" onclick="portalPrefillAction('create_rfq', 'PurchaseRequest', ${item.id})">استفاده در RFQ</button>`);
-        }
-        return buttons.join(' ');
+      async function traceObject(objectType, objectId) {
+        state.trace = await api(`/traceability/document/${encodeURIComponent(objectType)}/${objectId}`);
+        $('trace-object-type').value = objectType;
+        $('trace-object-id').value = objectId;
+        renderTrace();
+        setPage('trace');
       }
 
-      function rfqActions(item) {
-        const buttons = [`<button class="mini-btn ghost" onclick="portalOpenTrace('RFQ', ${item.id})">رهگیری</button>`];
-        if (appState.user?.role_code === 'Procurement Officer') {
-          buttons.unshift(`<button class="mini-btn secondary" onclick="portalPrefillAction('issue_po', 'RFQ', ${item.id})">صدور PO</button>`);
-          buttons.unshift(`<button class="mini-btn secondary" onclick="portalPrefillAction('commercial_eval', 'RFQ', ${item.id})">ارزیابی بازرگانی</button>`);
-          buttons.unshift(`<button class="mini-btn secondary" onclick="portalPrefillAction('record_quotes', 'RFQ', ${item.id})">ثبت پیشنهادها</button>`);
-        }
-        return buttons.join(' ');
-      }
+      async function refreshCurrentUser() { state.user = await api('/auth/me'); }
 
-      function populateSelect(selectId, items, mapper, placeholder = 'انتخاب کنید') {
-        const select = $(selectId);
-        if (!select) return;
-        const options = [`<option value="">${placeholder}</option>`].concat(items.map(mapper));
-        select.innerHTML = options.join('');
-      }
-
-      function refreshSelectors() {
-        const prsForRFQ = appState.records.purchaseRequests.filter((item) => ['approved', 'under_review', 'submitted'].includes(item.status) || item.status === 'approved');
-        populateSelect('rfq-pr-select', prsForRFQ, (item) => `<option value="${item.id}">PR #${item.id} | ${escapeHtml(item.code)} | ${escapeHtml(item.status)}</option>`, 'درخواست خرید را انتخاب کن');
-        populateSelect('quote-rfq-select', appState.records.rfqs, (item) => `<option value="${item.id}">RFQ #${item.id} | ${escapeHtml(item.code)} | ${escapeHtml(item.status)}</option>`, 'RFQ را انتخاب کن');
-        populateSelect('record-rfq-select', appState.records.rfqs, (item) => `<option value="${item.id}">RFQ #${item.id} | ${escapeHtml(item.code)}</option>`, 'RFQ را انتخاب کن');
-        populateSelect('commercial-rfq-select', appState.records.rfqs, (item) => `<option value="${item.id}">RFQ #${item.id} | ${escapeHtml(item.code)}</option>`, 'RFQ را انتخاب کن');
-        populateSelect('po-rfq-select', appState.records.rfqs, (item) => `<option value="${item.id}">RFQ #${item.id} | ${escapeHtml(item.code)}</option>`, 'RFQ را انتخاب کن');
-        populateSelect('receipt-po-select', appState.records.purchaseOrders, (item) => `<option value="${item.id}">PO #${item.id} | ${escapeHtml(item.code)}</option>`, 'سفارش خرید را انتخاب کن');
-        populateSelect('qc-gr-select', appState.records.goodsReceipts, (item) => `<option value="${item.id}">GR #${item.id} | ${escapeHtml(item.code)}</option>`, 'رسید کالا را انتخاب کن');
-        populateSelect('qc-finalize-select', appState.records.qualityInspections, (item) => `<option value="${item.id}">QC #${item.id} | ${escapeHtml(item.code)} | ${escapeHtml(item.status)}</option>`, 'پرونده QC را انتخاب کن');
-        populateSelect('invoice-po-select', appState.records.purchaseOrders, (item) => `<option value="${item.id}">PO #${item.id} | ${escapeHtml(item.code)}</option>`, 'PO را انتخاب کن');
-        populateSelect('invoice-gr-select', appState.records.goodsReceipts, (item) => `<option value="${item.id}">GR #${item.id} | ${escapeHtml(item.code)}</option>`, 'رسید را انتخاب کن');
-        populateSelect('match-invoice-select', appState.records.supplierInvoices, (item) => `<option value="${item.id}">INV #${item.id} | ${escapeHtml(item.invoice_no)} | ${escapeHtml(item.status)}</option>`, 'فاکتور را انتخاب کن');
-        populateSelect('payment-invoice-select', appState.records.supplierInvoices, (item) => `<option value="${item.id}">INV #${item.id} | ${escapeHtml(item.invoice_no)}</option>`, 'فاکتور را انتخاب کن');
-        populateSelect('quote-supplier-select', appState.records.suppliers, (item) => `<option value="${item.id}">${escapeHtml(item.code)} | ${escapeHtml(item.name)}</option>`, 'تأمین‌کننده را انتخاب کن');
-        populateSelect('invoice-supplier-select', appState.records.suppliers, (item) => `<option value="${item.id}">${escapeHtml(item.code)} | ${escapeHtml(item.name)}</option>`, 'تأمین‌کننده را انتخاب کن');
-        populateSelect('user-role-select', USER_ROLE_OPTIONS, (role) => `<option value="${role}">${escapeHtml(roleLabel(role))}</option>`, 'نقش را انتخاب کن');
-      }
-
-      async function loadRfqDetailToSelects(rfqId, quoteSelectIds = []) {
-        if (!rfqId) {
-          quoteSelectIds.forEach((id) => populateSelect(id, [], () => '', 'ابتدا RFQ را انتخاب کن'));
-          return;
-        }
-        if (!appState.rfqDetails[rfqId]) {
-          appState.rfqDetails[rfqId] = await api(`/rfqs/${rfqId}`);
-        }
-        const detail = appState.rfqDetails[rfqId];
-        quoteSelectIds.forEach((selectId) => {
-          populateSelect(selectId, detail.quotations || [], (quote) => `<option value="${quote.id}">Quote #${quote.id} | مبلغ ${numberLabel(quote.total_amount)} | تأمین‌کننده ${quote.supplier_id}</option>`, 'پیشنهاد را انتخاب کن');
-        });
-      }
-
-      function renderUsers() {
-        renderTable('users-wrap', [
-          { label: 'کاربر', render: (item) => `${escapeHtml(item.username)}<br><span class="muted">${escapeHtml(item.full_name)}</span>` },
-          { label: 'نقش', render: (item) => escapeHtml(roleLabel(item.role_code)) },
-          { label: 'واحد', render: (item) => escapeHtml(item.department_code || '-') },
-          { label: 'وضعیت', render: (item) => escapeHtml(item.status) },
-          { label: 'عملیات', render: (item) => `<button class="mini-btn secondary" onclick="portalForceReset('${item.username}')">الزام تغییر رمز</button>` },
-        ], appState.records.users, 'فهرست کاربران قابل مشاهده نیست یا هنوز کاربری ثبت نشده است.');
-      }
-
-      function renderSecurityDashboard() {
-        const sec = appState.securityDashboard;
-        const cards = $('security-cards');
-        if (!sec) {
-          cards.innerHTML = '<div class="empty">داشبورد امنیت برای این نقش فعال نیست.</div>';
-          return;
-        }
-        const entries = [
-          ['توکن فعال', sec.active_tokens],
-          ['توکن ابطال‌شده', sec.revoked_tokens],
-          ['توکن منقضی', sec.expired_tokens],
-          ['رخداد باز', sec.open_incidents],
-          ['رخداد بحرانی باز', sec.critical_open_incidents],
-          ['ورود موفق 24h', sec.login_successes_24h],
-          ['ورود ناموفق 24h', sec.login_failures_24h],
-          ['رخداد مشکوک 24h', sec.suspicious_events_24h],
-          ['کاربران قفل‌شده', (sec.locked_usernames || []).length],
-          ['توکن نامعتبر 24h', sec.invalid_token_events_24h],
-        ];
-        cards.innerHTML = entries.map(([label, value]) => `<div class="stat"><div class="stat-label">${label}</div><div class="stat-value">${numberLabel(value)}</div></div>`).join('');
-      }
-
-      function renderSessions(containerId, items, emptyText) {
-        renderTable(containerId, [
-          { label: 'شناسه', render: (item) => item.id },
-          { label: 'کاربر', render: (item) => escapeHtml(item.username || '-') },
-          { label: 'ایجاد', render: (item) => escapeHtml(item.created_at || '-') },
-          { label: 'انقضا', render: (item) => escapeHtml(item.expires_at || '-') },
-          { label: 'وضعیت', render: (item) => item.is_active ? 'فعال' : 'غیرفعال' },
-          { label: 'عملیات', render: (item) => item.is_active ? `<button class="mini-btn danger" onclick="portalRevokeSession(${item.id})">ابطال نشست</button>` : '-' },
-        ], items, emptyText);
-      }
-
-      function renderTrace(response) {
-        if (!response || !response.overview) {
-          $('trace-overview').innerHTML = '<div class="empty">رهگیری‌ای برای نمایش وجود ندارد.</div>';
-          $('trace-docs-wrap').innerHTML = '<div class="empty">-</div>';
-          $('trace-timeline').innerHTML = '<div class="empty">-</div>';
-          return;
-        }
-        const overview = response.overview;
-        const cards = [
-          ['فرایند', overview.process_name],
-          ['سند ریشه', `${overview.root_object_type} #${overview.root_object_id}`],
-          ['سند فعال', overview.active_object_type ? `${overview.active_object_type} #${overview.active_object_id}` : '-'],
-          ['وضعیت جاری', valueLabel(overview.current_state)],
-          ['مالک جاری', overview.current_owner || '-'],
-          ['نقش جاری', roleLabel(overview.current_role)],
-        ];
-        $('trace-overview').innerHTML = cards.map(([label, value]) => `<div class="stat"><div class="stat-label">${escapeHtml(label)}</div><div class="stat-value" style="font-size:18px;">${escapeHtml(value || '-')}</div></div>`).join('');
-
-        renderTable('trace-docs-wrap', [
-          { label: 'سند', render: (item) => `${escapeHtml(item.object_type)} #${item.object_id}<br><span class="muted">${escapeHtml(item.code)}</span>` },
-          { label: 'رابطه', render: (item) => escapeHtml(valueLabel(item.relation)) },
-          { label: 'وضعیت', render: (item) => escapeHtml(valueLabel(item.status)) },
-          { label: 'مرحله', render: (item) => escapeHtml(valueLabel(item.current_state)) },
-          { label: 'مالک', render: (item) => escapeHtml(item.current_owner || '-') },
-        ], response.linked_documents || [], 'سند مرتبطی یافت نشد.');
-
-        const timelineItems = response.timeline || [];
-        $('trace-timeline').innerHTML = timelineItems.length
-          ? timelineItems.map((item) => `
-              <div class="timeline-item">
-                <strong>${escapeHtml(item.event_type)}</strong>
-                <div class="muted small">${escapeHtml(item.event_time || '-')} | ${escapeHtml(item.source_type || '-')} ${item.source_id ? '#' + item.source_id : ''}</div>
-                <div>${escapeHtml(item.actor || '-')} ${item.status ? ' | ' + escapeHtml(item.status) : ''}</div>
-                <div class="muted">${escapeHtml(item.message || '')}</div>
-              </div>
-            `).join('')
-          : '<div class="empty">رویدادی برای تایم‌لاین ثبت نشده است.</div>';
-      }
-
-      async function loadWorkspace() {
+      async function loadAll() {
         renderHeader();
-        toggleSectionsForRole();
-        buildMenu();
-        refreshSelectors();
-        if (appState.user?.password_reset_required) {
-          showStatus(globalStatus, 'این کاربر باید قبل از کار عملیاتی، کلمه عبور را تغییر دهد.', 'warning');
-          return;
+        buildNav();
+        if (state.user?.password_reset_required) {
+          setPage('profile');
+          showStatus($('global-status'), 'این کاربر تا زمان تغییر رمز عبور فقط به صفحه حساب کاربری دسترسی دارد.', 'warning');
+        } else {
+          hideStatus($('global-status'));
         }
-        hideStatus(globalStatus);
-        const results = await Promise.allSettled([
+
+        const requests = [
           api('/dashboard/summary'),
           api('/inbox/my-tasks'),
           api('/inbox/approvals'),
@@ -1398,517 +1401,360 @@
           api('/payments'),
           api('/suppliers'),
           api('/alerts/my').catch(() => []),
-          ['Master Data Admin', 'Security Officer'].includes(appState.user?.role_code) ? api('/users') : Promise.resolve([]),
-          ['Master Data Admin', 'Security Officer'].includes(appState.user?.role_code) ? api('/security/dashboard') : Promise.resolve(null),
           api('/security/my-sessions').catch(() => ({ items: [] })),
-        ]);
+        ];
+        if (isSecurityRole()) {
+          requests.push(api('/users'));
+          requests.push(api('/security/dashboard'));
+          requests.push(api('/security/incidents'));
+          requests.push(api('/audit/events?limit=50'));
+        }
+        const res = await Promise.allSettled(requests);
+        let idx = 0;
+        state.dashboard = res[idx++].status==='fulfilled' ? res[idx-1].value : null;
+        state.tasks = res[idx++].status==='fulfilled' ? res[idx-1].value : [];
+        state.approvals = res[idx++].status==='fulfilled' ? res[idx-1].value : [];
+        state.purchaseRequests = res[idx++].status==='fulfilled' ? res[idx-1].value : [];
+        state.rfqs = res[idx++].status==='fulfilled' ? res[idx-1].value : [];
+        state.purchaseOrders = res[idx++].status==='fulfilled' ? res[idx-1].value : [];
+        state.goodsReceipts = res[idx++].status==='fulfilled' ? res[idx-1].value : [];
+        state.qualityInspections = res[idx++].status==='fulfilled' ? res[idx-1].value : [];
+        state.supplierInvoices = res[idx++].status==='fulfilled' ? res[idx-1].value : [];
+        state.payments = res[idx++].status==='fulfilled' ? res[idx-1].value : [];
+        state.suppliers = res[idx++].status==='fulfilled' ? res[idx-1].value : [];
+        state.alerts = res[idx++].status==='fulfilled' ? res[idx-1].value : [];
+        state.mySessions = res[idx++].status==='fulfilled' ? (res[idx-1].value.items || []) : [];
+        if (isSecurityRole()) {
+          state.users = res[idx++].status==='fulfilled' ? res[idx-1].value : [];
+          state.securityDashboard = res[idx++].status==='fulfilled' ? res[idx-1].value : null;
+          state.incidents = res[idx++].status==='fulfilled' ? res[idx-1].value : [];
+          const auditResp = res[idx++].status==='fulfilled' ? res[idx-1].value : { items: [], total_count: 0 };
+          state.auditResults = auditResp.items || [];
+          state.auditCount = auditResp.total_count || 0;
+        } else {
+          state.users = []; state.securityDashboard = null; state.incidents = []; state.auditResults = []; state.auditCount = 0;
+        }
 
-        const [dashboardRes, tasksRes, approvalsRes, prRes, rfqRes, poRes, grRes, qcRes, invRes, payRes, supplierRes, alertRes, usersRes, securityRes, mySessionsRes] = results;
-        appState.dashboard = dashboardRes.status === 'fulfilled' ? dashboardRes.value : null;
-        appState.tasks = tasksRes.status === 'fulfilled' ? tasksRes.value : [];
-        appState.approvals = approvalsRes.status === 'fulfilled' ? approvalsRes.value : [];
-        appState.records.purchaseRequests = prRes.status === 'fulfilled' ? prRes.value : [];
-        appState.records.rfqs = rfqRes.status === 'fulfilled' ? rfqRes.value : [];
-        appState.records.purchaseOrders = poRes.status === 'fulfilled' ? poRes.value : [];
-        appState.records.goodsReceipts = grRes.status === 'fulfilled' ? grRes.value : [];
-        appState.records.qualityInspections = qcRes.status === 'fulfilled' ? qcRes.value : [];
-        appState.records.supplierInvoices = invRes.status === 'fulfilled' ? invRes.value : [];
-        appState.records.payments = payRes.status === 'fulfilled' ? payRes.value : [];
-        appState.records.suppliers = supplierRes.status === 'fulfilled' ? supplierRes.value : [];
-        appState.records.alerts = alertRes.status === 'fulfilled' ? alertRes.value : [];
-        appState.records.users = usersRes.status === 'fulfilled' ? usersRes.value : [];
-        appState.securityDashboard = securityRes.status === 'fulfilled' ? securityRes.value : null;
-        appState.mySessions = mySessionsRes.status === 'fulfilled' ? (mySessionsRes.value.items || []) : [];
-
-        renderDashboard();
-        renderTasks();
-        renderProcurementTables();
         refreshSelectors();
+        renderHome();
+        renderInbox();
+        buildProcTabs();
+        buildSecurityTabs();
+        renderOperationsTables();
         renderUsers();
-        renderSessions('my-sessions-wrap', appState.mySessions, 'نشستی یافت نشد.');
-        renderSecurityDashboard();
-      }
-
-      async function refreshCurrentUser() {
-        appState.user = await api('/auth/me');
-        return appState.user;
+        renderSecurityOverview();
+        renderIncidents();
+        renderAudit();
+        renderSessions('my-sessions-wrap', state.mySessions, 'نشستی برای کاربر جاری یافت نشد.');
+        renderSessions('profile-sessions-wrap', state.mySessions, 'نشستی برای کاربر جاری یافت نشد.');
+        renderSessions('user-sessions-wrap', state.userSessions, 'نشست کاربر انتخاب‌شده نمایش داده می‌شود.');
+        renderTrace();
       }
 
       async function login(username, password) {
         const payload = await api('/auth/login', { method: 'POST', body: { username, password }, auth: false });
         setToken(payload.access_token || '');
         await refreshCurrentUser();
-        switchToWorkspace();
-        await loadWorkspace();
-        showStatus(globalStatus, `ورود با موفقیت انجام شد. نقش جاری: ${roleLabel(appState.user.role_code)}`, 'success');
+        switchToApp();
+        state.activePage = defaultPageForRole();
+        await loadAll();
+        setPage(defaultPageForRole());
+        showStatus($('global-status'), `ورود با موفقیت انجام شد. نقش جاری: ${roleLabel(state.user?.role_code)}`, 'success');
       }
 
       async function logout() {
-        try {
-          if (appState.token) await api('/auth/logout', { method: 'POST' });
-        } catch (_) {
-        } finally {
-          setToken('');
-          appState.user = null;
-          switchToAuth();
-          showStatus(authStatus, 'از سامانه خارج شدی.', 'success');
-        }
+        try { if (state.token) await api('/auth/logout', { method: 'POST' }); } catch (_) {}
+        setToken(''); state.user = null; switchToAuth(); showStatus($('auth-status'), 'از سامانه خارج شدید.', 'success');
       }
 
-      async function withAction(button, fn, successMessage) {
+      async function withAction(button, action, successMessage) {
         setBusy(button, true);
         try {
-          await fn();
-          await loadWorkspace();
-          if (successMessage) showStatus(globalStatus, successMessage, 'success');
+          await action();
+          await refreshCurrentUser();
+          await loadAll();
+          if (!state.user?.password_reset_required) setPage(state.activePage);
+          showStatus($('global-status'), successMessage, 'success');
         } catch (error) {
-          showStatus(globalStatus, error.message, 'error');
+          showStatus($('global-status'), error.message, 'error');
           throw error;
-        } finally {
-          setBusy(button, false);
-        }
+        } finally { setBusy(button, false); }
       }
 
-      async function submitPurchaseRequest(prId) {
-        await api(`/purchase-requests/${prId}/submit`, {
-          method: 'POST',
-          body: {
-            actor: appState.user.username,
-            actor_role: appState.user.role_code,
-            exception_approved: false,
-          },
-        });
+      function selectUser(username) {
+        const user = state.users.find(item => item.username === username);
+        if (!user) return;
+        $('edit-username').value = user.username;
+        $('edit-full-name').value = user.full_name || '';
+        $('edit-department').value = user.department_code || '';
+        $('edit-role-select').value = user.role_code || '';
+        $('edit-status').value = user.status || 'active';
+        state.activeSecurityTab = 'users';
+        buildSecurityTabs();
+        setPage('security');
       }
 
-      function prefillAction(action, objectType, objectId) {
-        const section = $('workspace-section');
-        if (action === 'create_rfq' && objectType === 'PurchaseRequest') {
-          $('rfq-pr-select').value = String(objectId);
-        }
-        if (action === 'record_quotes' && objectType === 'RFQ') {
-          $('record-rfq-select').value = String(objectId);
-          $('quote-rfq-select').value = String(objectId);
-        }
-        if (action === 'commercial_eval' && objectType === 'RFQ') {
-          $('commercial-rfq-select').value = String(objectId);
-          loadRfqDetailToSelects(String(objectId), ['commercial-quote-select']);
-        }
-        if (action === 'issue_po' && objectType === 'RFQ') {
-          $('po-rfq-select').value = String(objectId);
-          loadRfqDetailToSelects(String(objectId), ['po-quote-select']);
-        }
-        if (action === 'record_receipt' && objectType === 'PO') {
-          $('receipt-po-select').value = String(objectId);
-        }
-        if ((action === 'accept_qc' || action === 'reject_qc') && objectType === 'GoodsReceipt') {
-          $('qc-gr-select').value = String(objectId);
-        }
-        if (action === 'match_invoice' && objectType === 'SupplierInvoice') {
-          $('match-invoice-select').value = String(objectId);
-          $('payment-invoice-select').value = String(objectId);
-        }
-        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        showStatus(globalStatus, 'فرم مرحله بعدی برایت آماده شد.', 'success');
+      function selectIncident(id) {
+        const incident = state.incidents.find(item => item.id === id);
+        if (!incident) return;
+        $('incident-selected-id').value = String(id);
+        $('incident-action-assigned').value = incident.assigned_to || '';
+        $('incident-note').value = incident.summary || 'بررسی اولیه انجام شد.';
+        $('incident-containment').value = incident.containment_action || '';
+        $('incident-resolution').value = incident.resolution_note || '';
+        state.activeSecurityTab = 'incidents';
+        buildSecurityTabs();
+        setPage('security');
       }
 
-      async function openTrace(objectType, objectId) {
-        $('trace-object-type').value = objectType;
-        $('trace-object-id').value = objectId;
-        const response = await api(`/traceability/document/${encodeURIComponent(objectType)}/${objectId}`);
-        renderTrace(response);
-        $('trace-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-
-      async function forceReset(username) {
-        await api(`/users/${encodeURIComponent(username)}/force-password-reset`, { method: 'POST' });
-      }
-
-      async function revokeSession(sessionId) {
-        await api(`/security/sessions/${sessionId}/revoke`, { method: 'POST' });
-      }
-
-      window.portalOpenTrace = (objectType, objectId) => {
-        openTrace(objectType, objectId).catch((error) => showStatus(globalStatus, error.message, 'error'));
-      };
+      window.portalOpenPage = (pageId) => { setPage(pageId); };
+      window.portalOpenProcTab = (tabId) => { state.activeProcTab = tabId; buildProcTabs(); };
+      window.portalOpenSecurityTab = (tabId) => { state.activeSecurityTab = tabId; buildSecurityTabs(); };
+      window.portalPrepareAction = (action, objectType, objectId) => prepareAction(action, objectType, objectId);
       window.portalRunAction = (action, objectType, objectId) => {
         runDirectAction(action, objectType, objectId)
-          .then(() => loadWorkspace())
-          .then(() => showStatus(globalStatus, 'اقدام با موفقیت ثبت شد.', 'success'))
-          .catch((error) => showStatus(globalStatus, error.message, 'error'));
+          .then(() => refreshCurrentUser())
+          .then(() => loadAll())
+          .then(() => showStatus($('global-status'), 'اقدام با موفقیت ثبت شد.', 'success'))
+          .catch(error => showStatus($('global-status'), error.message, 'error'));
       };
-      window.portalPrefillAction = (action, objectType, objectId) => {
-        prefillAction(action, objectType, objectId);
+      window.portalTrace = (objectType, objectId) => {
+        traceObject(objectType, objectId).catch(error => showStatus($('global-status'), error.message, 'error'));
       };
-      window.portalSubmitPurchaseRequest = (prId) => {
-        submitPurchaseRequest(prId)
-          .then(() => loadWorkspace())
-          .then(() => showStatus(globalStatus, 'درخواست خرید ارسال شد.', 'success'))
-          .catch((error) => showStatus(globalStatus, error.message, 'error'));
+      window.portalSubmitPR = (prId) => {
+        api(`/purchase-requests/${prId}/submit`, { method: 'POST', body: { actor: state.user.username, actor_role: state.user.role_code, exception_approved: false } })
+          .then(() => refreshCurrentUser())
+          .then(() => loadAll())
+          .then(() => showStatus($('global-status'), 'درخواست خرید ارسال شد.', 'success'))
+          .catch(error => showStatus($('global-status'), error.message, 'error'));
       };
-      window.portalForceReset = (username) => {
-        forceReset(username)
-          .then(() => loadWorkspace())
-          .then(() => showStatus(globalStatus, `الزام تغییر رمز برای ${username} ثبت شد.`, 'success'))
-          .catch((error) => showStatus(globalStatus, error.message, 'error'));
-      };
+      window.portalSelectUser = (username) => selectUser(username);
+      window.portalSelectIncident = (id) => selectIncident(id);
       window.portalRevokeSession = (sessionId) => {
-        revokeSession(sessionId)
-          .then(() => loadWorkspace())
-          .then(() => showStatus(globalStatus, 'نشست ابطال شد.', 'success'))
-          .catch((error) => showStatus(globalStatus, error.message, 'error'));
+        api(`/security/sessions/${sessionId}/revoke`, { method: 'POST' })
+          .then(() => loadAll())
+          .then(() => showStatus($('global-status'), 'نشست ابطال شد.', 'success'))
+          .catch(error => showStatus($('global-status'), error.message, 'error'));
       };
 
-      $('login-form').addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const button = $('login-btn');
-        setBusy(button, true);
-        hideStatus(authStatus);
-        try {
-          await login($('login-username').value.trim(), $('login-password').value);
-        } catch (error) {
-          showStatus(authStatus, error.message, 'error');
-        } finally {
-          setBusy(button, false);
-        }
+      $('login-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = $('login-btn');
+        setBusy(btn, true); hideStatus($('auth-status'));
+        try { await login($('login-username').value.trim(), $('login-password').value); }
+        catch (error) { showStatus($('auth-status'), error.message, 'error'); }
+        finally { setBusy(btn, false); }
+      });
+      $('demo-user-btn').addEventListener('click', () => { $('login-username').value='ali'; $('login-password').value='ali'; });
+      $('demo-security-btn').addEventListener('click', () => { $('login-username').value='security.1'; $('login-password').value='security.1'; });
+      $('demo-proc-btn').addEventListener('click', () => { $('login-username').value='buyer.1'; $('login-password').value='buyer.1'; });
+      $('logout-btn').addEventListener('click', () => logout());
+      $('refresh-all-btn').addEventListener('click', async () => {
+        try { await refreshCurrentUser(); await loadAll(); showStatus($('global-status'), 'اطلاعات سامانه بازخوانی شد.', 'success'); }
+        catch (error) { showStatus($('global-status'), error.message, 'error'); }
       });
 
-      function quickLogin(username) {
-        $('login-username').value = username;
-        $('login-password').value = username;
-      }
-      $('demo-requester-btn').addEventListener('click', () => quickLogin('ali'));
-      $('demo-manager-btn').addEventListener('click', () => quickLogin('manager.1'));
-      $('demo-proc-btn').addEventListener('click', () => quickLogin('buyer.1'));
-
-      $('logout-btn').addEventListener('click', () => logout());
-      $('reload-btn').addEventListener('click', () => loadWorkspace().catch((error) => showStatus(globalStatus, error.message, 'error')));
-
-      $('pr-form').addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const btn = event.submitter;
-        await withAction(btn, async () => {
-          await api('/purchase-requests', {
-            method: 'POST',
-            body: {
-              requester: appState.user.username,
-              department: $('pr-department').value.trim(),
-              need_date: $('pr-need-date').value || null,
-              reason: $('pr-reason').value.trim(),
-              cost_center_code: $('pr-cost-center').value.trim() || null,
-              budget_status: 'within_budget',
-              priority: $('pr-priority').value,
-              total_estimated_amount: Number($('pr-total-amount').value || 0),
-              currency: 'IRR',
-              created_by: appState.user.username,
-              lines: [{
-                line_no: 1,
-                description: $('pr-line-desc').value.trim(),
-                material_code: null,
-                qty: Number($('pr-line-qty').value || 0),
-                uom: $('pr-line-uom').value.trim(),
-                estimated_unit_price: Number($('pr-line-price').value || 0),
-                cost_center_code: $('pr-cost-center').value.trim() || 'CC-100',
-              }],
-            },
-          });
+      $('pr-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await withAction(e.submitter, async () => {
+          await api('/purchase-requests', { method: 'POST', body: {
+            requester: state.user.username,
+            department: $('pr-department').value.trim(),
+            need_date: $('pr-need-date').value || null,
+            reason: $('pr-reason').value.trim(),
+            cost_center_code: $('pr-cost-center').value.trim() || null,
+            budget_status: 'within_budget', priority: $('pr-priority').value,
+            total_estimated_amount: Number($('pr-total-amount').value || 0), currency: 'IRR', created_by: state.user.username,
+            lines: [{ line_no: 1, description: $('pr-line-desc').value.trim(), material_code: null, qty: Number($('pr-line-qty').value || 0), uom: $('pr-line-uom').value.trim(), estimated_unit_price: Number($('pr-line-price').value || 0), cost_center_code: $('pr-cost-center').value.trim() || 'CC-100' }],
+          }});
         }, 'درخواست خرید ثبت شد.');
       });
 
-      $('rfq-form').addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const btn = event.submitter;
-        await withAction(btn, async () => {
-          await api('/rfqs', {
-            method: 'POST',
-            body: {
-              purchase_request_id: Number($('rfq-pr-select').value),
-              issue_date: $('rfq-issue-date').value,
-              close_date: $('rfq-close-date').value || null,
-              minimum_quote_count: Number($('rfq-min-quotes').value || 1),
-              buyer: appState.user.username,
-              created_by: appState.user.username,
-            },
-          });
+      $('rfq-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await withAction(e.submitter, async () => {
+          await api('/rfqs', { method: 'POST', body: { purchase_request_id: Number($('rfq-pr-select').value), issue_date: $('rfq-issue-date').value, close_date: $('rfq-close-date').value || null, minimum_quote_count: Number($('rfq-min-quotes').value || 1), buyer: state.user.username, created_by: state.user.username } });
         }, 'RFQ ایجاد شد.');
       });
 
-      $('quote-form').addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const btn = event.submitter;
-        await withAction(btn, async () => {
-          await api(`/rfqs/${Number($('quote-rfq-select').value)}/quotations`, {
-            method: 'POST',
-            body: {
-              supplier_id: Number($('quote-supplier-select').value),
-              quote_no: $('quote-no').value.trim(),
-              quote_date: $('quote-date').value,
-              currency: 'IRR',
-              validity_date: null,
-              delivery_days: Number($('quote-delivery-days').value || 0),
-              payment_terms: $('quote-payment-terms').value.trim() || null,
-              total_amount: Number($('quote-amount').value || 0),
-              price_variance_pct: Number($('quote-variance').value || 0),
-              commercial_score: null,
-              technical_score: null,
-              created_by: appState.user.username,
-            },
-          });
-          appState.rfqDetails = {};
-        }, 'پیشنهاد تأمین‌کننده ثبت شد.');
+      $('quote-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await withAction(e.submitter, async () => {
+          await api(`/rfqs/${Number($('quote-rfq-select').value)}/quotations`, { method: 'POST', body: { supplier_id: Number($('quote-supplier-select').value), quote_no: $('quote-no').value.trim(), quote_date: $('quote-date').value, currency: 'IRR', validity_date: null, delivery_days: Number($('quote-delivery-days').value || 0), payment_terms: $('quote-payment-terms').value.trim() || null, total_amount: Number($('quote-amount').value || 0), price_variance_pct: Number($('quote-variance').value || 0), commercial_score: null, technical_score: null, created_by: state.user.username } });
+          state.rfqDetails = {};
+        }, 'پیشنهاد تامین‌کننده ثبت شد.');
       });
 
-      $('record-quotes-form').addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const btn = event.submitter;
-        await withAction(btn, async () => {
-          await api(`/rfqs/${Number($('record-rfq-select').value)}/record-quotes`, {
-            method: 'POST',
-            body: {
-              actor: appState.user.username,
-              actor_role: appState.user.role_code,
-              exception_approved: false,
-            },
-          });
+      $('record-quotes-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await withAction(e.submitter, async () => {
+          await api(`/rfqs/${Number($('record-rfq-select').value)}/record-quotes`, { method: 'POST', body: { actor: state.user.username, actor_role: state.user.role_code, exception_approved: false } });
         }, 'مرحله دریافت پیشنهادها ثبت شد.');
       });
+      $('commercial-rfq-select').addEventListener('change', (e) => loadRfqDetailToSelects(e.target.value, ['commercial-quote-select']).catch(err => showStatus($('global-status'), err.message, 'error')));
+      $('po-rfq-select').addEventListener('change', (e) => loadRfqDetailToSelects(e.target.value, ['po-quote-select']).catch(err => showStatus($('global-status'), err.message, 'error')));
 
-      $('commercial-rfq-select').addEventListener('change', (event) => {
-        loadRfqDetailToSelects(event.target.value, ['commercial-quote-select']).catch((error) => showStatus(globalStatus, error.message, 'error'));
-      });
-      $('po-rfq-select').addEventListener('change', (event) => {
-        loadRfqDetailToSelects(event.target.value, ['po-quote-select']).catch((error) => showStatus(globalStatus, error.message, 'error'));
-      });
-
-      $('commercial-form').addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const btn = event.submitter;
-        await withAction(btn, async () => {
-          await api(`/rfqs/${Number($('commercial-rfq-select').value)}/commercial-evaluate`, {
-            method: 'POST',
-            body: {
-              actor: appState.user.username,
-              actor_role: appState.user.role_code,
-              selected_quotation_id: Number($('commercial-quote-select').value),
-              note: $('commercial-note').value.trim() || null,
-            },
-          });
+      $('commercial-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await withAction(e.submitter, async () => {
+          await api(`/rfqs/${Number($('commercial-rfq-select').value)}/commercial-evaluate`, { method: 'POST', body: { actor: state.user.username, actor_role: state.user.role_code, selected_quotation_id: Number($('commercial-quote-select').value), note: $('commercial-note').value.trim() || null } });
         }, 'ارزیابی بازرگانی ثبت شد.');
       });
 
-      $('po-form').addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const btn = event.submitter;
-        await withAction(btn, async () => {
-          await api('/purchase-orders', {
-            method: 'POST',
-            body: {
-              rfq_id: Number($('po-rfq-select').value),
-              selected_quotation_id: Number($('po-quote-select').value),
-              order_date: $('po-order-date').value,
-              delivery_date: $('po-delivery-date').value || null,
-              emergency_flag: false,
-              actor: appState.user.username,
-              actor_role: appState.user.role_code,
-              exception_approved: false,
-              note: null,
-            },
-          });
+      $('po-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await withAction(e.submitter, async () => {
+          await api('/purchase-orders', { method: 'POST', body: { rfq_id: Number($('po-rfq-select').value), selected_quotation_id: Number($('po-quote-select').value), order_date: $('po-order-date').value, delivery_date: $('po-delivery-date').value || null, emergency_flag: false, actor: state.user.username, actor_role: state.user.role_code, exception_approved: false, note: null } });
         }, 'سفارش خرید صادر شد.');
       });
 
-      $('receipt-form').addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const btn = event.submitter;
-        await withAction(btn, async () => {
-          await api('/goods-receipts', {
-            method: 'POST',
-            body: {
-              purchase_order_id: Number($('receipt-po-select').value),
-              receipt_date: $('receipt-date').value,
-              warehouse_code: $('receipt-warehouse').value.trim(),
-              supplier_delivery_ref: $('receipt-ref').value.trim() || null,
-              received_qty: Number($('receipt-qty').value || 0),
-              actor: appState.user.username,
-              actor_role: appState.user.role_code,
-            },
-          });
+      $('receipt-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await withAction(e.submitter, async () => {
+          await api('/goods-receipts', { method: 'POST', body: { purchase_order_id: Number($('receipt-po-select').value), receipt_date: $('receipt-date').value, warehouse_code: $('receipt-warehouse').value.trim(), supplier_delivery_ref: $('receipt-ref').value.trim() || null, received_qty: Number($('receipt-qty').value || 0), actor: state.user.username, actor_role: state.user.role_code } });
         }, 'رسید کالا ثبت شد.');
       });
 
-      $('qc-create-form').addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const btn = event.submitter;
-        await withAction(btn, async () => {
-          await api('/quality-inspections', {
-            method: 'POST',
-            body: {
-              goods_receipt_id: Number($('qc-gr-select').value),
-              inspection_date: $('qc-date').value,
-              inspector: appState.user.username,
-              actor_role: appState.user.role_code,
-            },
-          });
-        }, 'پرونده کنترل کیفیت ایجاد شد.');
+      $('qc-create-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await withAction(e.submitter, async () => {
+          await api('/quality-inspections', { method: 'POST', body: { goods_receipt_id: Number($('qc-gr-select').value), inspection_date: $('qc-date').value, inspector: state.user.username, actor_role: state.user.role_code } });
+        }, 'پرونده QC ایجاد شد.');
       });
 
-      $('qc-finalize-form').addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const btn = event.submitter;
-        await withAction(btn, async () => {
-          await api(`/quality-inspections/${Number($('qc-finalize-select').value)}/finalize`, {
-            method: 'POST',
-            body: {
-              actor: appState.user.username,
-              actor_role: appState.user.role_code,
-              result: $('qc-result').value,
-              accepted_qty: Number($('qc-accepted').value || 0),
-              rejected_qty: Number($('qc-rejected').value || 0),
-              defect_code: $('qc-defect').value.trim() || null,
-              corrective_action: $('qc-corrective').value.trim() || null,
-              note: $('qc-note').value.trim() || null,
-            },
-          });
-        }, 'نتیجه QC ثبت شد.');
+      $('qc-finalize-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await withAction(e.submitter, async () => {
+          await api(`/quality-inspections/${Number($('qc-finalize-select').value)}/finalize`, { method: 'POST', body: { actor: state.user.username, actor_role: state.user.role_code, result: $('qc-result').value, accepted_qty: Number($('qc-accepted').value || 0), rejected_qty: Number($('qc-rejected').value || 0), defect_code: $('qc-defect').value.trim() || null, corrective_action: $('qc-corrective').value.trim() || null, note: $('qc-note').value.trim() || null } });
+        }, 'نتیجه کنترل کیفیت ثبت شد.');
       });
 
       $('invoice-po-select').addEventListener('change', () => {
-        const po = appState.records.purchaseOrders.find((item) => String(item.id) === $('invoice-po-select').value);
+        const po = state.purchaseOrders.find(item => String(item.id) === $('invoice-po-select').value);
         if (po) $('invoice-supplier-select').value = String(po.supplier_id);
       });
 
-      $('invoice-form').addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const btn = event.submitter;
-        await withAction(btn, async () => {
-          await api('/supplier-invoices', {
-            method: 'POST',
-            body: {
-              supplier_id: Number($('invoice-supplier-select').value),
-              purchase_order_id: Number($('invoice-po-select').value),
-              goods_receipt_id: Number($('invoice-gr-select').value),
-              invoice_no: $('invoice-no').value.trim(),
-              invoice_date: $('invoice-date').value,
-              due_date: $('invoice-due-date').value || null,
-              currency: 'IRR',
-              total_amount: Number($('invoice-amount').value || 0),
-              actor: appState.user.username,
-              actor_role: appState.user.role_code,
-            },
-          });
-        }, 'فاکتور تأمین‌کننده ثبت شد.');
+      $('invoice-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await withAction(e.submitter, async () => {
+          await api('/supplier-invoices', { method: 'POST', body: { supplier_id: Number($('invoice-supplier-select').value), purchase_order_id: Number($('invoice-po-select').value), goods_receipt_id: Number($('invoice-gr-select').value), invoice_no: $('invoice-no').value.trim(), invoice_date: $('invoice-date').value, due_date: $('invoice-due-date').value || null, currency: 'IRR', total_amount: Number($('invoice-amount').value || 0), actor: state.user.username, actor_role: state.user.role_code } });
+        }, 'فاکتور تامین‌کننده ثبت شد.');
       });
 
-      $('invoice-match-form').addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const btn = event.submitter;
-        await withAction(btn, async () => {
-          await api(`/supplier-invoices/${Number($('match-invoice-select').value)}/match`, {
-            method: 'POST',
-            body: {
-              actor: appState.user.username,
-              actor_role: appState.user.role_code,
-              note: 'تطبیق سه‌طرفه انجام شد',
-            },
-          });
+      $('invoice-match-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await withAction(e.submitter, async () => {
+          await api(`/supplier-invoices/${Number($('match-invoice-select').value)}/match`, { method: 'POST', body: { actor: state.user.username, actor_role: state.user.role_code, note: 'تطبیق سه‌طرفه انجام شد' } });
         }, 'تطبیق فاکتور ثبت شد.');
       });
 
-      $('payment-form').addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const btn = event.submitter;
-        await withAction(btn, async () => {
-          await api('/payments', {
-            method: 'POST',
-            body: {
-              supplier_invoice_id: Number($('payment-invoice-select').value),
-              payment_date: $('payment-date').value || null,
-              amount: Number($('payment-amount').value || 0),
-              currency: 'IRR',
-              payment_method: $('payment-method').value.trim() || null,
-              bank_reference: $('payment-reference').value.trim() || null,
-              actor: appState.user.username,
-              actor_role: appState.user.role_code,
-            },
-          });
+      $('payment-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await withAction(e.submitter, async () => {
+          await api('/payments', { method: 'POST', body: { supplier_invoice_id: Number($('payment-invoice-select').value), payment_date: $('payment-date').value || null, amount: Number($('payment-amount').value || 0), currency: 'IRR', payment_method: $('payment-method').value.trim() || null, bank_reference: $('payment-reference').value.trim() || null, actor: state.user.username, actor_role: state.user.role_code } });
         }, 'درخواست پرداخت ایجاد شد.');
       });
 
-      $('trace-form').addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const btn = event.submitter;
-        await withAction(btn, async () => {
-          const response = await api(`/traceability/document/${encodeURIComponent($('trace-object-type').value)}/${Number($('trace-object-id').value)}`);
-          renderTrace(response);
-        }, 'رهگیری بارگذاری شد.');
-      });
-
-      $('user-form').addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const btn = event.submitter;
-        await withAction(btn, async () => {
-          await api('/users', {
-            method: 'POST',
-            body: {
-              username: $('user-username').value.trim(),
-              password: $('user-password').value,
-              full_name: $('user-full-name').value.trim(),
-              department_code: $('user-department').value.trim() || null,
-              role_code: $('user-role-select').value,
-              status: 'active',
-            },
-          });
+      $('user-create-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await withAction(e.submitter, async () => {
+          await api('/users', { method: 'POST', body: { username: $('user-username').value.trim(), password: $('user-password').value, full_name: $('user-full-name').value.trim(), department_code: $('user-department').value.trim() || null, role_code: $('user-role-select').value, status: $('user-status').value } });
         }, 'کاربر جدید ایجاد شد.');
       });
 
-      $('supplier-form').addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const btn = event.submitter;
-        await withAction(btn, async () => {
-          await api('/suppliers', {
-            method: 'POST',
-            body: {
-              code: $('supplier-code').value.trim(),
-              name: $('supplier-name').value.trim(),
-              approval_status: 'approved',
-              risk_level: $('supplier-risk').value,
-              payment_terms: $('supplier-payment-terms').value.trim() || null,
-              created_by: appState.user.username,
-            },
-          });
-        }, 'تأمین‌کننده ثبت شد.');
+      $('user-edit-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const username = $('edit-username').value.trim();
+        if (!username) { showStatus($('global-status'), 'ابتدا یک کاربر از جدول انتخاب کنید.', 'error'); return; }
+        await withAction(e.submitter, async () => {
+          await api(`/users/${encodeURIComponent(username)}`, { method: 'PATCH', body: { full_name: $('edit-full-name').value.trim(), department_code: $('edit-department').value.trim() || null, role_code: $('edit-role-select').value, status: $('edit-status').value } });
+        }, 'تغییرات کاربر ثبت شد.');
       });
 
-      $('cleanup-tokens-btn').addEventListener('click', async (event) => {
-        const btn = event.currentTarget;
-        await withAction(btn, async () => { await api('/security/tokens/cleanup', { method: 'POST' }); }, 'پاکسازی توکن‌ها انجام شد.');
+      $('user-force-reset-btn').addEventListener('click', async (e) => {
+        const username = $('edit-username').value.trim();
+        if (!username) return showStatus($('global-status'), 'ابتدا یک کاربر را انتخاب کنید.', 'error');
+        await withAction(e.currentTarget, async () => { await api(`/users/${encodeURIComponent(username)}/force-password-reset`, { method: 'POST' }); }, 'الزام تغییر رمز ثبت شد.');
+      });
+      $('user-unlock-btn').addEventListener('click', async (e) => {
+        const username = $('edit-username').value.trim();
+        if (!username) return showStatus($('global-status'), 'ابتدا یک کاربر را انتخاب کنید.', 'error');
+        await withAction(e.currentTarget, async () => { await api(`/users/${encodeURIComponent(username)}/unlock`, { method: 'POST' }); }, 'قفل کاربر رفع شد.');
+      });
+      $('user-revoke-all-btn').addEventListener('click', async (e) => {
+        const username = $('edit-username').value.trim();
+        if (!username) return showStatus($('global-status'), 'ابتدا یک کاربر را انتخاب کنید.', 'error');
+        await withAction(e.currentTarget, async () => { await api(`/users/${encodeURIComponent(username)}/revoke-sessions`, { method: 'POST' }); }, 'همه نشست‌های کاربر ابطال شد.');
       });
 
-      $('lookup-sessions-btn').addEventListener('click', async (event) => {
-        const btn = event.currentTarget;
-        await withAction(btn, async () => {
-          const username = $('session-lookup-username').value.trim();
-          const response = await api(`/security/sessions?username=${encodeURIComponent(username)}`);
-          appState.lookedUpSessions = response.items || [];
-          renderSessions('user-sessions-wrap', appState.lookedUpSessions, 'نشستی برای این کاربر پیدا نشد.');
+      $('lookup-sessions-btn').addEventListener('click', async (e) => {
+        const username = $('session-lookup-username').value.trim();
+        if (!username) { showStatus($('global-status'), 'نام کاربری را وارد کنید.', 'error'); return; }
+        await withAction(e.currentTarget, async () => {
+          const resp = await api(`/security/sessions?username=${encodeURIComponent(username)}`);
+          state.userSessions = resp.items || [];
+          renderSessions('user-sessions-wrap', state.userSessions, 'نشست فعالی برای این کاربر پیدا نشد.');
         }, 'نشست‌های کاربر بارگذاری شد.');
       });
 
-      $('password-form').addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const btn = event.submitter;
+      $('incident-create-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await withAction(e.submitter, async () => {
+          await api('/security/incidents', { method: 'POST', body: { title: $('incident-title').value.trim(), incident_type: $('incident-type').value.trim(), severity: $('incident-severity').value, related_username: $('incident-related-user').value.trim() || null, source_entity_name: $('incident-source-entity').value.trim() || null, source_entity_id: $('incident-source-id').value.trim() || null, audit_log_ids: [], summary: $('incident-summary').value.trim(), assigned_to: $('incident-assigned-to').value.trim() || null, actor: state.user.username, actor_role: state.user.role_code } });
+        }, 'رخداد امنیتی ثبت شد.');
+      });
+
+      async function actOnIncident(action) {
+        const incidentId = Number($('incident-selected-id').value || 0);
+        if (!incidentId) throw new Error('ابتدا یک رخداد از جدول انتخاب کنید.');
+        const body = { actor: state.user.username, actor_role: state.user.role_code, note: $('incident-note').value.trim() || null, assigned_to: $('incident-action-assigned').value.trim() || null, containment_action: $('incident-containment').value.trim() || null, resolution_note: $('incident-resolution').value.trim() || null };
+        await api(`/security/incidents/${incidentId}/${action}`, { method: 'POST', body });
+      }
+      $('incident-triage-btn').addEventListener('click', async (e) => { await withAction(e.currentTarget, async () => actOnIncident('triage'), 'رخداد به مرحله بررسی منتقل شد.'); });
+      $('incident-contain-btn').addEventListener('click', async (e) => { await withAction(e.currentTarget, async () => actOnIncident('contain'), 'اقدام مهاری روی رخداد ثبت شد.'); });
+      $('incident-resolve-btn').addEventListener('click', async (e) => { await withAction(e.currentTarget, async () => actOnIncident('resolve'), 'رخداد حل‌شده ثبت شد.'); });
+      $('incident-close-btn').addEventListener('click', async (e) => { await withAction(e.currentTarget, async () => actOnIncident('close'), 'رخداد بسته شد.'); });
+
+      async function loadAuditDefault() {
+        const resp = await api('/audit/events?limit=50');
+        state.auditResults = resp.items || [];
+        state.auditCount = resp.total_count || 0;
+        renderAudit();
+      }
+      $('audit-default-btn').addEventListener('click', async (e) => {
+        await withAction(e.currentTarget, async () => { await loadAuditDefault(); }, 'لاگ‌های اخیر بارگذاری شد.');
+      });
+      $('audit-search-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await withAction(e.submitter, async () => {
+          const params = new URLSearchParams();
+          if ($('audit-q').value.trim()) params.set('q', $('audit-q').value.trim());
+          if ($('audit-user').value.trim()) params.set('user_name', $('audit-user').value.trim());
+          if ($('audit-entity').value.trim()) params.set('entity_name', $('audit-entity').value.trim());
+          params.set('limit', $('audit-limit').value || '50');
+          const resp = await api(`/audit/events?${params.toString()}`);
+          state.auditResults = resp.items || [];
+          state.auditCount = resp.total_count || 0;
+          renderAudit();
+        }, 'نتایج لاگ بارگذاری شد.');
+      });
+
+      $('trace-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await withAction(e.submitter, async () => {
+          state.trace = await api(`/traceability/document/${encodeURIComponent($('trace-object-type').value)}/${Number($('trace-object-id').value)}`);
+          renderTrace();
+        }, 'رهگیری فرایند بارگذاری شد.');
+      });
+
+      $('password-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
         if ($('new-password').value !== $('new-password-repeat').value) {
-          showStatus(globalStatus, 'تکرار رمز جدید با رمز جدید یکسان نیست.', 'error');
+          showStatus($('global-status'), 'تکرار رمز جدید با رمز جدید یکسان نیست.', 'error');
           return;
         }
-        await withAction(btn, async () => {
-          await api('/auth/change-password', {
-            method: 'POST',
-            body: {
-              current_password: $('current-password').value,
-              new_password: $('new-password').value,
-            },
-          });
-          await refreshCurrentUser();
+        await withAction(e.submitter, async () => {
+          await api('/auth/change-password', { method: 'POST', body: { current_password: $('current-password').value, new_password: $('new-password').value } });
         }, 'رمز عبور تغییر کرد.');
       });
 
@@ -1924,7 +1770,8 @@
         $('invoice-date').value = isoDate();
         $('invoice-due-date').value = isoDate(30);
         $('payment-date').value = isoDate();
-        populateSelect('user-role-select', USER_ROLE_OPTIONS, (role) => `<option value="${role}">${escapeHtml(roleLabel(role))}</option>`, 'نقش را انتخاب کن');
+        populateSelect('user-role-select', USER_ROLE_OPTIONS, role => `<option value="${role}">${escapeHtml(roleLabel(role))}</option>`);
+        populateSelect('edit-role-select', USER_ROLE_OPTIONS, role => `<option value="${role}">${escapeHtml(roleLabel(role))}</option>`);
       }
 
       async function bootstrap() {
@@ -1934,8 +1781,10 @@
         try {
           setToken(token);
           await refreshCurrentUser();
-          switchToWorkspace();
-          await loadWorkspace();
+          switchToApp();
+          state.activePage = defaultPageForRole();
+          await loadAll();
+          setPage(defaultPageForRole());
         } catch (_) {
           setToken('');
           switchToAuth();

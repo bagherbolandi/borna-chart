@@ -223,6 +223,83 @@ class SecurityService:
         self.db.flush()
         return user
 
+    def update_user(
+        self,
+        *,
+        username: str,
+        actor: str,
+        full_name: str | None = None,
+        department_code: str | None = None,
+        role_code: str | None = None,
+        status: str | None = None,
+    ) -> User:
+        user = self.db.query(User).filter(User.username == username).first()
+        if not user:
+            raise AuthError("user not found", status_code=404)
+
+        if full_name is not None and full_name != user.full_name:
+            self.audit.log(
+                user_name=actor,
+                entity_name="users",
+                entity_id=username,
+                action="update_full_name",
+                old_value=user.full_name,
+                new_value=full_name,
+            )
+            user.full_name = full_name
+        if department_code is not None and department_code != user.department_code:
+            self.audit.log(
+                user_name=actor,
+                entity_name="users",
+                entity_id=username,
+                action="update_department",
+                old_value=user.department_code,
+                new_value=department_code,
+            )
+            user.department_code = department_code
+        if role_code is not None and role_code != user.role_code:
+            self.audit.log(
+                user_name=actor,
+                entity_name="users",
+                entity_id=username,
+                action="update_role",
+                old_value=user.role_code,
+                new_value=role_code,
+            )
+            user.role_code = role_code
+        if status is not None and status != user.status:
+            self.audit.log(
+                user_name=actor,
+                entity_name="users",
+                entity_id=username,
+                action="update_status",
+                old_value=user.status,
+                new_value=status,
+            )
+            user.status = status
+            if status != "active":
+                self.revoke_all_tokens_for_user(username, actor=actor, reason=f"status changed to {status}")
+        user.modified_by = actor
+        self.db.flush()
+        return user
+
+    def unlock_user(self, *, username: str, actor: str) -> User:
+        user = self.db.query(User).filter(User.username == username).first()
+        if not user:
+            raise AuthError("user not found", status_code=404)
+        user.failed_login_attempts = 0
+        user.locked_until = None
+        user.modified_by = actor
+        self.audit.log(
+            user_name=actor,
+            entity_name="users",
+            entity_id=username,
+            action="unlock_user",
+            reason="administrator unlock",
+        )
+        self.db.flush()
+        return user
+
     def _token_active(self, row: AuthToken) -> bool:
         if row.revoked_at:
             return False

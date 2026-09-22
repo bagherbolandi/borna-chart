@@ -36,6 +36,17 @@ class UserCreate(BaseModel):
     status: str = "active"
 
 
+class UserUpdate(BaseModel):
+    full_name: str | None = None
+    department_code: str | None = None
+    role_code: str | None = None
+    status: str | None = None
+
+
+class AdminActionResponse(BaseModel):
+    detail: str
+
+
 class UserRead(ORMModel):
     id: int
     username: str
