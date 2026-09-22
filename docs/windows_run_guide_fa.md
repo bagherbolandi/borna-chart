@@ -9,10 +9,12 @@
 ## فایل‌های اصلی برای کاربر نهایی
 در ریشه پروژه/بسته این فایل‌ها را خواهید داشت:
 - `OPEN_ME_FIRST.bat`
+- `COPY_PACKAGE_TO_LOCAL_AND_RUN.bat`
 - `RUN_ON_SERVER_IP.bat`
 - `RESET_AND_RUN_DEMO.bat`
 - `ENABLE_WINDOWS_FIREWALL_8000.bat`
 - `OPEN_IIS_DEPLOY_GUIDE.bat`
+- `INSTALL_PYTHON_FIRST.bat`
 - `setup_windows_env.bat`
 - `run_borna_server.bat`
 
@@ -29,6 +31,18 @@ OPEN_ME_FIRST.bat
 3. `.env` را از روی `.env.example` می‌سازد اگر لازم باشد
 4. API را روی پورت `8000` اجرا می‌کند
 5. مرورگر را روی `http://localhost:8000/console` باز می‌کند
+
+### نکته مهم برای Network Share / درایو مپ‌شده
+اگر فایل‌ها را از مسیر شبکه مثل `\\SERVER\share\...` یا درایو مپ‌شده مثل `Y:` اجرا می‌کنید، ساخت `.venv` ممکن است fail شود.
+
+در این حالت از این فایل استفاده کنید:
+
+```bat
+COPY_PACKAGE_TO_LOCAL_AND_RUN.bat
+```
+
+این فایل کل بسته را به مسیر local زیر کپی می‌کند و از آنجا اجرا می‌کند:
+- `%LOCALAPPDATA%\\BornaRuntime\\borna-chart-windows-selfcontained-iis-kit-20260922`
 
 ## سناریوی 2 — دسترسی از سیستم‌های دیگر شبکه
 اگر می‌خواهید کاربران در شبکه با IP سرور باز کنند:

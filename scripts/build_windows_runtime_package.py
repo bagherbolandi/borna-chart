@@ -15,6 +15,7 @@ INCLUDE_FILES = [
     "requirements.txt",
     "pyproject.toml",
     "OPEN_ME_FIRST.bat",
+    "COPY_PACKAGE_TO_LOCAL_AND_RUN.bat",
     "RESET_AND_RUN_DEMO.bat",
     "RUN_ON_SERVER_IP.bat",
     "ENABLE_WINDOWS_FIREWALL_8000.bat",

@@ -32,6 +32,11 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 OPEN_ME_FIRST.bat
 ```
 
+اگر بسته را روی Network Share یا درایو مپ‌شده اجرا می‌کنید، بهتر است اول این را بزنید:
+```bat
+COPY_PACKAGE_TO_LOCAL_AND_RUN.bat
+```
+
 برای اجرا روی IP سرور/LAN:
 ```bat
 ENABLE_WINDOWS_FIREWALL_8000.bat
