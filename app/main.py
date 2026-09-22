@@ -51,12 +51,18 @@ def create_app() -> FastAPI:
             )
         return response
 
-    console_path = Path(__file__).resolve().parent / "ui" / "console.html"
+    ui_dir = Path(__file__).resolve().parent / "ui"
+    console_path = ui_dir / "console.html"
+    review_console_path = ui_dir / "review_console.html"
 
     @app.get("/", response_class=HTMLResponse, include_in_schema=False)
     @app.get("/console", response_class=HTMLResponse, include_in_schema=False)
     def index() -> HTMLResponse:
         return HTMLResponse(console_path.read_text(encoding="utf-8"))
+
+    @app.get("/review-console", response_class=HTMLResponse, include_in_schema=False)
+    def review_console() -> HTMLResponse:
+        return HTMLResponse(review_console_path.read_text(encoding="utf-8"))
 
     app.include_router(api_router, prefix=settings.api_prefix)
     return app

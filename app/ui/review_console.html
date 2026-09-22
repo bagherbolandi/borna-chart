@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Borna Process Control Console</title>
+    <style>
+      :root {
+        --bg: #0b1020;
+        --panel: #121a31;
+        --panel-2: #182241;
+        --border: #2d3b6b;
+        --text: #e9eefc;
+        --muted: #9fb0dc;
+        --accent: #66d9ef;
+        --success: #25c17e;
+        --warn: #ffb020;
+        --danger: #ff6b6b;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: linear-gradient(180deg, #09101f 0%, #10182f 100%);
+        color: var(--text);
+      }
+      a { color: var(--accent); }
+      .container { max-width: 1500px; margin: 0 auto; padding: 24px; }
+      .hero, .card {
+        background: rgba(18, 26, 49, 0.94);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+      }
+      .hero { padding: 24px; margin-bottom: 20px; }
+      .hero h1 { margin: 0 0 8px; font-size: 30px; }
+      .hero p { margin: 6px 0; color: var(--muted); }
+      .hero-links, .actions, .chips { display: flex; flex-wrap: wrap; gap: 10px; }
+      .hero-links { margin-top: 16px; }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        color: var(--muted);
+        background: rgba(14, 21, 48, 0.6);
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        gap: 18px;
+      }
+      .card { padding: 18px; }
+      .col-3 { grid-column: span 3; }
+      .col-4 { grid-column: span 4; }
+      .col-5 { grid-column: span 5; }
+      .col-6 { grid-column: span 6; }
+      .col-7 { grid-column: span 7; }
+      .col-8 { grid-column: span 8; }
+      .col-12 { grid-column: span 12; }
+      @media (max-width: 1180px) {
+        .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-12 { grid-column: span 12; }
+      }
+      h2, h3 { margin-top: 0; }
+      .muted { color: var(--muted); }
+      .small { font-size: 12px; }
+      label {
+        display: block;
+        margin: 10px 0 6px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+      input, select, textarea, button {
+        width: 100%;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: var(--panel-2);
+        color: var(--text);
+        padding: 11px 12px;
+        font: inherit;
+      }
+      textarea { min-height: 120px; resize: vertical; }
+      .row, .row-3, .row-4 {
+        display: grid;
+        gap: 10px;
+      }
+      .row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .row-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .row-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      @media (max-width: 760px) {
+        .row, .row-3, .row-4 { grid-template-columns: 1fr; }
+      }
+      .actions { margin-top: 12px; }
+      .actions button, .chips button { width: auto; min-width: 110px; cursor: pointer; }
+      button.primary { background: #1d7efc; border-color: #1d7efc; }
+      button.secondary { background: #26345f; }
+      button.success { background: #1f9f68; }
+      button.warn { background: #a66a14; }
+      button.danger { background: #a53939; }
+      pre {
+        background: #0a1021;
+        border: 1px solid #24335f;
+        border-radius: 14px;
+        padding: 14px;
+        overflow: auto;
+        white-space: pre-wrap;
+        word-break: break-word;
+        min-height: 160px;
+      }
+      .status {
+        margin-top: 10px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: #10192f;
+        color: var(--muted);
+      }
+      .ok { color: var(--success); }
+      .bad { color: var(--danger); }
+      .hint-list { margin: 0; padding-left: 18px; color: var(--muted); }
+      .kv {
+        display: grid;
+        grid-template-columns: minmax(140px, 220px) 1fr;
+        gap: 8px;
+        margin-top: 10px;
+        font-size: 13px;
+      }
+      .kv strong { color: var(--muted); }
+      .divider { height: 1px; background: var(--border); margin: 16px 0; opacity: 0.7; }
+      .section-note { margin-top: 8px; color: var(--muted); font-size: 13px; }
+      code.inline {
+        background: #0e1530;
+        border: 1px solid #27345d;
+        padding: 2px 6px;
+        border-radius: 8px;
+      }
+      .mini { padding: 8px 10px; min-width: 98px; }
+      .two-col-list { columns: 2; gap: 24px; }
+      .nav-card { position: sticky; top: 10px; z-index: 5; }
+      .menu-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+      .menu-grid a {
+        text-decoration: none;
+        color: var(--text);
+        background: #22345f;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 10px 12px;
+        font-size: 13px;
+      }
+      .section-anchor { scroll-margin-top: 92px; }
+      @media (max-width: 900px) { .two-col-list { columns: 1; } }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <section class="hero">
+        <div class="badge">نسخه بازبینی زنده</div>
+        <h1>کنسول کنترل فرایند بورنا</h1>
+        <p>این نسخه یک کنسول بازبینی و تست است، نه رابط نهایی سامانه. از اینجا می‌توانید لاگین کنید، سناریوها را اجرا کنید و پاسخ API را ببینید.</p>
+        <p class="muted">ترتیب پیشنهادی نقش‌ها برای سناریوی خرید: <code class="inline">master.admin</code> → <code class="inline">ali</code> → <code class="inline">manager.1</code> → <code class="inline">buyer.1</code> → <code class="inline">tech.1</code> → <code class="inline">finance.1</code> → <code class="inline">warehouse.1</code> → <code class="inline">qc.1</code> → <code class="inline">ap.1</code> → <code class="inline">finance.1</code> → <code class="inline">treasury.1</code>.</p>
+        <div class="hero-links">
+          <a href="/docs" target="_blank">Swagger</a>
+          <a href="/openapi.json" target="_blank">OpenAPI</a>
+          <a href="/api/v1/health" target="_blank">سلامت سامانه</a>
+          <a href="/api/v1/dashboard/summary" target="_blank">داشبورد خلاصه</a>
+          <a href="/api/v1/dashboard/security" target="_blank">داشبورد امنیت</a>
+        </div>
+      </section>
+
+      <div class="grid">
+        <section class="card col-12 nav-card">
+          <h2>منوی سریع</h2>
+          <div class="menu-grid">
+            <a href="#session-section">ورود و نشست</a>
+            <a href="#access-section">کنترل دسترسی</a>
+            <a href="#incident-section">رخداد امنیتی</a>
+            <a href="#pr-section">درخواست خرید</a>
+            <a href="#downstream-section">خرید تکمیلی</a>
+            <a href="#sales-section">فروش</a>
+            <a href="#tools-section">ابزارهای عمومی</a>
+            <a href="#response-section">نمایش پاسخ</a>
+          </div>
+          <p class="section-note">اگر بعد از زدن دکمه‌ها نتیجه‌ای ندیدی، به بخش «نمایش پاسخ» پایین صفحه برو. در نسخه بعدی این خروجی‌ها را به شکل فرم و جدول بهتر می‌کنم.</p>
+        </section>
+        <section class="card col-4 section-anchor" id="session-section">
+          <h2>۱) ورود، نشست و میانبر نقش‌ها</h2>
+          <label>نام کاربری</label>
+          <input id="login-username" value="security.1" />
+          <label>رمز عبور</label>
+          <input id="login-password" type="password" value="security.1" />
+          <div class="actions">
+            <button class="primary" id="login-btn">ورود</button>
+            <button class="secondary" id="me-btn">کاربر فعلی</button>
+            <button class="danger" id="logout-btn">خروج</button>
+          </div>
+          <div class="status" id="session-status">هنوز وارد نشده‌اید.</div>
+          <div class="kv" id="current-user-meta">
+            <strong>کاربر</strong><span>-</span>
+            <strong>نقش</strong><span>-</span>
+            <strong>نیاز به تغییر رمز</strong><span>-</span>
+          </div>
+          <label>میانبر نقش‌ها</label>
+          <div class="chips">
+            <button class="secondary mini" data-login-shortcut="master.admin">master.admin</button>
+            <button class="secondary mini" data-login-shortcut="security.1">security.1</button>
+            <button class="secondary mini" data-login-shortcut="ali">ali</button>
+            <button class="secondary mini" data-login-shortcut="manager.1">manager.1</button>
+            <button class="secondary mini" data-login-shortcut="buyer.1">buyer.1</button>
+            <button class="secondary mini" data-login-shortcut="tech.1">tech.1</button>
+            <button class="secondary mini" data-login-shortcut="finance.1">finance.1</button>
+            <button class="secondary mini" data-login-shortcut="warehouse.1">warehouse.1</button>
+            <button class="secondary mini" data-login-shortcut="qc.1">qc.1</button>
+            <button class="secondary mini" data-login-shortcut="ap.1">ap.1</button>
+            <button class="secondary mini" data-login-shortcut="treasury.1">treasury.1</button>
+            <button class="secondary mini" data-login-shortcut="pricing.1">pricing.1</button>
+            <button class="secondary mini" data-login-shortcut="sales.1">sales.1</button>
+            <button class="secondary mini" data-login-shortcut="sales.mgr">sales.mgr</button>
+          </div>
+          <label>توکن فعال</label>
+          <textarea id="active-token" readonly></textarea>
+        </section>
+
+        <section class="card col-5 section-anchor" id="review-section">
+          <h2>۲) وضعیت سناریوی بازبینی</h2>
+          <p class="muted">آخرین شناسه‌های ساخته‌شده برای سناریوهای امنیتی، خرید و فروش اینجا نگهداری می‌شوند تا ادامه سناریوها راحت‌تر باشد.</p>
+          <pre id="review-state-output">{}</pre>
+          <div class="actions">
+            <button class="secondary" id="clear-review-state-btn">پاک‌کردن وضعیت</button>
+            <button class="secondary" id="sync-me-btn">به‌روزرسانی کاربر</button>
+          </div>
+        </section>
+
+        <section class="card col-3 section-anchor" id="quick-section">
+          <h2>۳) بررسی سریع</h2>
+          <p class="muted small">بررسی سریع برای داشبوردها، لاگ‌ها، اینباکس، نشست‌ها و رخدادها.</p>
+          <div class="actions">
+            <button class="secondary" data-path="/api/v1/health" data-method="GET">سلامت سامانه</button>
+            <button class="secondary" data-path="/api/v1/dashboard/summary" data-method="GET">داشبورد خلاصه</button>
+            <button class="secondary" data-path="/api/v1/dashboard/security" data-method="GET">داشبورد امنیت</button>
+            <button class="secondary" data-path="/api/v1/security/my-sessions" data-method="GET">نشست‌های من</button>
+            <button class="secondary" data-path="/api/v1/alerts" data-method="GET">هشدارها</button>
+            <button class="secondary" data-path="/api/v1/inbox/approvals" data-method="GET">اینباکس تاییدها</button>
+            <button class="secondary" data-path="/api/v1/security/incidents" data-method="GET">رخدادهای امنیتی</button>
+            <button class="secondary" data-path="/api/v1/audit/events?entity_name=auth" data-method="GET">ممیزی احراز هویت</button>
+          </div>
+        </section>
+
+        <section class="card col-6 section-anchor" id="access-section">
+          <h2>۴) بازبینی کنترل دسترسی</h2>
+          <p class="muted">ایجاد کاربر، اجبار به تغییر رمز، تغییر رمز، مشاهده نشست‌ها و لغو نشست‌ها.</p>
+          <div class="row">
+            <div>
+              <label>نام کاربری جدید</label>
+              <input id="new-user-username" value="review.user" />
+            </div>
+            <div>
+              <label>نام کامل</label>
+              <input id="new-user-full-name" value="Review User" />
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>رمز قوی</label>
+              <input id="new-user-password" value="Review#1234" />
+            </div>
+            <div>
+              <label>نقش</label>
+              <select id="new-user-role">
+                <option>Requester</option>
+                <option>Sales Officer</option>
+                <option>Sales Manager</option>
+                <option>Pricing Analyst</option>
+                <option>Security Officer</option>
+                <option>Department Manager</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>واحد سازمانی</label>
+              <input id="new-user-department" value="review" />
+            </div>
+            <div>
+              <label>کاربر هدف برای reset / session</label>
+              <input id="access-target-username" value="review.user" />
+            </div>
+          </div>
+          <div class="actions">
+            <button class="success" id="create-user-btn">ایجاد کاربر</button>
+            <button class="warn" id="force-reset-btn">اجبار به تغییر رمز</button>
+            <button class="secondary" id="load-user-sessions-btn">بارگذاری نشست‌ها</button>
+          </div>
+          <div class="divider"></div>
+          <div class="row">
+            <div>
+              <label>رمز فعلی</label>
+              <input id="change-password-current" value="security.1" />
+            </div>
+            <div>
+              <label>رمز جدید</label>
+              <input id="change-password-new" value="Security#1234" />
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>شناسه نشست برای لغو</label>
+              <input id="revoke-session-id" placeholder="auto-filled after loading sessions" />
+            </div>
+            <div>
+              <label>یادداشت</label>
+              <input id="access-note" value="Interactive control review from console" />
+            </div>
+          </div>
+          <div class="actions">
+            <button class="secondary" id="change-password-btn">تغییر رمز من</button>
+            <button class="danger" id="revoke-session-btn">لغو نشست</button>
+          </div>
+        </section>
+
+        <section class="card col-6 section-anchor" id="incident-section">
+          <h2>۵) آزمایش گردش‌کار رخداد امنیتی</h2>
+          <p class="muted">ایجاد، بررسی اولیه، مهار، رفع و بستن برای مرور state machine رخداد امنیتی.</p>
+          <div class="row">
+            <div>
+              <label>عنوان</label>
+              <input id="incident-title" value="Repeated failed login attempts" />
+            </div>
+            <div>
+              <label>نوع</label>
+              <input id="incident-type" value="authentication_abuse" />
+            </div>
+          </div>
+          <div class="row-3">
+            <div>
+              <label>شدت</label>
+              <select id="incident-severity">
+                <option>medium</option>
+                <option selected>high</option>
+                <option>critical</option>
+              </select>
+            </div>
+            <div>
+              <label>کاربر مرتبط</label>
+              <input id="incident-related-user" value="buyer.1" />
+            </div>
+            <div>
+              <label>مسئول رسیدگی</label>
+              <input id="incident-assigned-to" value="security.1" />
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>موجودیت مبنا</label>
+              <input id="incident-source-entity" value="auth" />
+            </div>
+            <div>
+              <label>شناسه موجودیت</label>
+              <input id="incident-source-id" value="buyer.1" />
+            </div>
+          </div>
+          <label>خلاصه</label>
+          <textarea id="incident-summary">Review suspicious authentication attempts and determine whether containment is needed.</textarea>
+          <div class="actions">
+            <button class="warn" id="create-incident-btn">ایجاد رخداد</button>
+            <button class="secondary" id="list-incidents-btn">فهرست رخدادها</button>
+            <button class="secondary" id="open-latest-incident-btn">آخرین رخداد</button>
+          </div>
+          <div class="divider"></div>
+          <div class="row-3">
+            <div>
+              <label>شناسه رخداد</label>
+              <input id="incident-id" placeholder="auto-filled" />
+            </div>
+            <div>
+              <label>یادداشت عملیات</label>
+              <input id="incident-note" value="Reviewed in web console" />
+            </div>
+            <div>
+              <label>واگذاری به</label>
+              <input id="incident-reassign" value="security.1" />
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>اقدام مهار</label>
+              <input id="incident-containment" value="Revoke suspicious active sessions and review source IPs" />
+            </div>
+            <div>
+              <label>یادداشت رفع</label>
+              <input id="incident-resolution" value="Account reviewed, password reset enforced, no further malicious activity observed" />
+            </div>
+          </div>
+          <div class="actions">
+            <button class="secondary" data-incident-action="triage">بررسی اولیه</button>
+            <button class="secondary" data-incident-action="contain">مهار</button>
+            <button class="secondary" data-incident-action="resolve">رفع</button>
+            <button class="secondary" data-incident-action="close">بستن</button>
+          </div>
+        </section>
+
+        <section class="card col-6 section-anchor" id="pr-section">
+          <h2>۶) اجرای سناریوی درخواست خرید</h2>
+          <p class="muted">سناریوی درخواست خرید تا مرحله تایید. ترتیب اجرا و تفکیک وظایف در backend اعمال می‌شود.</p>
+          <div class="row">
+            <div>
+              <label>کاربر درخواست‌کننده</label>
+              <input id="pr-requester" value="ali" />
+            </div>
+            <div>
+              <label>واحد سازمانی</label>
+              <input id="pr-department" value="ops" />
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>علت</label>
+              <input id="pr-reason" value="Need packaging material for urgent replenishment" />
+            </div>
+            <div>
+              <label>مرکز هزینه</label>
+              <input id="pr-cost-center" value="OPS-100" />
+            </div>
+          </div>
+          <div class="row-4">
+            <div>
+              <label>کد کالا</label>
+              <input id="pr-material-code" value="PKG-BOX" />
+            </div>
+            <div>
+              <label>شرح</label>
+              <input id="pr-line-description" value="Corrugated packaging box" />
+            </div>
+            <div>
+              <label>مقدار</label>
+              <input id="pr-qty" type="number" value="100" />
+            </div>
+            <div>
+              <label>قیمت واحد برآوردی</label>
+              <input id="pr-unit-price" type="number" value="250000" />
+            </div>
+          </div>
+          <label>یادداشت عملیات</label>
+          <input id="pr-note" value="Reviewed through web console" />
+          <div class="actions">
+            <button class="success" id="create-pr-btn">ایجاد درخواست خرید</button>
+            <button class="secondary" id="submit-pr-btn">ارسال درخواست خرید</button>
+            <button class="secondary" id="route-pr-btn">ارسال برای بررسی</button>
+            <button class="secondary" id="approve-pr-btn">تایید درخواست خرید</button>
+            <button class="secondary" id="trace-pr-btn">رهگیری</button>
+          </div>
+        </section>
+
+        <section class="card col-6 section-anchor" id="downstream-section">
+          <h2>۷) اجرای سناریوی خرید تکمیلی</h2>
+          <p class="muted">RFQ ← پیشنهاد قیمت ← ارزیابی ← سفارش خرید ← رسید کالا ← QC ← فاکتور ← پرداخت برای بازبینی end-to-end.</p>
+          <div class="row">
+            <div>
+              <label>کد تامین‌کننده</label>
+              <input id="supplier-code" value="SUP-CONSOLE" />
+            </div>
+            <div>
+              <label>نام تامین‌کننده</label>
+              <input id="supplier-name" value="Console Approved Supplier" />
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>شرایط پرداخت تامین‌کننده</label>
+              <input id="supplier-payment-terms" value="30D" />
+            </div>
+            <div>
+              <label>خریدار RFQ</label>
+              <input id="rfq-buyer" value="buyer.1" />
+            </div>
+          </div>
+          <div class="row-4">
+            <div>
+              <label>حداقل تعداد پیشنهاد</label>
+              <input id="rfq-min-quotes" type="number" value="1" />
+            </div>
+            <div>
+              <label>شماره پیشنهاد</label>
+              <input id="quotation-no" value="QUO-CONSOLE-01" />
+            </div>
+            <div>
+              <label>مبلغ پیشنهاد</label>
+              <input id="quotation-amount" type="number" value="25000000" />
+            </div>
+            <div>
+              <label>روزهای تحویل</label>
+              <input id="quotation-delivery-days" type="number" value="7" />
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>کد انبار</label>
+              <input id="receipt-warehouse" value="WH-01" />
+            </div>
+            <div>
+              <label>مرجع تحویل تامین‌کننده</label>
+              <input id="supplier-delivery-ref" value="DLV-CONSOLE-01" />
+            </div>
+          </div>
+          <div class="row-4">
+            <div>
+              <label>مقدار دریافت</label>
+              <input id="receipt-qty" type="number" value="100" />
+            </div>
+            <div>
+              <label>نتیجه QC</label>
+              <select id="qc-result">
+                <option selected>accepted</option>
+                <option>rejected</option>
+              </select>
+            </div>
+            <div>
+              <label>مقدار تاییدشده</label>
+              <input id="qc-accepted-qty" type="number" value="100" />
+            </div>
+            <div>
+              <label>مقدار ردشده</label>
+              <input id="qc-rejected-qty" type="number" value="0" />
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>شماره فاکتور</label>
+              <input id="invoice-no" value="INV-CONSOLE-01" />
+            </div>
+            <div>
+              <label>مرجع بانکی</label>
+              <input id="payment-bank-ref" value="BANK-CONSOLE-01" />
+            </div>
+          </div>
+          <label>یادداشت مشترک</label>
+          <input id="proc-downstream-note" value="Reviewed through web console end-to-end flow" />
+          <div class="actions">
+            <button class="success" id="create-supplier-btn">ایجاد تامین‌کننده</button>
+            <button class="secondary" id="create-rfq-btn">ایجاد RFQ</button>
+            <button class="secondary" id="add-quotation-btn">ثبت پیشنهاد</button>
+            <button class="secondary" id="record-quotes-btn">ثبت دریافت پیشنهادها</button>
+            <button class="secondary" id="commercial-eval-btn">ارزیابی تجاری</button>
+            <button class="secondary" id="technical-approve-btn">تایید فنی</button>
+            <button class="secondary" id="price-approve-btn">تایید قیمت</button>
+            <button class="secondary" id="create-po-btn">ایجاد سفارش خرید</button>
+            <button class="secondary" id="create-grn-btn">ایجاد رسید کالا</button>
+            <button class="secondary" id="create-qc-btn">ایجاد QC</button>
+            <button class="secondary" id="finalize-qc-btn">نهایی‌سازی QC</button>
+            <button class="secondary" id="create-invoice-btn">ایجاد فاکتور</button>
+            <button class="secondary" id="match-invoice-btn">تطبیق سه‌طرفه</button>
+            <button class="secondary" id="create-payment-btn">ایجاد پرداخت</button>
+            <button class="secondary" id="approve-payment-btn">تایید پرداخت</button>
+            <button class="secondary" id="execute-payment-btn">اجرای پرداخت</button>
+            <button class="secondary" id="trace-payment-btn">رهگیری آخرین پرداخت</button>
+          </div>
+          <div class="section-note">برای smoke سریع، minimum quotes روی <code class="inline">1</code> تنظیم شده است. برای کنترل سخت‌گیرانه‌تر می‌توانید تعداد را افزایش دهید.</div>
+        </section>
+
+        <section class="card col-6 section-anchor" id="sales-section">
+          <h2>۸) اجرای سناریوی فروش</h2>
+          <p class="muted">مشتری ← محصول ← قیمت‌گذاری ← سفارش فروش برای مرور سریع سناریوی فروش.</p>
+          <div class="row">
+            <div>
+              <label>کد مشتری</label>
+              <input id="sales-customer-code" value="CUS-CONSOLE" />
+            </div>
+            <div>
+              <label>نام مشتری</label>
+              <input id="sales-customer-name" value="Console Review Customer" />
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>کد محصول</label>
+              <input id="sales-product-code" value="PRD-CONSOLE" />
+            </div>
+            <div>
+              <label>نام محصول</label>
+              <input id="sales-product-name" value="Console Review Product" />
+            </div>
+          </div>
+          <div class="row-4">
+            <div>
+              <label>بهای استاندارد</label>
+              <input id="sales-standard-cost" type="number" value="100" />
+            </div>
+            <div>
+              <label>حداقل قیمت تاییدشده</label>
+              <input id="sales-min-price" type="number" value="130" />
+            </div>
+            <div>
+              <label>قیمت پیشنهادی</label>
+              <input id="sales-proposed-price" type="number" value="160" />
+            </div>
+            <div>
+              <label>مقدار سفارش</label>
+              <input id="sales-order-qty" type="number" value="10" />
+            </div>
+          </div>
+          <label>یادداشت عملیات</label>
+          <input id="sales-note" value="Commercial review completed in console" />
+          <div class="actions">
+            <button class="success" id="create-customer-btn">ایجاد مشتری</button>
+            <button class="success" id="create-product-btn">ایجاد محصول</button>
+            <button class="secondary" id="create-price-btn">ایجاد لیست قیمت</button>
+            <button class="secondary" id="approve-price-btn">تایید قیمت</button>
+            <button class="secondary" id="create-sales-order-btn">ایجاد سفارش فروش</button>
+            <button class="secondary" id="confirm-sales-order-btn">تایید سفارش فروش</button>
+            <button class="secondary" id="trace-sales-order-btn">رهگیری</button>
+          </div>
+        </section>
+
+        <section class="card col-7 section-anchor" id="tools-section">
+          <h2>۹) ابزارهای عمومی و سازنده درخواست</h2>
+          <div class="row-3">
+            <div>
+              <label>الگوی آماده</label>
+              <select id="preset-select"></select>
+            </div>
+            <div>
+              <label>متد</label>
+              <select id="request-method">
+                <option>GET</option>
+                <option>POST</option>
+                <option>PUT</option>
+                <option>PATCH</option>
+                <option>DELETE</option>
+              </select>
+            </div>
+            <div>
+              <label>استفاده از توکن</label>
+              <select id="use-auth">
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+          </div>
+          <label>مسیر API</label>
+          <input id="request-path" value="/api/v1/dashboard/summary" />
+          <label>بدنه JSON</label>
+          <textarea id="request-body">{
+  "actor": "security.1",
+  "actor_role": "Security Officer"
+}</textarea>
+          <div class="actions">
+            <button class="primary" id="send-request-btn">ارسال درخواست</button>
+            <button class="secondary" id="format-json-btn">مرتب‌سازی JSON</button>
+            <button class="secondary" id="use-current-actor-btn">قرار دادن کاربر جاری</button>
+          </div>
+          <div class="divider"></div>
+          <h3>Traceability & audit helpers</h3>
+          <div class="row-3">
+            <div>
+              <label>نوع رهگیری</label>
+              <select id="traceability-type">
+                <option value="purchase-request">Purchase Request</option>
+                <option value="sales-order">Sales Order</option>
+                <option value="document">Generic Document</option>
+              </select>
+            </div>
+            <div>
+              <label>شناسه</label>
+              <input id="traceability-id" value="1" />
+            </div>
+            <div>
+              <label>نوع سند</label>
+              <input id="traceability-object-type" value="payment" />
+            </div>
+          </div>
+          <div class="actions">
+            <button class="secondary" id="traceability-btn">اجرای رهگیری</button>
+          </div>
+          <div class="row">
+            <div>
+              <label>عبارت جست‌وجوی ممیزی</label>
+              <input id="audit-query" placeholder="login_failed / sales_orders / buyer.1" />
+            </div>
+            <div>
+              <label>موجودیت</label>
+              <input id="audit-entity" placeholder="auth" />
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>کاربر</label>
+              <input id="audit-user" placeholder="security.1" />
+            </div>
+            <div>
+              <label>اقدام</label>
+              <input id="audit-action" placeholder="login_failed" />
+            </div>
+          </div>
+          <div class="actions">
+            <button class="secondary" id="audit-search-btn">جست‌وجوی ممیزی</button>
+          </div>
+        </section>
+
+        <section class="card col-5 section-anchor" id="scenarios-section">
+          <h2>۱۰) سناریوهای پیشنهادی برای تست</h2>
+          <ul class="hint-list two-col-list">
+            <li>Create a review user, force reset it, then verify protected endpoints are blocked until password change.</li>
+            <li>Load session inventory and revoke a non-current session.</li>
+            <li>Create a security incident and progress it to close.</li>
+            <li>Run PR creation, submit, route review, and approve with role switching.</li>
+            <li>Create an approved supplier, RFQ, quotation, and PO.</li>
+            <li>Receive goods, finalize QC, and verify invoice matching only works after inventory release.</li>
+            <li>Create payment, approve it, then execute with treasury to validate SoD.</li>
+            <li>Use traceability on payment, PO, RFQ, or PR to inspect upstream/downstream links.</li>
+            <li>Search audit logs for procurement and security lifecycle events.</li>
+          </ul>
+        </section>
+
+        <section class="card col-12 section-anchor" id="response-section">
+          <h2>۱۱) نمایش پاسخ و خروجی عملیات</h2>
+          <div id="response-meta" class="status">هنوز پاسخی ثبت نشده است.</div>
+          <p class="section-note">نتیجهٔ اجرای دکمه‌ها و خطاهای API در این بخش نمایش داده می‌شود.</p>
+          <pre id="response-output">{}</pre>
+        </section>
+      </div>
+    </div>
+
+    <script>
+      const tokenStorageKey = 'borna_console_token';
+      const userStorageKey = 'borna_console_user';
+      const stateStorageKey = 'borna_console_state';
+
+      const tokenArea = document.getElementById('active-token');
+      const sessionStatus = document.getElementById('session-status');
+      const currentUserMeta = document.getElementById('current-user-meta');
+      const responseMeta = document.getElementById('response-meta');
+      const responseOutput = document.getElementById('response-output');
+      const reviewStateOutput = document.getElementById('review-state-output');
+      const responseSection = document.getElementById('response-section');
+      let activeToken = '';
+
+      const presets = [
+        { label: 'Dashboard Summary', method: 'GET', path: '/api/v1/dashboard/summary', body: '' },
+        { label: 'Security Dashboard', method: 'GET', path: '/api/v1/security/dashboard', body: '' },
+        { label: 'My Sessions', method: 'GET', path: '/api/v1/security/my-sessions', body: '' },
+        { label: 'Audit Search: auth failures', method: 'GET', path: '/api/v1/audit/events?entity_name=auth&action=login_failed', body: '' },
+        { label: 'Create User', method: 'POST', path: '/api/v1/users', body: '{\n  "username": "review.user",\n  "password": "Review#1234",\n  "full_name": "Review User",\n  "department_code": "review",\n  "role_code": "Requester",\n  "status": "active"\n}' },
+        { label: 'Create Purchase Request', method: 'POST', path: '/api/v1/purchase-requests', body: '{\n  "requester": "ali",\n  "department": "ops",\n  "reason": "Need packaging material for urgent replenishment",\n  "cost_center_code": "OPS-100",\n  "budget_status": "within_budget",\n  "priority": "normal",\n  "total_estimated_amount": 25000000,\n  "currency": "IRR",\n  "created_by": "ali",\n  "lines": [\n    {\n      "line_no": 1,\n      "description": "Corrugated packaging box",\n      "material_code": "PKG-BOX",\n      "qty": 100,\n      "uom": "pcs",\n      "estimated_unit_price": 250000,\n      "cost_center_code": "OPS-100"\n    }\n  ]\n}' },
+        { label: 'Create RFQ', method: 'POST', path: '/api/v1/rfqs', body: '{\n  "purchase_request_id": 1,\n  "issue_date": "2026-09-22",\n  "close_date": "2026-09-29",\n  "minimum_quote_count": 1,\n  "buyer": "buyer.1",\n  "created_by": "buyer.1"\n}' },
+        { label: 'Create Supplier', method: 'POST', path: '/api/v1/suppliers', body: '{\n  "code": "SUP-CONSOLE",\n  "name": "Console Approved Supplier",\n  "approval_status": "approved",\n  "risk_level": "medium",\n  "payment_terms": "30D"\n}' },
+        { label: 'Create Supplier Invoice', method: 'POST', path: '/api/v1/supplier-invoices', body: '{\n  "supplier_id": 1,\n  "purchase_order_id": 1,\n  "goods_receipt_id": 1,\n  "invoice_no": "INV-CONSOLE-01",\n  "invoice_date": "2026-09-22",\n  "due_date": "2026-10-22",\n  "currency": "IRR",\n  "total_amount": 25000000,\n  "actor": "ap.1",\n  "actor_role": "AP Accountant"\n}' },
+        { label: 'Create Sales Order', method: 'POST', path: '/api/v1/sales-orders', body: '{\n  "customer_id": 1,\n  "product_id": 1,\n  "price_list_id": 1,\n  "order_date": "2026-09-22",\n  "requested_delivery_date": "2026-09-29",\n  "qty": 10,\n  "unit_price": 160,\n  "actor": "sales.1",\n  "actor_role": "Sales Officer"\n}' },
+      ];
+
+      function getToken() {
+        if (activeToken) return activeToken;
+        try {
+          return sessionStorage.getItem(tokenStorageKey) || tokenArea.value || '';
+        } catch (_) {
+          return tokenArea.value || '';
+        }
+      }
+
+      function setToken(token) {
+        activeToken = token || '';
+        try {
+          if (activeToken) sessionStorage.setItem(tokenStorageKey, activeToken);
+          else sessionStorage.removeItem(tokenStorageKey);
+        } catch (_) {}
+        tokenArea.value = activeToken;
+      }
+
+      function getCurrentUser() {
+        try { return JSON.parse(sessionStorage.getItem(userStorageKey) || 'null'); }
+        catch (_) { return null; }
+      }
+
+      function setCurrentUser(user) {
+        if (user) sessionStorage.setItem(userStorageKey, JSON.stringify(user));
+        else sessionStorage.removeItem(userStorageKey);
+        renderSessionInfo();
+      }
+
+      function getReviewState() {
+        try { return JSON.parse(sessionStorage.getItem(stateStorageKey) || '{}'); }
+        catch (_) { return {}; }
+      }
+
+      function setReviewState(nextState) {
+        sessionStorage.setItem(stateStorageKey, JSON.stringify(nextState));
+        renderReviewState();
+      }
+
+      function rememberState(partial) {
+        setReviewState({ ...getReviewState(), ...partial });
+      }
+
+      function clearReviewState() {
+        sessionStorage.removeItem(stateStorageKey);
+        renderReviewState();
+      }
+
+      function setStatus(message, ok = true) {
+        sessionStatus.innerHTML = `<span class="${ok ? 'ok' : 'bad'}">${message}</span>`;
+      }
+
+      function renderSessionInfo() {
+        const user = getCurrentUser();
+        tokenArea.value = getToken();
+        if (!user) {
+          currentUserMeta.innerHTML = '<strong>کاربر</strong><span>-</span><strong>نقش</strong><span>-</span><strong>نیاز به تغییر رمز</strong><span>-</span>';
+          return;
+        }
+        currentUserMeta.innerHTML = `
+          <strong>کاربر</strong><span>${user.username || '-'}</span>
+          <strong>نقش</strong><span>${user.role_code || '-'}</span>
+          <strong>نیاز به تغییر رمز</strong><span>${user.password_reset_required ? 'yes' : 'no'}</span>
+        `;
+      }
+
+      function renderReviewState() {
+        reviewStateOutput.textContent = JSON.stringify(getReviewState(), null, 2);
+      }
+
+      function responseErrorText(payload) {
+        if (typeof payload === 'string') return payload;
+        if (payload && typeof payload.detail === 'string') return payload.detail;
+        return JSON.stringify(payload);
+      }
+
+      function showResponse(status, payload, headers = {}) {
+        responseMeta.textContent = `آخرین پاسخ: HTTP ${status}` + (headers['content-type'] ? ` | ${headers['content-type']}` : '');
+        responseOutput.textContent = typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2);
+      }
+
+      function isoDate(offsetDays = 0) {
+        const now = new Date();
+        now.setDate(now.getDate() + offsetDays);
+        return now.toISOString().slice(0, 10);
+      }
+
+      function getCurrentActor() {
+        const user = getCurrentUser();
+        if (!user?.username || !user?.role_code) throw new Error('ابتدا وارد شوید و کاربر جاری را به‌روزرسانی کنید.');
+        return { actor: user.username, actor_role: user.role_code };
+      }
+
+      function fillCredentials(username) {
+        document.getElementById('login-username').value = username;
+        document.getElementById('login-password').value = username;
+      }
+
+      async function apiRequest(path, { method = 'GET', body = undefined, useAuth = true, tokenOverride = '', focusResponse = true } = {}) {
+        const headers = {};
+        const effectiveToken = tokenOverride || getToken();
+        if (useAuth && effectiveToken) {
+          headers['Authorization'] = `Bearer ${effectiveToken}`;
+          headers['X-Access-Token'] = effectiveToken;
+        }
+        let payloadBody;
+        if (body !== undefined && body !== null && method !== 'GET') {
+          headers['Content-Type'] = 'application/json';
+          payloadBody = typeof body === 'string' ? body : JSON.stringify(body);
+        }
+        const response = await fetch(path, { method, headers, body: payloadBody });
+        const contentType = response.headers.get('content-type') || '';
+        const payload = contentType.includes('application/json') ? await response.json() : await response.text();
+        showResponse(response.status, payload, { 'content-type': contentType });
+        if (focusResponse && responseSection) {
+          responseSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        if (!response.ok) throw new Error(responseErrorText(payload));
+        return payload;
+      }
+
+      async function refreshCurrentUser(showStatus = true, tokenOverride = '') {
+        const effectiveToken = tokenOverride || getToken();
+        if (!effectiveToken) {
+          setCurrentUser(null);
+          if (showStatus) setStatus('توکنی ذخیره نشده است.', false);
+          return null;
+        }
+        try {
+          const payload = await apiRequest('/api/v1/auth/me', { tokenOverride: effectiveToken, focusResponse: false });
+          setCurrentUser(payload);
+          if (showStatus) setStatus(`کاربر جاری: ${payload.username} / ${payload.role_code}`);
+          return payload;
+        } catch (error) {
+          setCurrentUser(null);
+          if (showStatus) setStatus(`بررسی نشست ناموفق بود: ${error.message}`, false);
+          throw error;
+        }
+      }
+
+      function hydrateIdsFromState() {
+        const state = getReviewState();
+        if (state.latest_incident_id) document.getElementById('incident-id').value = String(state.latest_incident_id);
+        if (state.latest_user) document.getElementById('access-target-username').value = state.latest_user;
+        if (state.latest_session_id) document.getElementById('revoke-session-id').value = String(state.latest_session_id);
+        if (state.latest_purchase_request_id) document.getElementById('traceability-id').value = String(state.latest_purchase_request_id);
+      }
+
+      async function loginWithCredentials(username, password) {
+        const payload = await apiRequest('/api/v1/auth/login', {
+          method: 'POST',
+          body: { username, password },
+          useAuth: false,
+          focusResponse: false,
+        });
+        const issuedToken = payload.access_token || '';
+        setToken(issuedToken);
+        try {
+          const me = await refreshCurrentUser(false, issuedToken);
+          setStatus(`ورود موفق: ${username}${me?.password_reset_required ? ' | نیاز به تغییر رمز' : ''}`);
+          if (me?.username) rememberState({ last_logged_in_user: me.username, last_role: me.role_code || null });
+        } catch (_) {
+          setStatus(`توکن برای ${username} صادر شد. اگر اطلاعات نشست خودکار لود نشد، یک بار روی «کاربر فعلی» بزنید.`, true);
+        }
+      }
+
+      async function createReviewUser() {
+        const response = await apiRequest('/api/v1/users', {
+          method: 'POST',
+          body: {
+            username: document.getElementById('new-user-username').value.trim(),
+            password: document.getElementById('new-user-password').value,
+            full_name: document.getElementById('new-user-full-name').value.trim(),
+            department_code: document.getElementById('new-user-department').value.trim() || null,
+            role_code: document.getElementById('new-user-role').value,
+            status: 'active',
+          },
+        });
+        document.getElementById('access-target-username').value = response.username;
+        rememberState({ latest_user: response.username });
+      }
+
+      async function forcePasswordReset() {
+        const username = document.getElementById('access-target-username').value.trim() || getReviewState().latest_user;
+        if (!username) throw new Error('Set a target username first.');
+        await apiRequest(`/api/v1/users/${encodeURIComponent(username)}/force-password-reset`, { method: 'POST' });
+        rememberState({ latest_user: username, forced_reset_target: username });
+      }
+
+      async function changeMyPassword() {
+        await apiRequest('/api/v1/auth/change-password', {
+          method: 'POST',
+          body: {
+            current_password: document.getElementById('change-password-current').value,
+            new_password: document.getElementById('change-password-new').value,
+          },
+        });
+        document.getElementById('login-password').value = document.getElementById('change-password-new').value;
+      }
+
+      async function loadSessionsForTarget() {
+        const currentUser = getCurrentUser();
+        const username = document.getElementById('access-target-username').value.trim() || currentUser?.username;
+        if (!username) throw new Error('No username is available for session lookup.');
+        const path = currentUser && username === currentUser.username
+          ? '/api/v1/security/my-sessions'
+          : `/api/v1/security/sessions?username=${encodeURIComponent(username)}`;
+        const payload = await apiRequest(path);
+        const preferred = (payload.items || []).find((item) => item.is_active && !item.is_current) || (payload.items || [])[0];
+        if (preferred) {
+          document.getElementById('revoke-session-id').value = String(preferred.id);
+          rememberState({ latest_session_id: preferred.id });
+        }
+        rememberState({ latest_session_target: username, latest_session_count: payload.total_count || 0 });
+      }
+
+      async function revokeSelectedSession() {
+        const sessionId = document.getElementById('revoke-session-id').value.trim();
+        if (!sessionId) throw new Error('Load sessions first or enter a session id.');
+        await apiRequest(`/api/v1/security/sessions/${sessionId}/revoke`, { method: 'POST' });
+      }
+
+      async function createIncident() {
+        const response = await apiRequest('/api/v1/security/incidents', {
+          method: 'POST',
+          body: {
+            title: document.getElementById('incident-title').value.trim(),
+            incident_type: document.getElementById('incident-type').value.trim(),
+            severity: document.getElementById('incident-severity').value,
+            related_username: document.getElementById('incident-related-user').value.trim() || null,
+            source_entity_name: document.getElementById('incident-source-entity').value.trim() || null,
+            source_entity_id: document.getElementById('incident-source-id').value.trim() || null,
+            audit_log_ids: [],
+            summary: document.getElementById('incident-summary').value.trim(),
+            assigned_to: document.getElementById('incident-assigned-to').value.trim() || null,
+            ...getCurrentActor(),
+          },
+        });
+        document.getElementById('incident-id').value = String(response.id);
+        rememberState({ latest_incident_id: response.id });
+      }
+
+      async function openLatestIncident() {
+        const incidentId = Number(document.getElementById('incident-id').value || getReviewState().latest_incident_id);
+        if (!incidentId) throw new Error('No incident id is available.');
+        const response = await apiRequest(`/api/v1/security/incidents/${incidentId}`);
+        document.getElementById('incident-id').value = String(response.id);
+        rememberState({ latest_incident_id: response.id });
+      }
+
+      async function runIncidentAction(action) {
+        const incidentId = Number(document.getElementById('incident-id').value || getReviewState().latest_incident_id);
+        if (!incidentId) throw new Error('Create or load an incident first.');
+        const response = await apiRequest(`/api/v1/security/incidents/${incidentId}/${action}`, {
+          method: 'POST',
+          body: {
+            ...getCurrentActor(),
+            note: document.getElementById('incident-note').value.trim() || null,
+            assigned_to: document.getElementById('incident-reassign').value.trim() || null,
+            containment_action: document.getElementById('incident-containment').value.trim() || null,
+            resolution_note: document.getElementById('incident-resolution').value.trim() || null,
+          },
+        });
+        document.getElementById('incident-id').value = String(response.id);
+        rememberState({ latest_incident_id: response.id });
+      }
+
+      async function createPurchaseRequest() {
+        const requester = document.getElementById('pr-requester').value.trim();
+        const qty = Number(document.getElementById('pr-qty').value || 0);
+        const unitPrice = Number(document.getElementById('pr-unit-price').value || 0);
+        const response = await apiRequest('/api/v1/purchase-requests', {
+          method: 'POST',
+          body: {
+            requester,
+            department: document.getElementById('pr-department').value.trim(),
+            reason: document.getElementById('pr-reason').value.trim(),
+            cost_center_code: document.getElementById('pr-cost-center').value.trim() || null,
+            budget_status: 'within_budget',
+            priority: 'normal',
+            total_estimated_amount: qty * unitPrice,
+            currency: 'IRR',
+            created_by: requester,
+            lines: [{
+              line_no: 1,
+              description: document.getElementById('pr-line-description').value.trim(),
+              material_code: document.getElementById('pr-material-code').value.trim() || null,
+              qty,
+              uom: 'pcs',
+              estimated_unit_price: unitPrice,
+              cost_center_code: document.getElementById('pr-cost-center').value.trim() || 'OPS-100',
+            }],
+          },
+        });
+        document.getElementById('traceability-type').value = 'purchase-request';
+        document.getElementById('traceability-id').value = String(response.id);
+        rememberState({ latest_purchase_request_id: response.id, latest_pr_code: response.code });
+      }
+
+      async function runPurchaseRequestAction(action) {
+        const prId = Number(getReviewState().latest_purchase_request_id || document.getElementById('traceability-id').value);
+        if (!prId) throw new Error('Create a purchase request first.');
+        const actor = getCurrentActor();
+        const payload = action === 'submit'
+          ? { ...actor, exception_approved: false }
+          : { ...actor, note: document.getElementById('pr-note').value.trim() || null };
+        const response = await apiRequest(`/api/v1/purchase-requests/${prId}/${action}`, { method: 'POST', body: payload });
+        rememberState({ latest_purchase_request_id: response.id, latest_pr_status: response.status });
+      }
+
+      async function tracePurchaseRequest() {
+        const prId = Number(getReviewState().latest_purchase_request_id);
+        if (!prId) throw new Error('No purchase request id in review state.');
+        document.getElementById('traceability-type').value = 'purchase-request';
+        document.getElementById('traceability-id').value = String(prId);
+        await apiRequest(`/api/v1/traceability/purchase-requests/${prId}`);
+      }
+
+      async function createSupplier() {
+        const response = await apiRequest('/api/v1/suppliers', {
+          method: 'POST',
+          body: {
+            code: document.getElementById('supplier-code').value.trim(),
+            name: document.getElementById('supplier-name').value.trim(),
+            approval_status: 'approved',
+            risk_level: 'medium',
+            payment_terms: document.getElementById('supplier-payment-terms').value.trim() || null,
+          },
+        });
+        rememberState({ latest_supplier_id: response.id, latest_supplier_code: response.code });
+      }
+
+      async function createRfq() {
+        const prId = Number(getReviewState().latest_purchase_request_id);
+        if (!prId) throw new Error('Approve a purchase request first.');
+        const buyer = document.getElementById('rfq-buyer').value.trim();
+        const response = await apiRequest('/api/v1/rfqs', {
+          method: 'POST',
+          body: {
+            purchase_request_id: prId,
+            issue_date: isoDate(0),
+            close_date: isoDate(7),
+            minimum_quote_count: Number(document.getElementById('rfq-min-quotes').value || 1),
+            buyer,
+            created_by: buyer,
+          },
+        });
+        rememberState({ latest_rfq_id: response.id, latest_rfq_code: response.code });
+      }
+
+      async function addQuotation() {
+        const rfqId = Number(getReviewState().latest_rfq_id);
+        const supplierId = Number(getReviewState().latest_supplier_id);
+        if (!rfqId || !supplierId) throw new Error('Create supplier and RFQ first.');
+        const response = await apiRequest(`/api/v1/rfqs/${rfqId}/quotations`, {
+          method: 'POST',
+          body: {
+            supplier_id: supplierId,
+            quote_no: document.getElementById('quotation-no').value.trim(),
+            quote_date: isoDate(0),
+            currency: 'IRR',
+            validity_date: isoDate(14),
+            delivery_days: Number(document.getElementById('quotation-delivery-days').value || 0),
+            payment_terms: document.getElementById('supplier-payment-terms').value.trim() || null,
+            total_amount: Number(document.getElementById('quotation-amount').value || 0),
+            price_variance_pct: 0,
+            commercial_score: 90,
+            technical_score: 88,
+            created_by: getCurrentUser()?.username || undefined,
+          },
+        });
+        rememberState({
+          latest_quotation_id: response.id,
+          latest_quote_no: response.quote_no,
+          latest_quote_amount: response.total_amount,
+          latest_selected_quotation_id: response.id,
+        });
+      }
+
+      async function recordQuotes() {
+        const rfqId = Number(getReviewState().latest_rfq_id);
+        if (!rfqId) throw new Error('Create RFQ first.');
+        await apiRequest(`/api/v1/rfqs/${rfqId}/record-quotes`, {
+          method: 'POST',
+          body: { ...getCurrentActor(), exception_approved: false },
+        });
+      }
+
+      async function commercialEvaluate() {
+        const rfqId = Number(getReviewState().latest_rfq_id);
+        const quotationId = Number(getReviewState().latest_selected_quotation_id || getReviewState().latest_quotation_id);
+        if (!rfqId || !quotationId) throw new Error('Add a quotation first.');
+        await apiRequest(`/api/v1/rfqs/${rfqId}/commercial-evaluate`, {
+          method: 'POST',
+          body: {
+            ...getCurrentActor(),
+            selected_quotation_id: quotationId,
+            note: document.getElementById('proc-downstream-note').value.trim() || null,
+          },
+        });
+      }
+
+      async function technicalApprove() {
+        const rfqId = Number(getReviewState().latest_rfq_id);
+        if (!rfqId) throw new Error('Create RFQ first.');
+        await apiRequest(`/api/v1/rfqs/${rfqId}/technical-approve`, {
+          method: 'POST',
+          body: { ...getCurrentActor(), note: document.getElementById('proc-downstream-note').value.trim() || null },
+        });
+      }
+
+      async function priceApprove() {
+        const rfqId = Number(getReviewState().latest_rfq_id);
+        if (!rfqId) throw new Error('Create RFQ first.');
+        await apiRequest(`/api/v1/rfqs/${rfqId}/price-approve`, {
+          method: 'POST',
+          body: { ...getCurrentActor(), note: document.getElementById('proc-downstream-note').value.trim() || null },
+        });
+      }
+
+      async function createPurchaseOrder() {
+        const rfqId = Number(getReviewState().latest_rfq_id);
+        const quotationId = Number(getReviewState().latest_selected_quotation_id || getReviewState().latest_quotation_id);
+        if (!rfqId || !quotationId) throw new Error('Create RFQ and quotation first.');
+        const response = await apiRequest('/api/v1/purchase-orders', {
+          method: 'POST',
+          body: {
+            rfq_id: rfqId,
+            selected_quotation_id: quotationId,
+            order_date: isoDate(0),
+            delivery_date: isoDate(7),
+            emergency_flag: false,
+            exception_approved: false,
+            note: document.getElementById('proc-downstream-note').value.trim() || null,
+            ...getCurrentActor(),
+          },
+        });
+        document.getElementById('traceability-type').value = 'document';
+        document.getElementById('traceability-object-type').value = 'po';
+        document.getElementById('traceability-id').value = String(response.id);
+        rememberState({ latest_po_id: response.id, latest_po_code: response.code, latest_po_supplier_id: response.supplier_id });
+      }
+
+      async function createGoodsReceipt() {
+        const poId = Number(getReviewState().latest_po_id);
+        if (!poId) throw new Error('Create a purchase order first.');
+        const response = await apiRequest('/api/v1/goods-receipts', {
+          method: 'POST',
+          body: {
+            purchase_order_id: poId,
+            receipt_date: isoDate(1),
+            warehouse_code: document.getElementById('receipt-warehouse').value.trim(),
+            supplier_delivery_ref: document.getElementById('supplier-delivery-ref').value.trim() || null,
+            received_qty: Number(document.getElementById('receipt-qty').value || 0),
+            ...getCurrentActor(),
+          },
+        });
+        rememberState({ latest_receipt_id: response.id, latest_grn_code: response.code });
+      }
+
+      async function createQualityInspection() {
+        const receiptId = Number(getReviewState().latest_receipt_id);
+        const currentUser = getCurrentUser();
+        if (!receiptId) throw new Error('Create a goods receipt first.');
+        if (!currentUser?.username || !currentUser?.role_code) throw new Error('Login as QC Inspector first.');
+        const response = await apiRequest('/api/v1/quality-inspections', {
+          method: 'POST',
+          body: {
+            goods_receipt_id: receiptId,
+            inspection_date: isoDate(1),
+            inspector: currentUser.username,
+            actor_role: currentUser.role_code,
+          },
+        });
+        rememberState({ latest_qc_id: response.id, latest_qc_code: response.code });
+      }
+
+      async function finalizeQualityInspection() {
+        const qcId = Number(getReviewState().latest_qc_id);
+        if (!qcId) throw new Error('Create QC first.');
+        const result = document.getElementById('qc-result').value;
+        const response = await apiRequest(`/api/v1/quality-inspections/${qcId}/finalize`, {
+          method: 'POST',
+          body: {
+            ...getCurrentActor(),
+            result,
+            accepted_qty: Number(document.getElementById('qc-accepted-qty').value || 0),
+            rejected_qty: Number(document.getElementById('qc-rejected-qty').value || 0),
+            defect_code: result === 'rejected' ? 'QC-FAIL' : null,
+            corrective_action: result === 'rejected' ? 'Return material to supplier' : 'Inventory released',
+            note: document.getElementById('proc-downstream-note').value.trim() || null,
+          },
+        });
+        rememberState({ latest_qc_id: response.id, latest_qc_status: response.status });
+      }
+
+      async function createSupplierInvoice() {
+        const poId = Number(getReviewState().latest_po_id);
+        const receiptId = Number(getReviewState().latest_receipt_id);
+        const supplierId = Number(getReviewState().latest_po_supplier_id || getReviewState().latest_supplier_id);
+        if (!poId || !receiptId || !supplierId) throw new Error('Need supplier, PO, and goods receipt first.');
+        const response = await apiRequest('/api/v1/supplier-invoices', {
+          method: 'POST',
+          body: {
+            supplier_id: supplierId,
+            purchase_order_id: poId,
+            goods_receipt_id: receiptId,
+            invoice_no: document.getElementById('invoice-no').value.trim(),
+            invoice_date: isoDate(2),
+            due_date: isoDate(32),
+            currency: 'IRR',
+            total_amount: Number(getReviewState().latest_quote_amount || document.getElementById('quotation-amount').value || 0),
+            ...getCurrentActor(),
+          },
+        });
+        rememberState({ latest_invoice_id: response.id, latest_invoice_code: response.code });
+      }
+
+      async function matchSupplierInvoice() {
+        const invoiceId = Number(getReviewState().latest_invoice_id);
+        if (!invoiceId) throw new Error('Create supplier invoice first.');
+        await apiRequest(`/api/v1/supplier-invoices/${invoiceId}/match`, {
+          method: 'POST',
+          body: { ...getCurrentActor(), note: document.getElementById('proc-downstream-note').value.trim() || null },
+        });
+      }
+
+      async function createPayment() {
+        const invoiceId = Number(getReviewState().latest_invoice_id);
+        if (!invoiceId) throw new Error('Create and match invoice first.');
+        const response = await apiRequest('/api/v1/payments', {
+          method: 'POST',
+          body: {
+            supplier_invoice_id: invoiceId,
+            payment_date: isoDate(3),
+            amount: Number(getReviewState().latest_quote_amount || document.getElementById('quotation-amount').value || 0),
+            currency: 'IRR',
+            payment_method: 'bank_transfer',
+            bank_reference: document.getElementById('payment-bank-ref').value.trim() || null,
+            ...getCurrentActor(),
+          },
+        });
+        document.getElementById('traceability-type').value = 'document';
+        document.getElementById('traceability-object-type').value = 'payment';
+        document.getElementById('traceability-id').value = String(response.id);
+        rememberState({ latest_payment_id: response.id, latest_payment_code: response.code });
+      }
+
+      async function approvePayment() {
+        const paymentId = Number(getReviewState().latest_payment_id);
+        if (!paymentId) throw new Error('Create payment first.');
+        await apiRequest(`/api/v1/payments/${paymentId}/approve`, {
+          method: 'POST',
+          body: { ...getCurrentActor(), note: document.getElementById('proc-downstream-note').value.trim() || null },
+        });
+      }
+
+      async function executePayment() {
+        const paymentId = Number(getReviewState().latest_payment_id);
+        if (!paymentId) throw new Error('Create payment first.');
+        await apiRequest(`/api/v1/payments/${paymentId}/execute`, {
+          method: 'POST',
+          body: { ...getCurrentActor(), note: document.getElementById('proc-downstream-note').value.trim() || null },
+        });
+      }
+
+      async function traceLatestPayment() {
+        const paymentId = Number(getReviewState().latest_payment_id);
+        if (!paymentId) throw new Error('No payment id in review state.');
+        document.getElementById('traceability-type').value = 'document';
+        document.getElementById('traceability-object-type').value = 'payment';
+        document.getElementById('traceability-id').value = String(paymentId);
+        await apiRequest(`/api/v1/traceability/document/payment/${paymentId}`);
+      }
+
+      async function createCustomer() {
+        const response = await apiRequest('/api/v1/customers', {
+          method: 'POST',
+          body: {
+            code: document.getElementById('sales-customer-code').value.trim(),
+            name: document.getElementById('sales-customer-name').value.trim(),
+            payment_terms: '30D',
+            credit_limit: 100000,
+            credit_status: 'open',
+          },
+        });
+        rememberState({ latest_customer_id: response.id, latest_customer_code: response.code });
+      }
+
+      async function createProduct() {
+        const response = await apiRequest('/api/v1/products', {
+          method: 'POST',
+          body: {
+            code: document.getElementById('sales-product-code').value.trim(),
+            name: document.getElementById('sales-product-name').value.trim(),
+            family: 'FG',
+            uom: 'pcs',
+            standard_cost: Number(document.getElementById('sales-standard-cost').value || 0),
+            approved_min_price: Number(document.getElementById('sales-min-price').value || 0),
+            pricing_method: 'Cost Plus',
+            status: 'active',
+          },
+        });
+        rememberState({ latest_product_id: response.id, latest_product_code: response.code });
+      }
+
+      async function createPriceList() {
+        const state = getReviewState();
+        if (!state.latest_customer_id || !state.latest_product_id) throw new Error('Create customer and product first.');
+        const response = await apiRequest('/api/v1/pricing', {
+          method: 'POST',
+          body: {
+            customer_id: state.latest_customer_id,
+            product_id: state.latest_product_id,
+            pricing_method: 'Cost Plus',
+            cost_basis: Number(document.getElementById('sales-standard-cost').value || 0),
+            target_margin_pct: 25,
+            logistics_cost: 5,
+            financial_cost: 3,
+            risk_cost: 2,
+            proposed_price: Number(document.getElementById('sales-proposed-price').value || 0),
+            approved_min_price: Number(document.getElementById('sales-min-price').value || 0),
+            valid_from: isoDate(0),
+            valid_to: isoDate(30),
+            ...getCurrentActor(),
+          },
+        });
+        rememberState({ latest_price_list_id: response.id, latest_price_list_code: response.code });
+      }
+
+      async function approvePriceList() {
+        const priceListId = Number(getReviewState().latest_price_list_id);
+        if (!priceListId) throw new Error('Create a price list first.');
+        const response = await apiRequest(`/api/v1/pricing/${priceListId}/approve`, {
+          method: 'POST',
+          body: { ...getCurrentActor(), note: document.getElementById('sales-note').value.trim() || null },
+        });
+        rememberState({ latest_price_list_id: response.id, latest_price_list_status: response.status });
+      }
+
+      async function createSalesOrder() {
+        const state = getReviewState();
+        if (!state.latest_customer_id || !state.latest_product_id || !state.latest_price_list_id) {
+          throw new Error('Create customer, product, and approved price list first.');
+        }
+        const response = await apiRequest('/api/v1/sales-orders', {
+          method: 'POST',
+          body: {
+            customer_id: state.latest_customer_id,
+            product_id: state.latest_product_id,
+            price_list_id: state.latest_price_list_id,
+            order_date: isoDate(0),
+            requested_delivery_date: isoDate(7),
+            qty: Number(document.getElementById('sales-order-qty').value || 0),
+            unit_price: Number(document.getElementById('sales-proposed-price').value || 0),
+            ...getCurrentActor(),
+          },
+        });
+        document.getElementById('traceability-type').value = 'sales-order';
+        document.getElementById('traceability-id').value = String(response.id);
+        rememberState({ latest_sales_order_id: response.id, latest_sales_order_code: response.code });
+      }
+
+      async function confirmSalesOrder() {
+        const salesOrderId = Number(getReviewState().latest_sales_order_id);
+        if (!salesOrderId) throw new Error('Create a sales order first.');
+        const response = await apiRequest(`/api/v1/sales-orders/${salesOrderId}/confirm`, {
+          method: 'POST',
+          body: { ...getCurrentActor(), note: document.getElementById('sales-note').value.trim() || null },
+        });
+        rememberState({ latest_sales_order_id: response.id, latest_sales_order_status: response.status });
+      }
+
+      async function traceSalesOrder() {
+        const salesOrderId = Number(getReviewState().latest_sales_order_id);
+        if (!salesOrderId) throw new Error('No sales order id in review state.');
+        document.getElementById('traceability-type').value = 'sales-order';
+        document.getElementById('traceability-id').value = String(salesOrderId);
+        await apiRequest(`/api/v1/traceability/sales-orders/${salesOrderId}`);
+      }
+
+      function loadPreset(index) {
+        const preset = presets[index];
+        if (!preset) return;
+        document.getElementById('request-method').value = preset.method;
+        document.getElementById('request-path').value = preset.path;
+        document.getElementById('request-body').value = preset.body || '';
+      }
+
+      function injectCurrentActor() {
+        const area = document.getElementById('request-body');
+        const actor = getCurrentActor();
+        const payload = area.value.trim() ? JSON.parse(area.value) : {};
+        payload.actor = actor.actor;
+        payload.actor_role = actor.actor_role;
+        area.value = JSON.stringify(payload, null, 2);
+      }
+
+      async function runTraceability() {
+        const type = document.getElementById('traceability-type').value;
+        const id = document.getElementById('traceability-id').value.trim();
+        const objectType = document.getElementById('traceability-object-type').value.trim();
+        let path = `/api/v1/traceability/purchase-requests/${id}`;
+        if (type === 'sales-order') path = `/api/v1/traceability/sales-orders/${id}`;
+        if (type === 'document') path = `/api/v1/traceability/document/${objectType}/${id}`;
+        await apiRequest(path);
+      }
+
+      async function searchAudit() {
+        const params = new URLSearchParams();
+        const q = document.getElementById('audit-query').value.trim();
+        const entity = document.getElementById('audit-entity').value.trim();
+        const user = document.getElementById('audit-user').value.trim();
+        const action = document.getElementById('audit-action').value.trim();
+        if (q) params.set('q', q);
+        if (entity) params.set('entity_name', entity);
+        if (user) params.set('user_name', user);
+        if (action) params.set('action', action);
+        const query = params.toString();
+        await apiRequest(`/api/v1/audit/events${query ? `?${query}` : ''}`);
+      }
+
+      document.getElementById('login-btn').addEventListener('click', async () => {
+        try { await loginWithCredentials(document.getElementById('login-username').value.trim(), document.getElementById('login-password').value); }
+        catch (error) { setStatus(`Login failed: ${error.message}`, false); }
+      });
+
+      document.querySelectorAll('[data-login-shortcut]').forEach((button) => {
+        button.addEventListener('click', async () => {
+          const username = button.dataset.loginShortcut;
+          fillCredentials(username);
+          try { await loginWithCredentials(username, username); }
+          catch (error) { setStatus(`Shortcut login failed: ${error.message}`, false); }
+        });
+      });
+
+      document.getElementById('logout-btn').addEventListener('click', async () => {
+        try {
+          await apiRequest('/api/v1/auth/logout', { method: 'POST', focusResponse: false });
+          setToken('');
+          setCurrentUser(null);
+          setStatus('Logged out');
+        } catch (error) {
+          setStatus(`Logout failed: ${error.message}`, false);
+        }
+      });
+
+      document.getElementById('me-btn').addEventListener('click', async () => { try { await refreshCurrentUser(true); } catch (_) {} });
+      document.getElementById('sync-me-btn').addEventListener('click', async () => { try { await refreshCurrentUser(true); } catch (_) {} });
+      document.getElementById('clear-review-state-btn').addEventListener('click', () => { clearReviewState(); hydrateIdsFromState(); });
+
+      document.querySelectorAll('[data-path]').forEach((button) => {
+        button.addEventListener('click', async () => { try { await apiRequest(button.dataset.path, { method: button.dataset.method || 'GET' }); } catch (_) {} });
+      });
+
+      document.getElementById('create-user-btn').addEventListener('click', async () => { try { await createReviewUser(); setStatus('کاربر ایجاد شد.'); } catch (error) { setStatus(`Create user failed: ${error.message}`, false); } });
+      document.getElementById('force-reset-btn').addEventListener('click', async () => { try { await forcePasswordReset(); setStatus('اجبار به تغییر رمز ثبت شد.'); } catch (error) { setStatus(`Force reset failed: ${error.message}`, false); } });
+      document.getElementById('change-password-btn').addEventListener('click', async () => { try { await changeMyPassword(); await refreshCurrentUser(false); setStatus('رمز عبور با موفقیت تغییر کرد.'); } catch (error) { setStatus(`Change password failed: ${error.message}`, false); } });
+      document.getElementById('load-user-sessions-btn').addEventListener('click', async () => { try { await loadSessionsForTarget(); setStatus('نشست‌ها بارگذاری شد.'); } catch (error) { setStatus(`Load sessions failed: ${error.message}`, false); } });
+      document.getElementById('revoke-session-btn').addEventListener('click', async () => { try { await revokeSelectedSession(); setStatus('نشست لغو شد.'); } catch (error) { setStatus(`Revoke session failed: ${error.message}`, false); } });
+
+      document.getElementById('create-incident-btn').addEventListener('click', async () => { try { await createIncident(); setStatus('رخداد ایجاد شد.'); } catch (error) { setStatus(`Create incident failed: ${error.message}`, false); } });
+      document.getElementById('list-incidents-btn').addEventListener('click', async () => { try { await apiRequest('/api/v1/security/incidents'); } catch (_) {} });
+      document.getElementById('open-latest-incident-btn').addEventListener('click', async () => { try { await openLatestIncident(); setStatus('رخداد بارگذاری شد.'); } catch (error) { setStatus(`Open incident failed: ${error.message}`, false); } });
+      document.querySelectorAll('[data-incident-action]').forEach((button) => {
+        button.addEventListener('click', async () => { try { await runIncidentAction(button.dataset.incidentAction); setStatus(`اقدام رخداد ${button.dataset.incidentAction} انجام شد.`); } catch (error) { setStatus(`${button.dataset.incidentAction} failed: ${error.message}`, false); } });
+      });
+
+      document.getElementById('create-pr-btn').addEventListener('click', async () => { try { await createPurchaseRequest(); setStatus('درخواست خرید ایجاد شد.'); } catch (error) { setStatus(`Create PR failed: ${error.message}`, false); } });
+      document.getElementById('submit-pr-btn').addEventListener('click', async () => { try { await runPurchaseRequestAction('submit'); setStatus('درخواست خرید ارسال شد.'); } catch (error) { setStatus(`Submit PR failed: ${error.message}`, false); } });
+      document.getElementById('route-pr-btn').addEventListener('click', async () => { try { await runPurchaseRequestAction('route-review'); setStatus('درخواست خرید برای بررسی ارسال شد.'); } catch (error) { setStatus(`Route review failed: ${error.message}`, false); } });
+      document.getElementById('approve-pr-btn').addEventListener('click', async () => { try { await runPurchaseRequestAction('approve'); setStatus('درخواست خرید تایید شد.'); } catch (error) { setStatus(`Approve PR failed: ${error.message}`, false); } });
+      document.getElementById('trace-pr-btn').addEventListener('click', async () => { try { await tracePurchaseRequest(); } catch (error) { setStatus(`Traceability failed: ${error.message}`, false); } });
+
+      document.getElementById('create-supplier-btn').addEventListener('click', async () => { try { await createSupplier(); setStatus('تامین‌کننده ایجاد شد.'); } catch (error) { setStatus(`Create supplier failed: ${error.message}`, false); } });
+      document.getElementById('create-rfq-btn').addEventListener('click', async () => { try { await createRfq(); setStatus('RFQ ایجاد شد.'); } catch (error) { setStatus(`Create RFQ failed: ${error.message}`, false); } });
+      document.getElementById('add-quotation-btn').addEventListener('click', async () => { try { await addQuotation(); setStatus('پیشنهاد ثبت شد.'); } catch (error) { setStatus(`Add quotation failed: ${error.message}`, false); } });
+      document.getElementById('record-quotes-btn').addEventListener('click', async () => { try { await recordQuotes(); setStatus('ثبت پیشنهادها انجام شد.'); } catch (error) { setStatus(`Record quotes failed: ${error.message}`, false); } });
+      document.getElementById('commercial-eval-btn').addEventListener('click', async () => { try { await commercialEvaluate(); setStatus('ارزیابی تجاری انجام شد.'); } catch (error) { setStatus(`Commercial evaluation failed: ${error.message}`, false); } });
+      document.getElementById('technical-approve-btn').addEventListener('click', async () => { try { await technicalApprove(); setStatus('تایید فنی انجام شد.'); } catch (error) { setStatus(`Technical approval failed: ${error.message}`, false); } });
+      document.getElementById('price-approve-btn').addEventListener('click', async () => { try { await priceApprove(); setStatus('تایید قیمت انجام شد.'); } catch (error) { setStatus(`Price approval failed: ${error.message}`, false); } });
+      document.getElementById('create-po-btn').addEventListener('click', async () => { try { await createPurchaseOrder(); setStatus('سفارش خرید ایجاد شد.'); } catch (error) { setStatus(`Create PO failed: ${error.message}`, false); } });
+      document.getElementById('create-grn-btn').addEventListener('click', async () => { try { await createGoodsReceipt(); setStatus('رسید کالا ایجاد شد.'); } catch (error) { setStatus(`Create GRN failed: ${error.message}`, false); } });
+      document.getElementById('create-qc-btn').addEventListener('click', async () => { try { await createQualityInspection(); setStatus('QC ایجاد شد.'); } catch (error) { setStatus(`Create QC failed: ${error.message}`, false); } });
+      document.getElementById('finalize-qc-btn').addEventListener('click', async () => { try { await finalizeQualityInspection(); setStatus('QC نهایی شد.'); } catch (error) { setStatus(`Finalize QC failed: ${error.message}`, false); } });
+      document.getElementById('create-invoice-btn').addEventListener('click', async () => { try { await createSupplierInvoice(); setStatus('فاکتور تامین‌کننده ایجاد شد.'); } catch (error) { setStatus(`Create invoice failed: ${error.message}`, false); } });
+      document.getElementById('match-invoice-btn').addEventListener('click', async () => { try { await matchSupplierInvoice(); setStatus('تطبیق فاکتور انجام شد.'); } catch (error) { setStatus(`3-way match failed: ${error.message}`, false); } });
+      document.getElementById('create-payment-btn').addEventListener('click', async () => { try { await createPayment(); setStatus('پرداخت ایجاد شد.'); } catch (error) { setStatus(`Create payment failed: ${error.message}`, false); } });
+      document.getElementById('approve-payment-btn').addEventListener('click', async () => { try { await approvePayment(); setStatus('پرداخت تایید شد.'); } catch (error) { setStatus(`Approve payment failed: ${error.message}`, false); } });
+      document.getElementById('execute-payment-btn').addEventListener('click', async () => { try { await executePayment(); setStatus('پرداخت اجرا شد.'); } catch (error) { setStatus(`Execute payment failed: ${error.message}`, false); } });
+      document.getElementById('trace-payment-btn').addEventListener('click', async () => { try { await traceLatestPayment(); } catch (error) { setStatus(`Traceability failed: ${error.message}`, false); } });
+
+      document.getElementById('create-customer-btn').addEventListener('click', async () => { try { await createCustomer(); setStatus('مشتری ایجاد شد.'); } catch (error) { setStatus(`Create customer failed: ${error.message}`, false); } });
+      document.getElementById('create-product-btn').addEventListener('click', async () => { try { await createProduct(); setStatus('محصول ایجاد شد.'); } catch (error) { setStatus(`Create product failed: ${error.message}`, false); } });
+      document.getElementById('create-price-btn').addEventListener('click', async () => { try { await createPriceList(); setStatus('لیست قیمت ایجاد شد.'); } catch (error) { setStatus(`Create price list failed: ${error.message}`, false); } });
+      document.getElementById('approve-price-btn').addEventListener('click', async () => { try { await approvePriceList(); setStatus('لیست قیمت تایید شد.'); } catch (error) { setStatus(`Approve price failed: ${error.message}`, false); } });
+      document.getElementById('create-sales-order-btn').addEventListener('click', async () => { try { await createSalesOrder(); setStatus('سفارش فروش ایجاد شد.'); } catch (error) { setStatus(`Create sales order failed: ${error.message}`, false); } });
+      document.getElementById('confirm-sales-order-btn').addEventListener('click', async () => { try { await confirmSalesOrder(); setStatus('سفارش فروش تایید شد.'); } catch (error) { setStatus(`Confirm sales order failed: ${error.message}`, false); } });
+      document.getElementById('trace-sales-order-btn').addEventListener('click', async () => { try { await traceSalesOrder(); } catch (error) { setStatus(`Traceability failed: ${error.message}`, false); } });
+
+      document.getElementById('send-request-btn').addEventListener('click', async () => {
+        try {
+          const path = document.getElementById('request-path').value.trim();
+          const method = document.getElementById('request-method').value;
+          const useAuth = document.getElementById('use-auth').value === 'yes';
+          const raw = document.getElementById('request-body').value.trim();
+          const body = raw && method !== 'GET' ? JSON.parse(raw) : undefined;
+          await apiRequest(path, { method, body, useAuth });
+        } catch (error) {
+          setStatus(`Request failed: ${error.message}`, false);
+        }
+      });
+
+      document.getElementById('format-json-btn').addEventListener('click', () => {
+        const area = document.getElementById('request-body');
+        if (!area.value.trim()) return;
+        try { area.value = JSON.stringify(JSON.parse(area.value), null, 2); }
+        catch (error) { setStatus(`JSON format error: ${error.message}`, false); }
+      });
+
+      document.getElementById('use-current-actor-btn').addEventListener('click', () => {
+        try { injectCurrentActor(); setStatus('کاربر جاری داخل JSON قرار گرفت.'); }
+        catch (error) { setStatus(`Inject actor failed: ${error.message}`, false); }
+      });
+
+      document.getElementById('traceability-btn').addEventListener('click', async () => { try { await runTraceability(); } catch (error) { setStatus(`Traceability failed: ${error.message}`, false); } });
+      document.getElementById('audit-search-btn').addEventListener('click', async () => { try { await searchAudit(); } catch (error) { setStatus(`Audit search failed: ${error.message}`, false); } });
+
+      const presetSelect = document.getElementById('preset-select');
+      presets.forEach((preset, index) => {
+        const option = document.createElement('option');
+        option.value = String(index);
+        option.textContent = preset.label;
+        presetSelect.appendChild(option);
+      });
+      presetSelect.addEventListener('change', () => loadPreset(Number(presetSelect.value)));
+
+      loadPreset(0);
+      renderSessionInfo();
+      renderReviewState();
+      hydrateIdsFromState();
+      if (getToken()) refreshCurrentUser(false).catch(() => {});
+    </script>
+  </body>
+</html>

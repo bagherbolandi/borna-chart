@@ -1,1572 +1,1948 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Borna Process Control Console</title>
+    <title>سامانه عملیات فرایندی بورنا</title>
     <style>
       :root {
-        --bg: #0b1020;
-        --panel: #121a31;
-        --panel-2: #182241;
-        --border: #2d3b6b;
-        --text: #e9eefc;
-        --muted: #9fb0dc;
-        --accent: #66d9ef;
-        --success: #25c17e;
-        --warn: #ffb020;
-        --danger: #ff6b6b;
+        color-scheme: light;
+        --bg: #f4f7fb;
+        --panel: #ffffff;
+        --panel-soft: #f8fbff;
+        --line: #d9e4f2;
+        --text: #122033;
+        --muted: #5c6b7c;
+        --primary: #1d4ed8;
+        --primary-soft: #dbeafe;
+        --success: #0f766e;
+        --success-soft: #d1fae5;
+        --warning: #92400e;
+        --warning-soft: #fef3c7;
+        --danger: #b91c1c;
+        --danger-soft: #fee2e2;
+        --shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+        --radius: 18px;
       }
+
       * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
       body {
         margin: 0;
-        font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        background: linear-gradient(180deg, #09101f 0%, #10182f 100%);
+        font-family: Tahoma, "Segoe UI", sans-serif;
+        background: linear-gradient(180deg, #eef4ff 0%, var(--bg) 180px);
         color: var(--text);
       }
-      a { color: var(--accent); }
-      .container { max-width: 1500px; margin: 0 auto; padding: 24px; }
-      .hero, .card {
-        background: rgba(18, 26, 49, 0.94);
-        border: 1px solid var(--border);
-        border-radius: 18px;
+
+      .hidden { display: none !important; }
+      .auth-shell {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 24px;
       }
-      .hero { padding: 24px; margin-bottom: 20px; }
-      .hero h1 { margin: 0 0 8px; font-size: 30px; }
-      .hero p { margin: 6px 0; color: var(--muted); }
-      .hero-links, .actions, .chips { display: flex; flex-wrap: wrap; gap: 10px; }
-      .hero-links { margin-top: 16px; }
+      .auth-card {
+        width: min(1120px, 100%);
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+      }
+      .hero-panel {
+        background: radial-gradient(circle at top right, #1d4ed8 0%, #0f172a 85%);
+        color: #fff;
+        padding: 40px;
+      }
+      .hero-panel h1 {
+        margin: 0 0 12px;
+        font-size: 34px;
+      }
+      .hero-panel p {
+        line-height: 1.9;
+        color: rgba(255,255,255,0.92);
+      }
+      .hero-points {
+        display: grid;
+        gap: 14px;
+        margin-top: 28px;
+      }
+      .hero-point {
+        background: rgba(255,255,255,0.12);
+        border: 1px solid rgba(255,255,255,0.18);
+        border-radius: 16px;
+        padding: 14px 16px;
+      }
+      .hero-point strong { display: block; margin-bottom: 6px; }
+
+      .login-panel {
+        padding: 34px 32px;
+        background: var(--panel);
+      }
       .badge {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        font-size: 12px;
-        padding: 6px 10px;
+        gap: 8px;
+        padding: 8px 12px;
+        background: var(--primary-soft);
+        color: var(--primary);
         border-radius: 999px;
-        border: 1px solid var(--border);
-        color: var(--muted);
-        background: rgba(14, 21, 48, 0.6);
-      }
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(12, minmax(0, 1fr));
-        gap: 18px;
-      }
-      .card { padding: 18px; }
-      .col-3 { grid-column: span 3; }
-      .col-4 { grid-column: span 4; }
-      .col-5 { grid-column: span 5; }
-      .col-6 { grid-column: span 6; }
-      .col-7 { grid-column: span 7; }
-      .col-8 { grid-column: span 8; }
-      .col-12 { grid-column: span 12; }
-      @media (max-width: 1180px) {
-        .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-12 { grid-column: span 12; }
-      }
-      h2, h3 { margin-top: 0; }
-      .muted { color: var(--muted); }
-      .small { font-size: 12px; }
-      label {
-        display: block;
-        margin: 10px 0 6px;
         font-size: 13px;
-        color: var(--muted);
+        font-weight: 700;
       }
-      input, select, textarea, button {
-        width: 100%;
-        border-radius: 12px;
-        border: 1px solid var(--border);
-        background: var(--panel-2);
-        color: var(--text);
-        padding: 11px 12px;
-        font: inherit;
+      h2.section-title {
+        margin: 0 0 10px;
+        font-size: 26px;
       }
-      textarea { min-height: 120px; resize: vertical; }
-      .row, .row-3, .row-4 {
-        display: grid;
-        gap: 10px;
-      }
-      .row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .row-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-      .row-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-      @media (max-width: 760px) {
-        .row, .row-3, .row-4 { grid-template-columns: 1fr; }
-      }
-      .actions { margin-top: 12px; }
-      .actions button, .chips button { width: auto; min-width: 110px; cursor: pointer; }
-      button.primary { background: #1d7efc; border-color: #1d7efc; }
-      button.secondary { background: #26345f; }
-      button.success { background: #1f9f68; }
-      button.warn { background: #a66a14; }
-      button.danger { background: #a53939; }
-      pre {
-        background: #0a1021;
-        border: 1px solid #24335f;
-        border-radius: 14px;
-        padding: 14px;
-        overflow: auto;
-        white-space: pre-wrap;
-        word-break: break-word;
-        min-height: 160px;
+      .muted { color: var(--muted); }
+      .small { font-size: 13px; }
+      .note-box,
+      .status,
+      .soft-box {
+        border-radius: 16px;
+        padding: 14px 16px;
+        border: 1px solid var(--line);
+        background: var(--panel-soft);
       }
       .status {
-        margin-top: 10px;
-        padding: 10px 12px;
-        border-radius: 12px;
-        border: 1px solid var(--border);
-        background: #10192f;
-        color: var(--muted);
+        margin-top: 12px;
       }
-      .ok { color: var(--success); }
-      .bad { color: var(--danger); }
-      .hint-list { margin: 0; padding-left: 18px; color: var(--muted); }
-      .kv {
+      .status.success { background: var(--success-soft); color: var(--success); border-color: #a7f3d0; }
+      .status.error { background: var(--danger-soft); color: var(--danger); border-color: #fecaca; }
+      .status.warning { background: var(--warning-soft); color: var(--warning); border-color: #fde68a; }
+
+      .form-grid {
         display: grid;
-        grid-template-columns: minmax(140px, 220px) 1fr;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        gap: 14px;
+      }
+      .field { display: flex; flex-direction: column; gap: 7px; }
+      .col-12 { grid-column: span 12; }
+      .col-8 { grid-column: span 8; }
+      .col-6 { grid-column: span 6; }
+      .col-4 { grid-column: span 4; }
+      .col-3 { grid-column: span 3; }
+      label {
+        font-size: 13px;
+        font-weight: 700;
+        color: #26415f;
+      }
+      input, select, textarea, button {
+        font: inherit;
+      }
+      input, select, textarea {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 11px 12px;
+        background: #fff;
+        color: var(--text);
+      }
+      textarea { min-height: 96px; resize: vertical; }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      button {
+        border: 0;
+        border-radius: 12px;
+        padding: 11px 16px;
+        cursor: pointer;
+        transition: transform .14s ease, opacity .14s ease;
+      }
+      button:hover { transform: translateY(-1px); }
+      button:disabled { opacity: 0.55; cursor: progress; transform: none; }
+      .primary { background: var(--primary); color: #fff; }
+      .secondary { background: #e8eef8; color: #1e3557; }
+      .success { background: var(--success); color: #fff; }
+      .danger { background: var(--danger); color: #fff; }
+      .ghost { background: transparent; color: var(--primary); border: 1px solid #bfd4ff; }
+      .mini-btn {
+        padding: 7px 10px;
+        border-radius: 10px;
+        font-size: 12px;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        background: rgba(255,255,255,0.95);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+        align-items: center;
+        padding: 14px 20px;
+      }
+      .brand-title { font-size: 22px; font-weight: 800; margin: 0; }
+      .brand-sub { color: var(--muted); font-size: 13px; margin-top: 4px; }
+      .topbar-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .user-chip {
+        display: inline-flex;
+        flex-direction: column;
+        gap: 2px;
+        padding: 10px 14px;
+        border: 1px solid var(--line);
+        background: var(--panel-soft);
+        border-radius: 14px;
+        min-width: 210px;
+      }
+      .layout {
+        display: grid;
+        grid-template-columns: 270px minmax(0, 1fr);
+        gap: 18px;
+        padding: 18px;
+      }
+      .sidebar {
+        position: sticky;
+        top: 88px;
+        align-self: start;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        box-shadow: var(--shadow);
+        padding: 18px;
+      }
+      .menu-title { margin: 0 0 12px; font-size: 16px; }
+      .menu-list {
+        display: grid;
         gap: 8px;
-        margin-top: 10px;
+      }
+      .menu-item {
+        text-decoration: none;
+        color: #16345a;
+        background: var(--panel-soft);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 12px 14px;
+        font-weight: 700;
+      }
+      .menu-item:hover { background: #eef5ff; }
+      .content {
+        display: grid;
+        gap: 18px;
+      }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        box-shadow: var(--shadow);
+        padding: 20px;
+      }
+      .card h3 {
+        margin: 0 0 10px;
+        font-size: 19px;
+      }
+      .card-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: flex-start;
+        margin-bottom: 14px;
+      }
+      .grid-2, .grid-3, .stats-grid, .record-grid {
+        display: grid;
+        gap: 16px;
+      }
+      .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .stats-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+      .record-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .stat {
+        border-radius: 18px;
+        border: 1px solid var(--line);
+        background: linear-gradient(180deg, #fff 0%, #f7fbff 100%);
+        padding: 16px;
+      }
+      .stat-label { font-size: 13px; color: var(--muted); }
+      .stat-value { font-size: 28px; font-weight: 800; margin-top: 8px; }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .chip {
+        background: #eef5ff;
+        color: #17355a;
+        border: 1px solid #cbdcfb;
+        border-radius: 999px;
+        padding: 8px 12px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .process-map {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+      }
+      .process-step {
+        padding: 12px 14px;
+        border-radius: 14px;
+        border: 1px solid var(--line);
+        background: var(--panel-soft);
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .arrow { color: #7c8faa; font-weight: 900; }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
         font-size: 13px;
       }
-      .kv strong { color: var(--muted); }
-      .divider { height: 1px; background: var(--border); margin: 16px 0; opacity: 0.7; }
-      .section-note { margin-top: 8px; color: var(--muted); font-size: 13px; }
-      code.inline {
-        background: #0e1530;
-        border: 1px solid #27345d;
-        padding: 2px 6px;
-        border-radius: 8px;
+      th, td {
+        border-bottom: 1px solid var(--line);
+        padding: 12px 10px;
+        text-align: right;
+        vertical-align: top;
       }
-      .mini { padding: 8px 10px; min-width: 98px; }
-      .two-col-list { columns: 2; gap: 24px; }
-      @media (max-width: 900px) { .two-col-list { columns: 1; } }
+      th {
+        color: #294160;
+        background: #f8fbff;
+        font-size: 12px;
+      }
+      tbody tr:hover { background: #fafcff; }
+      .table-wrap { overflow: auto; }
+      .empty {
+        padding: 18px;
+        border: 1px dashed #bfd2e8;
+        border-radius: 16px;
+        color: var(--muted);
+        background: #fbfdff;
+      }
+      .kv {
+        display: grid;
+        grid-template-columns: 160px 1fr;
+        gap: 8px 12px;
+      }
+      .timeline {
+        display: grid;
+        gap: 12px;
+      }
+      .timeline-item {
+        border-right: 3px solid #bfd4ff;
+        padding: 10px 14px;
+        background: #fbfdff;
+        border-radius: 12px;
+      }
+      .timeline-item strong { display: block; margin-bottom: 4px; }
+      .anchor-offset { scroll-margin-top: 86px; }
+      .helper-list {
+        margin: 0;
+        padding-right: 18px;
+        color: var(--muted);
+        line-height: 1.9;
+      }
+      .footer-note {
+        color: var(--muted);
+        font-size: 12px;
+        margin-top: 8px;
+      }
+
+      @media (max-width: 1180px) {
+        .auth-card,
+        .layout,
+        .grid-2,
+        .grid-3,
+        .record-grid,
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+        .sidebar {
+          position: static;
+        }
+      }
+      @media (max-width: 860px) {
+        .auth-card { grid-template-columns: 1fr; }
+        .topbar { padding: 14px; }
+        .layout { padding: 14px; }
+        .form-grid { grid-template-columns: 1fr; }
+        .col-12, .col-8, .col-6, .col-4, .col-3 { grid-column: span 1; }
+      }
     </style>
   </head>
   <body>
-    <div class="container">
-      <section class="hero">
-        <div class="badge">Live backend preview</div>
-        <h1>Borna Process Control Console</h1>
-        <p>این کنسول برای بازبینی تعاملی طراحی شده تا امنیت، state machineها، traceability و hard controlها را مستقیم روی API زنده بررسی کنید.</p>
-        <p class="muted">Suggested procurement role sequence: <code class="inline">master.admin</code> → <code class="inline">ali</code> → <code class="inline">manager.1</code> → <code class="inline">buyer.1</code> → <code class="inline">tech.1</code> → <code class="inline">finance.1</code> → <code class="inline">warehouse.1</code> → <code class="inline">qc.1</code> → <code class="inline">ap.1</code> → <code class="inline">finance.1</code> → <code class="inline">treasury.1</code>.</p>
-        <div class="hero-links">
-          <a href="/docs" target="_blank">Swagger UI</a>
-          <a href="/openapi.json" target="_blank">OpenAPI JSON</a>
-          <a href="/api/v1/health" target="_blank">Health</a>
-          <a href="/api/v1/dashboard/summary" target="_blank">Dashboard Summary</a>
-          <a href="/api/v1/dashboard/security" target="_blank">Security Dashboard</a>
+    <section id="auth-view" class="auth-shell">
+      <div class="auth-card">
+        <div class="hero-panel">
+          <div class="badge">ورود نقش‌محور و کارتابل عملیاتی</div>
+          <h1>سامانه عملیات فرایندی بورنا</h1>
+          <p>
+            این صفحه دیگر یک کنسول خام تست نیست. هر کاربر با نام کاربری و رمز خودش وارد می‌شود،
+            منو و عملیات مرتبط با همان نقش را می‌بیند، کارتابل خودش را پیگیری می‌کند، عملیات مجاز را انجام می‌دهد و خارج می‌شود.
+          </p>
+          <div class="hero-points">
+            <div class="hero-point">
+              <strong>کارتابل نقش‌محور</strong>
+              کاربر فقط کارهای مرتبط با نقش خود را در بخش «کارتابل من» و «عملیات نقش من» می‌بیند.
+            </div>
+            <div class="hero-point">
+              <strong>ارتباط بین فرایندها</strong>
+              زنجیره خرید از درخواست خرید تا RFQ، سفارش خرید، دریافت، کنترل کیفیت، فاکتور و پرداخت به‌صورت رهگیری‌شونده نمایش داده می‌شود.
+            </div>
+            <div class="hero-point">
+              <strong>مدیریت امنیت و نشست</strong>
+              خروج، تغییر رمز، نشست‌های فعال و عملیات امنیتی برای نقش‌های مجاز در دسترس است.
+            </div>
+          </div>
         </div>
-      </section>
 
-      <div class="grid">
-        <section class="card col-4">
-          <h2>1) Session & role shortcuts</h2>
-          <label>Username</label>
-          <input id="login-username" value="security.1" />
-          <label>Password</label>
-          <input id="login-password" type="password" value="security.1" />
-          <div class="actions">
-            <button class="primary" id="login-btn">Login</button>
-            <button class="secondary" id="me-btn">Who am I?</button>
-            <button class="danger" id="logout-btn">Logout</button>
-          </div>
-          <div class="status" id="session-status">Not logged in.</div>
-          <div class="kv" id="current-user-meta">
-            <strong>User</strong><span>-</span>
-            <strong>Role</strong><span>-</span>
-            <strong>Password reset required</strong><span>-</span>
-          </div>
-          <label>Role shortcuts</label>
-          <div class="chips">
-            <button class="secondary mini" data-login-shortcut="master.admin">master.admin</button>
-            <button class="secondary mini" data-login-shortcut="security.1">security.1</button>
-            <button class="secondary mini" data-login-shortcut="ali">ali</button>
-            <button class="secondary mini" data-login-shortcut="manager.1">manager.1</button>
-            <button class="secondary mini" data-login-shortcut="buyer.1">buyer.1</button>
-            <button class="secondary mini" data-login-shortcut="tech.1">tech.1</button>
-            <button class="secondary mini" data-login-shortcut="finance.1">finance.1</button>
-            <button class="secondary mini" data-login-shortcut="warehouse.1">warehouse.1</button>
-            <button class="secondary mini" data-login-shortcut="qc.1">qc.1</button>
-            <button class="secondary mini" data-login-shortcut="ap.1">ap.1</button>
-            <button class="secondary mini" data-login-shortcut="treasury.1">treasury.1</button>
-            <button class="secondary mini" data-login-shortcut="pricing.1">pricing.1</button>
-            <button class="secondary mini" data-login-shortcut="sales.1">sales.1</button>
-            <button class="secondary mini" data-login-shortcut="sales.mgr">sales.mgr</button>
-          </div>
-          <label>Active token</label>
-          <textarea id="active-token" readonly></textarea>
-        </section>
+        <div class="login-panel">
+          <div class="badge">نسخه بازبینی قابل اجرا</div>
+          <h2 class="section-title">ورود به سامانه</h2>
+          <p class="muted">
+            برای بازبینی فرایندها می‌توانی با یکی از کاربران نمونه وارد شوی. در نسخه واقعی، مدیر سیستم کاربران و نقش‌ها را مدیریت می‌کند.
+          </p>
 
-        <section class="card col-5">
-          <h2>2) Review state</h2>
-          <p class="muted">آخرین شناسه‌های ساخته‌شده برای سناریوهای امنیتی، خرید و فروش اینجا نگهداری می‌شوند.</p>
-          <pre id="review-state-output">{}</pre>
-          <div class="actions">
-            <button class="secondary" id="clear-review-state-btn">Clear state</button>
-            <button class="secondary" id="sync-me-btn">Refresh current user</button>
-          </div>
-        </section>
+          <form id="login-form" class="form-grid">
+            <div class="field col-6">
+              <label for="login-username">نام کاربری</label>
+              <input id="login-username" name="username" autocomplete="username" value="ali" />
+            </div>
+            <div class="field col-6">
+              <label for="login-password">رمز عبور</label>
+              <input id="login-password" name="password" type="password" autocomplete="current-password" value="ali" />
+            </div>
+            <div class="field col-12">
+              <div class="actions">
+                <button class="primary" type="submit" id="login-btn">ورود</button>
+                <button class="secondary" type="button" id="demo-requester-btn">ورود سریع درخواست‌کننده</button>
+                <button class="secondary" type="button" id="demo-manager-btn">ورود سریع مدیر</button>
+                <button class="secondary" type="button" id="demo-proc-btn">ورود سریع تدارکات</button>
+              </div>
+            </div>
+          </form>
 
-        <section class="card col-3">
-          <h2>3) Quick checks</h2>
-          <p class="muted small">Fast smoke checks for dashboards, audit, inbox, sessions, and incidents.</p>
-          <div class="actions">
-            <button class="secondary" data-path="/api/v1/health" data-method="GET">Health</button>
-            <button class="secondary" data-path="/api/v1/dashboard/summary" data-method="GET">Dashboard Summary</button>
-            <button class="secondary" data-path="/api/v1/dashboard/security" data-method="GET">Security Dashboard</button>
-            <button class="secondary" data-path="/api/v1/security/my-sessions" data-method="GET">My Sessions</button>
-            <button class="secondary" data-path="/api/v1/alerts" data-method="GET">Alerts</button>
-            <button class="secondary" data-path="/api/v1/inbox/approvals" data-method="GET">Approval Inbox</button>
-            <button class="secondary" data-path="/api/v1/security/incidents" data-method="GET">Security Incidents</button>
-            <button class="secondary" data-path="/api/v1/audit/events?entity_name=auth" data-method="GET">Audit: auth</button>
-          </div>
-        </section>
+          <div id="auth-status" class="status hidden"></div>
 
-        <section class="card col-6">
-          <h2>4) Access control review</h2>
-          <p class="muted">ایجاد کاربر، force reset، تغییر رمز، مشاهده sessionها و revoke آن‌ها.</p>
-          <div class="row">
-            <div>
-              <label>New username</label>
-              <input id="new-user-username" value="review.user" />
+          <div class="grid-2" style="margin-top:18px;">
+            <div class="soft-box">
+              <strong>کاربران نمونه برای سناریوی خرید</strong>
+              <ul class="helper-list">
+                <li>درخواست‌کننده: <strong>ali</strong></li>
+                <li>مدیر واحد: <strong>manager.1</strong></li>
+                <li>خریدار: <strong>buyer.1</strong></li>
+                <li>ارزیاب فنی: <strong>tech.1</strong></li>
+                <li>مدیر مالی: <strong>finance.1</strong></li>
+                <li>انبار: <strong>warehouse.1</strong></li>
+                <li>کنترل کیفیت: <strong>qc.1</strong></li>
+                <li>حسابداری پرداختنی: <strong>ap.1</strong></li>
+                <li>خزانه: <strong>treasury.1</strong></li>
+              </ul>
             </div>
-            <div>
-              <label>Full name</label>
-              <input id="new-user-full-name" value="Review User" />
-            </div>
-          </div>
-          <div class="row">
-            <div>
-              <label>Strong password</label>
-              <input id="new-user-password" value="Review#1234" />
-            </div>
-            <div>
-              <label>Role</label>
-              <select id="new-user-role">
-                <option>Requester</option>
-                <option>Sales Officer</option>
-                <option>Sales Manager</option>
-                <option>Pricing Analyst</option>
-                <option>Security Officer</option>
-                <option>Department Manager</option>
-              </select>
+            <div class="soft-box">
+              <strong>نکته مهم</strong>
+              <ul class="helper-list">
+                <li>منوها بر اساس نقش نمایش داده می‌شوند.</li>
+                <li>در هر مرحله رهگیری فرایند، اسناد مرتبط و وضعیت جاری قابل مشاهده است.</li>
+                <li>برای ابزار فنی قبلی، لینک «کنسول فنی بازبینی» در داخل سامانه گذاشته شده است.</li>
+              </ul>
             </div>
           </div>
-          <div class="row">
-            <div>
-              <label>Department</label>
-              <input id="new-user-department" value="review" />
-            </div>
-            <div>
-              <label>Target username for reset/sessions</label>
-              <input id="access-target-username" value="review.user" />
-            </div>
-          </div>
-          <div class="actions">
-            <button class="success" id="create-user-btn">Create User</button>
-            <button class="warn" id="force-reset-btn">Force Password Reset</button>
-            <button class="secondary" id="load-user-sessions-btn">Load Sessions</button>
-          </div>
-          <div class="divider"></div>
-          <div class="row">
-            <div>
-              <label>Current password</label>
-              <input id="change-password-current" value="security.1" />
-            </div>
-            <div>
-              <label>New password</label>
-              <input id="change-password-new" value="Security#1234" />
-            </div>
-          </div>
-          <div class="row">
-            <div>
-              <label>Session id to revoke</label>
-              <input id="revoke-session-id" placeholder="auto-filled after loading sessions" />
-            </div>
-            <div>
-              <label>Notes</label>
-              <input id="access-note" value="Interactive control review from console" />
-            </div>
-          </div>
-          <div class="actions">
-            <button class="secondary" id="change-password-btn">Change My Password</button>
-            <button class="danger" id="revoke-session-btn">Revoke Session</button>
-          </div>
-        </section>
-
-        <section class="card col-6">
-          <h2>5) Security incident workflow lab</h2>
-          <p class="muted">Create / triage / contain / resolve / close برای مرور state machine حادثه امنیتی.</p>
-          <div class="row">
-            <div>
-              <label>Title</label>
-              <input id="incident-title" value="Repeated failed login attempts" />
-            </div>
-            <div>
-              <label>Type</label>
-              <input id="incident-type" value="authentication_abuse" />
-            </div>
-          </div>
-          <div class="row-3">
-            <div>
-              <label>Severity</label>
-              <select id="incident-severity">
-                <option>medium</option>
-                <option selected>high</option>
-                <option>critical</option>
-              </select>
-            </div>
-            <div>
-              <label>Related username</label>
-              <input id="incident-related-user" value="buyer.1" />
-            </div>
-            <div>
-              <label>Assigned to</label>
-              <input id="incident-assigned-to" value="security.1" />
-            </div>
-          </div>
-          <div class="row">
-            <div>
-              <label>Source entity</label>
-              <input id="incident-source-entity" value="auth" />
-            </div>
-            <div>
-              <label>Source entity id</label>
-              <input id="incident-source-id" value="buyer.1" />
-            </div>
-          </div>
-          <label>Summary</label>
-          <textarea id="incident-summary">Review suspicious authentication attempts and determine whether containment is needed.</textarea>
-          <div class="actions">
-            <button class="warn" id="create-incident-btn">Create Incident</button>
-            <button class="secondary" id="list-incidents-btn">List Incidents</button>
-            <button class="secondary" id="open-latest-incident-btn">Open Latest Incident</button>
-          </div>
-          <div class="divider"></div>
-          <div class="row-3">
-            <div>
-              <label>Incident id</label>
-              <input id="incident-id" placeholder="auto-filled" />
-            </div>
-            <div>
-              <label>Action note</label>
-              <input id="incident-note" value="Reviewed in web console" />
-            </div>
-            <div>
-              <label>Reassign to</label>
-              <input id="incident-reassign" value="security.1" />
-            </div>
-          </div>
-          <div class="row">
-            <div>
-              <label>Containment action</label>
-              <input id="incident-containment" value="Revoke suspicious active sessions and review source IPs" />
-            </div>
-            <div>
-              <label>Resolution note</label>
-              <input id="incident-resolution" value="Account reviewed, password reset enforced, no further malicious activity observed" />
-            </div>
-          </div>
-          <div class="actions">
-            <button class="secondary" data-incident-action="triage">Triage</button>
-            <button class="secondary" data-incident-action="contain">Contain</button>
-            <button class="secondary" data-incident-action="resolve">Resolve</button>
-            <button class="secondary" data-incident-action="close">Close</button>
-          </div>
-        </section>
-
-        <section class="card col-6">
-          <h2>6) Procurement workflow runner</h2>
-          <p class="muted">Purchase Request تا مرحله approval. ترتیب اجرا و SoD در Backend enforce می‌شود.</p>
-          <div class="row">
-            <div>
-              <label>Requester username</label>
-              <input id="pr-requester" value="ali" />
-            </div>
-            <div>
-              <label>Department</label>
-              <input id="pr-department" value="ops" />
-            </div>
-          </div>
-          <div class="row">
-            <div>
-              <label>Reason</label>
-              <input id="pr-reason" value="Need packaging material for urgent replenishment" />
-            </div>
-            <div>
-              <label>Cost center</label>
-              <input id="pr-cost-center" value="OPS-100" />
-            </div>
-          </div>
-          <div class="row-4">
-            <div>
-              <label>Material code</label>
-              <input id="pr-material-code" value="PKG-BOX" />
-            </div>
-            <div>
-              <label>Description</label>
-              <input id="pr-line-description" value="Corrugated packaging box" />
-            </div>
-            <div>
-              <label>Qty</label>
-              <input id="pr-qty" type="number" value="100" />
-            </div>
-            <div>
-              <label>Estimated unit price</label>
-              <input id="pr-unit-price" type="number" value="250000" />
-            </div>
-          </div>
-          <label>Action note</label>
-          <input id="pr-note" value="Reviewed through web console" />
-          <div class="actions">
-            <button class="success" id="create-pr-btn">Create PR</button>
-            <button class="secondary" id="submit-pr-btn">Submit PR</button>
-            <button class="secondary" id="route-pr-btn">Route Review</button>
-            <button class="secondary" id="approve-pr-btn">Approve PR</button>
-            <button class="secondary" id="trace-pr-btn">Traceability</button>
-          </div>
-        </section>
-
-        <section class="card col-6">
-          <h2>7) Downstream procurement runner</h2>
-          <p class="muted">RFQ → Quotation → Evaluation → PO → GRN → QC → Invoice → Payment برای بازبینی end-to-end.</p>
-          <div class="row">
-            <div>
-              <label>Supplier code</label>
-              <input id="supplier-code" value="SUP-CONSOLE" />
-            </div>
-            <div>
-              <label>Supplier name</label>
-              <input id="supplier-name" value="Console Approved Supplier" />
-            </div>
-          </div>
-          <div class="row">
-            <div>
-              <label>Supplier payment terms</label>
-              <input id="supplier-payment-terms" value="30D" />
-            </div>
-            <div>
-              <label>RFQ buyer</label>
-              <input id="rfq-buyer" value="buyer.1" />
-            </div>
-          </div>
-          <div class="row-4">
-            <div>
-              <label>Minimum quotes</label>
-              <input id="rfq-min-quotes" type="number" value="1" />
-            </div>
-            <div>
-              <label>Quotation no</label>
-              <input id="quotation-no" value="QUO-CONSOLE-01" />
-            </div>
-            <div>
-              <label>Quote amount</label>
-              <input id="quotation-amount" type="number" value="25000000" />
-            </div>
-            <div>
-              <label>Delivery days</label>
-              <input id="quotation-delivery-days" type="number" value="7" />
-            </div>
-          </div>
-          <div class="row">
-            <div>
-              <label>Warehouse code</label>
-              <input id="receipt-warehouse" value="WH-01" />
-            </div>
-            <div>
-              <label>Supplier delivery ref</label>
-              <input id="supplier-delivery-ref" value="DLV-CONSOLE-01" />
-            </div>
-          </div>
-          <div class="row-4">
-            <div>
-              <label>Received qty</label>
-              <input id="receipt-qty" type="number" value="100" />
-            </div>
-            <div>
-              <label>QC result</label>
-              <select id="qc-result">
-                <option selected>accepted</option>
-                <option>rejected</option>
-              </select>
-            </div>
-            <div>
-              <label>Accepted qty</label>
-              <input id="qc-accepted-qty" type="number" value="100" />
-            </div>
-            <div>
-              <label>Rejected qty</label>
-              <input id="qc-rejected-qty" type="number" value="0" />
-            </div>
-          </div>
-          <div class="row">
-            <div>
-              <label>Invoice no</label>
-              <input id="invoice-no" value="INV-CONSOLE-01" />
-            </div>
-            <div>
-              <label>Bank reference</label>
-              <input id="payment-bank-ref" value="BANK-CONSOLE-01" />
-            </div>
-          </div>
-          <label>Shared note</label>
-          <input id="proc-downstream-note" value="Reviewed through web console end-to-end flow" />
-          <div class="actions">
-            <button class="success" id="create-supplier-btn">Create Supplier</button>
-            <button class="secondary" id="create-rfq-btn">Create RFQ</button>
-            <button class="secondary" id="add-quotation-btn">Add Quotation</button>
-            <button class="secondary" id="record-quotes-btn">Record Quotes</button>
-            <button class="secondary" id="commercial-eval-btn">Commercial Evaluate</button>
-            <button class="secondary" id="technical-approve-btn">Technical Approve</button>
-            <button class="secondary" id="price-approve-btn">Price Approve</button>
-            <button class="secondary" id="create-po-btn">Create PO</button>
-            <button class="secondary" id="create-grn-btn">Create GRN</button>
-            <button class="secondary" id="create-qc-btn">Create QC</button>
-            <button class="secondary" id="finalize-qc-btn">Finalize QC</button>
-            <button class="secondary" id="create-invoice-btn">Create Invoice</button>
-            <button class="secondary" id="match-invoice-btn">3-Way Match</button>
-            <button class="secondary" id="create-payment-btn">Create Payment</button>
-            <button class="secondary" id="approve-payment-btn">Approve Payment</button>
-            <button class="secondary" id="execute-payment-btn">Execute Payment</button>
-            <button class="secondary" id="trace-payment-btn">Trace Latest Payment</button>
-          </div>
-          <div class="section-note">برای smoke سریع، minimum quotes روی <code class="inline">1</code> تنظیم شده است. برای کنترل سخت‌گیرانه‌تر می‌توانید تعداد را افزایش دهید.</div>
-        </section>
-
-        <section class="card col-6">
-          <h2>8) Sales workflow runner</h2>
-          <p class="muted">Customer → Product → Pricing → Sales Order برای مرور سریع سناریوی فروش.</p>
-          <div class="row">
-            <div>
-              <label>Customer code</label>
-              <input id="sales-customer-code" value="CUS-CONSOLE" />
-            </div>
-            <div>
-              <label>Customer name</label>
-              <input id="sales-customer-name" value="Console Review Customer" />
-            </div>
-          </div>
-          <div class="row">
-            <div>
-              <label>Product code</label>
-              <input id="sales-product-code" value="PRD-CONSOLE" />
-            </div>
-            <div>
-              <label>Product name</label>
-              <input id="sales-product-name" value="Console Review Product" />
-            </div>
-          </div>
-          <div class="row-4">
-            <div>
-              <label>Standard cost</label>
-              <input id="sales-standard-cost" type="number" value="100" />
-            </div>
-            <div>
-              <label>Approved min price</label>
-              <input id="sales-min-price" type="number" value="130" />
-            </div>
-            <div>
-              <label>Proposed price</label>
-              <input id="sales-proposed-price" type="number" value="160" />
-            </div>
-            <div>
-              <label>Order qty</label>
-              <input id="sales-order-qty" type="number" value="10" />
-            </div>
-          </div>
-          <label>Action note</label>
-          <input id="sales-note" value="Commercial review completed in console" />
-          <div class="actions">
-            <button class="success" id="create-customer-btn">Create Customer</button>
-            <button class="success" id="create-product-btn">Create Product</button>
-            <button class="secondary" id="create-price-btn">Create Price List</button>
-            <button class="secondary" id="approve-price-btn">Approve Price</button>
-            <button class="secondary" id="create-sales-order-btn">Create Sales Order</button>
-            <button class="secondary" id="confirm-sales-order-btn">Confirm Sales Order</button>
-            <button class="secondary" id="trace-sales-order-btn">Traceability</button>
-          </div>
-        </section>
-
-        <section class="card col-7">
-          <h2>9) Guided tools & request composer</h2>
-          <div class="row-3">
-            <div>
-              <label>Preset</label>
-              <select id="preset-select"></select>
-            </div>
-            <div>
-              <label>Method</label>
-              <select id="request-method">
-                <option>GET</option>
-                <option>POST</option>
-                <option>PUT</option>
-                <option>PATCH</option>
-                <option>DELETE</option>
-              </select>
-            </div>
-            <div>
-              <label>Use auth token</label>
-              <select id="use-auth">
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
-              </select>
-            </div>
-          </div>
-          <label>Path</label>
-          <input id="request-path" value="/api/v1/dashboard/summary" />
-          <label>JSON body</label>
-          <textarea id="request-body">{
-  "actor": "security.1",
-  "actor_role": "Security Officer"
-}</textarea>
-          <div class="actions">
-            <button class="primary" id="send-request-btn">Send Request</button>
-            <button class="secondary" id="format-json-btn">Format JSON</button>
-            <button class="secondary" id="use-current-actor-btn">Inject current actor</button>
-          </div>
-          <div class="divider"></div>
-          <h3>Traceability & audit helpers</h3>
-          <div class="row-3">
-            <div>
-              <label>Traceability type</label>
-              <select id="traceability-type">
-                <option value="purchase-request">Purchase Request</option>
-                <option value="sales-order">Sales Order</option>
-                <option value="document">Generic Document</option>
-              </select>
-            </div>
-            <div>
-              <label>ID</label>
-              <input id="traceability-id" value="1" />
-            </div>
-            <div>
-              <label>Document type</label>
-              <input id="traceability-object-type" value="payment" />
-            </div>
-          </div>
-          <div class="actions">
-            <button class="secondary" id="traceability-btn">Run Traceability</button>
-          </div>
-          <div class="row">
-            <div>
-              <label>Audit search text</label>
-              <input id="audit-query" placeholder="login_failed / sales_orders / buyer.1" />
-            </div>
-            <div>
-              <label>Entity</label>
-              <input id="audit-entity" placeholder="auth" />
-            </div>
-          </div>
-          <div class="row">
-            <div>
-              <label>User</label>
-              <input id="audit-user" placeholder="security.1" />
-            </div>
-            <div>
-              <label>Action</label>
-              <input id="audit-action" placeholder="login_failed" />
-            </div>
-          </div>
-          <div class="actions">
-            <button class="secondary" id="audit-search-btn">Search Audit</button>
-          </div>
-        </section>
-
-        <section class="card col-5">
-          <h2>10) Suggested review scenarios</h2>
-          <ul class="hint-list two-col-list">
-            <li>Create a review user, force reset it, then verify protected endpoints are blocked until password change.</li>
-            <li>Load session inventory and revoke a non-current session.</li>
-            <li>Create a security incident and progress it to close.</li>
-            <li>Run PR creation, submit, route review, and approve with role switching.</li>
-            <li>Create an approved supplier, RFQ, quotation, and PO.</li>
-            <li>Receive goods, finalize QC, and verify invoice matching only works after inventory release.</li>
-            <li>Create payment, approve it, then execute with treasury to validate SoD.</li>
-            <li>Use traceability on payment, PO, RFQ, or PR to inspect upstream/downstream links.</li>
-            <li>Search audit logs for procurement and security lifecycle events.</li>
-          </ul>
-        </section>
-
-        <section class="card col-12">
-          <h2>11) Response viewer</h2>
-          <div id="response-meta" class="status">No response yet.</div>
-          <pre id="response-output">{}</pre>
-        </section>
+        </div>
       </div>
-    </div>
+    </section>
+
+    <section id="workspace-view" class="hidden">
+      <header class="topbar">
+        <div>
+          <div class="brand-title">سامانه عملیات فرایندی بورنا</div>
+          <div class="brand-sub">داشبورد نقش‌محور، کارتابل، عملیات مجاز و رهگیری بین‌فرایندی</div>
+        </div>
+        <div class="topbar-actions">
+          <div class="user-chip">
+            <strong id="header-name">-</strong>
+            <span class="muted small" id="header-role">-</span>
+          </div>
+          <button class="secondary" id="reload-btn">بارگذاری مجدد</button>
+          <a class="ghost" id="review-console-link" href="/review-console" target="_blank" style="text-decoration:none;display:inline-flex;align-items:center;">کنسول فنی بازبینی</a>
+          <button class="danger" id="logout-btn">خروج</button>
+        </div>
+      </header>
+
+      <div class="layout">
+        <aside class="sidebar">
+          <h3 class="menu-title">منوی سامانه</h3>
+          <div id="main-menu" class="menu-list"></div>
+          <div class="note-box small" style="margin-top:14px;">
+            <strong>اصل کار</strong>
+            <div class="muted" id="role-guidance-side">
+              هر کاربر باید فقط کارهای مربوط به نقش خود را انجام دهد. برای مراحل بعدی از رهگیری فرایند و کارتابل استفاده کن.
+            </div>
+          </div>
+        </aside>
+
+        <main class="content">
+          <div id="global-status" class="status hidden"></div>
+
+          <section id="dashboard-section" class="card anchor-offset">
+            <div class="card-head">
+              <div>
+                <h3>داشبورد</h3>
+                <div class="muted">تصویر سریع از وضعیت فرایندها، هشدارها و حجم کار باز</div>
+              </div>
+              <div class="chips" id="role-chips"></div>
+            </div>
+            <div id="dashboard-cards" class="stats-grid"></div>
+            <div class="grid-2" style="margin-top:16px;">
+              <div class="soft-box">
+                <strong>جریان اصلی خرید</strong>
+                <div class="process-map" style="margin-top:10px;">
+                  <span class="process-step">درخواست خرید</span>
+                  <span class="arrow">←</span>
+                  <span class="process-step">RFQ و پیشنهادها</span>
+                  <span class="arrow">←</span>
+                  <span class="process-step">سفارش خرید</span>
+                  <span class="arrow">←</span>
+                  <span class="process-step">دریافت کالا</span>
+                  <span class="arrow">←</span>
+                  <span class="process-step">کنترل کیفیت</span>
+                  <span class="arrow">←</span>
+                  <span class="process-step">فاکتور</span>
+                  <span class="arrow">←</span>
+                  <span class="process-step">پرداخت</span>
+                </div>
+              </div>
+              <div class="soft-box">
+                <strong>راهنمای نقش جاری</strong>
+                <div id="role-guidance-main" class="muted" style="margin-top:10px; line-height:1.9;"></div>
+              </div>
+            </div>
+          </section>
+
+          <section id="tasks-section" class="card anchor-offset">
+            <div class="card-head">
+              <div>
+                <h3>کارتابل من</h3>
+                <div class="muted">کارهای در انتظار اقدام و آیتم‌هایی که طبق نقش فعلی می‌توانی روی آنها عملیات مجاز انجام دهی</div>
+              </div>
+            </div>
+            <div class="grid-2">
+              <div>
+                <h4>کارهای منتسب به من</h4>
+                <div id="my-tasks-wrap" class="table-wrap"></div>
+              </div>
+              <div>
+                <h4>اقدام‌های مجاز برای نقش من</h4>
+                <div id="approvals-wrap" class="table-wrap"></div>
+                <div class="field" style="margin-top:12px;">
+                  <label for="approval-note">یادداشت اقدام</label>
+                  <textarea id="approval-note" placeholder="در صورت نیاز توضیح اقدام یا دلیل تأیید/ارجاع را اینجا بنویس"></textarea>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="workspace-section" class="card anchor-offset">
+            <div class="card-head">
+              <div>
+                <h3>عملیات نقش من</h3>
+                <div class="muted">فرم‌هایی که کاربر جاری واقعاً برای انجام کار روزانه لازم دارد</div>
+              </div>
+            </div>
+
+            <div class="grid-3">
+              <article class="card role-card" data-roles="*" style="padding:18px; box-shadow:none;">
+                <h3>پروفایل کاری</h3>
+                <div id="role-summary" class="kv"></div>
+              </article>
+
+              <article class="card role-card" data-roles="Requester" style="padding:18px; box-shadow:none;">
+                <h3>ثبت درخواست خرید</h3>
+                <form id="pr-form" class="form-grid">
+                  <div class="field col-6"><label>واحد</label><input id="pr-department" required placeholder="ops / production / engineering" /></div>
+                  <div class="field col-6"><label>تاریخ نیاز</label><input id="pr-need-date" type="date" /></div>
+                  <div class="field col-6"><label>مرکز هزینه</label><input id="pr-cost-center" value="CC-100" /></div>
+                  <div class="field col-6"><label>اولویت</label><select id="pr-priority"><option value="normal">عادی</option><option value="high">بالا</option><option value="urgent">فوری</option></select></div>
+                  <div class="field col-6"><label>مبلغ برآوردی</label><input id="pr-total-amount" type="number" min="0" step="0.01" value="1000000" /></div>
+                  <div class="field col-6"><label>شرح قلم</label><input id="pr-line-desc" value="خرید ماده اولیه" /></div>
+                  <div class="field col-3"><label>تعداد</label><input id="pr-line-qty" type="number" min="0.01" step="0.01" value="10" /></div>
+                  <div class="field col-3"><label>واحد سنجش</label><input id="pr-line-uom" value="EA" /></div>
+                  <div class="field col-6"><label>قیمت واحد برآوردی</label><input id="pr-line-price" type="number" min="0" step="0.01" value="100000" /></div>
+                  <div class="field col-12"><label>علت نیاز</label><textarea id="pr-reason" required>نیاز عملیاتی برای ادامه تولید</textarea></div>
+                  <div class="field col-12"><button class="primary" type="submit">ثبت درخواست خرید</button></div>
+                </form>
+                <div class="footer-note">بعد از ثبت، از جدول «درخواست‌های خرید» دکمه «ارسال» را بزن.</div>
+              </article>
+
+              <article class="card role-card" data-roles="Procurement Officer" style="padding:18px; box-shadow:none;">
+                <h3>ایجاد RFQ</h3>
+                <form id="rfq-form" class="form-grid">
+                  <div class="field col-12"><label>درخواست خرید</label><select id="rfq-pr-select"></select></div>
+                  <div class="field col-6"><label>تاریخ صدور</label><input id="rfq-issue-date" type="date" /></div>
+                  <div class="field col-6"><label>تاریخ بسته‌شدن</label><input id="rfq-close-date" type="date" /></div>
+                  <div class="field col-6"><label>حداقل تعداد پیشنهاد</label><input id="rfq-min-quotes" type="number" min="1" value="3" /></div>
+                  <div class="field col-12"><button class="primary" type="submit">ایجاد RFQ</button></div>
+                </form>
+              </article>
+
+              <article class="card role-card" data-roles="Procurement Officer" style="padding:18px; box-shadow:none;">
+                <h3>ثبت پیشنهاد تأمین‌کننده</h3>
+                <form id="quote-form" class="form-grid">
+                  <div class="field col-12"><label>RFQ</label><select id="quote-rfq-select"></select></div>
+                  <div class="field col-12"><label>تأمین‌کننده</label><select id="quote-supplier-select"></select></div>
+                  <div class="field col-6"><label>شماره پیشنهاد</label><input id="quote-no" value="Q-001" /></div>
+                  <div class="field col-6"><label>تاریخ پیشنهاد</label><input id="quote-date" type="date" /></div>
+                  <div class="field col-6"><label>مبلغ کل</label><input id="quote-amount" type="number" min="0.01" step="0.01" value="950000" /></div>
+                  <div class="field col-6"><label>شرایط پرداخت</label><input id="quote-payment-terms" value="30 days" /></div>
+                  <div class="field col-6"><label>روز تحویل</label><input id="quote-delivery-days" type="number" min="0" value="7" /></div>
+                  <div class="field col-6"><label>واریانس قیمت %</label><input id="quote-variance" type="number" step="0.01" value="-5" /></div>
+                  <div class="field col-12"><button class="primary" type="submit">ثبت پیشنهاد</button></div>
+                </form>
+              </article>
+
+              <article class="card role-card" data-roles="Procurement Officer" style="padding:18px; box-shadow:none;">
+                <h3>تکمیل مرحله RFQ</h3>
+                <form id="record-quotes-form" class="form-grid">
+                  <div class="field col-12"><label>RFQ</label><select id="record-rfq-select"></select></div>
+                  <div class="field col-12"><label>ثبت رسیدن پیشنهادها</label><button class="secondary" type="submit">ثبت دریافت پیشنهادها</button></div>
+                </form>
+                <hr style="border:none;border-top:1px solid var(--line);margin:16px 0;" />
+                <form id="commercial-form" class="form-grid">
+                  <div class="field col-6"><label>RFQ برای ارزیابی بازرگانی</label><select id="commercial-rfq-select"></select></div>
+                  <div class="field col-6"><label>پیشنهاد منتخب</label><select id="commercial-quote-select"></select></div>
+                  <div class="field col-12"><label>یادداشت</label><textarea id="commercial-note">پیشنهاد منتخب از نظر قیمت و شرایط پرداخت مناسب‌تر است.</textarea></div>
+                  <div class="field col-12"><button class="primary" type="submit">ثبت ارزیابی بازرگانی</button></div>
+                </form>
+              </article>
+
+              <article class="card role-card" data-roles="Procurement Officer" style="padding:18px; box-shadow:none;">
+                <h3>صدور سفارش خرید</h3>
+                <form id="po-form" class="form-grid">
+                  <div class="field col-6"><label>RFQ</label><select id="po-rfq-select"></select></div>
+                  <div class="field col-6"><label>پیشنهاد منتخب</label><select id="po-quote-select"></select></div>
+                  <div class="field col-6"><label>تاریخ سفارش</label><input id="po-order-date" type="date" /></div>
+                  <div class="field col-6"><label>تاریخ تحویل</label><input id="po-delivery-date" type="date" /></div>
+                  <div class="field col-12"><button class="primary" type="submit">صدور سفارش خرید</button></div>
+                </form>
+              </article>
+
+              <article class="card role-card" data-roles="Warehouse Receiver" style="padding:18px; box-shadow:none;">
+                <h3>ثبت دریافت کالا</h3>
+                <form id="receipt-form" class="form-grid">
+                  <div class="field col-12"><label>سفارش خرید</label><select id="receipt-po-select"></select></div>
+                  <div class="field col-6"><label>تاریخ دریافت</label><input id="receipt-date" type="date" /></div>
+                  <div class="field col-6"><label>انبار</label><input id="receipt-warehouse" value="WH-01" /></div>
+                  <div class="field col-6"><label>مرجع تحویل تأمین‌کننده</label><input id="receipt-ref" value="DEL-01" /></div>
+                  <div class="field col-6"><label>مقدار دریافتی</label><input id="receipt-qty" type="number" min="0.01" step="0.01" value="10" /></div>
+                  <div class="field col-12"><button class="primary" type="submit">ثبت دریافت کالا</button></div>
+                </form>
+              </article>
+
+              <article class="card role-card" data-roles="QC Inspector" style="padding:18px; box-shadow:none;">
+                <h3>کنترل کیفیت</h3>
+                <form id="qc-create-form" class="form-grid">
+                  <div class="field col-12"><label>رسید کالا</label><select id="qc-gr-select"></select></div>
+                  <div class="field col-12"><label>تاریخ بازرسی</label><input id="qc-date" type="date" /></div>
+                  <div class="field col-12"><button class="secondary" type="submit">ایجاد بازرسی QC</button></div>
+                </form>
+                <hr style="border:none;border-top:1px solid var(--line);margin:16px 0;" />
+                <form id="qc-finalize-form" class="form-grid">
+                  <div class="field col-12"><label>پرونده QC</label><select id="qc-finalize-select"></select></div>
+                  <div class="field col-6"><label>نتیجه</label><select id="qc-result"><option value="accepted">قبول</option><option value="rejected">رد</option></select></div>
+                  <div class="field col-3"><label>تعداد قبول</label><input id="qc-accepted" type="number" min="0" step="0.01" value="10" /></div>
+                  <div class="field col-3"><label>تعداد رد</label><input id="qc-rejected" type="number" min="0" step="0.01" value="0" /></div>
+                  <div class="field col-6"><label>کد عیب</label><input id="qc-defect" /></div>
+                  <div class="field col-6"><label>اقدام اصلاحی</label><input id="qc-corrective" /></div>
+                  <div class="field col-12"><label>یادداشت</label><textarea id="qc-note">کنترل کیفیت تکمیل شد.</textarea></div>
+                  <div class="field col-12"><button class="primary" type="submit">نهایی‌سازی QC</button></div>
+                </form>
+              </article>
+
+              <article class="card role-card" data-roles="AP Accountant" style="padding:18px; box-shadow:none;">
+                <h3>فاکتور تأمین‌کننده و پرداخت</h3>
+                <form id="invoice-form" class="form-grid">
+                  <div class="field col-4"><label>تأمین‌کننده</label><select id="invoice-supplier-select"></select></div>
+                  <div class="field col-4"><label>سفارش خرید</label><select id="invoice-po-select"></select></div>
+                  <div class="field col-4"><label>رسید کالا</label><select id="invoice-gr-select"></select></div>
+                  <div class="field col-6"><label>شماره فاکتور</label><input id="invoice-no" value="INV-001" /></div>
+                  <div class="field col-6"><label>تاریخ فاکتور</label><input id="invoice-date" type="date" /></div>
+                  <div class="field col-6"><label>سررسید</label><input id="invoice-due-date" type="date" /></div>
+                  <div class="field col-6"><label>مبلغ</label><input id="invoice-amount" type="number" min="0.01" step="0.01" value="950000" /></div>
+                  <div class="field col-12"><button class="secondary" type="submit">ثبت فاکتور</button></div>
+                </form>
+                <hr style="border:none;border-top:1px solid var(--line);margin:16px 0;" />
+                <form id="invoice-match-form" class="form-grid">
+                  <div class="field col-12"><label>فاکتور برای تطبیق</label><select id="match-invoice-select"></select></div>
+                  <div class="field col-12"><button class="secondary" type="submit">ثبت تطبیق فاکتور</button></div>
+                </form>
+                <hr style="border:none;border-top:1px solid var(--line);margin:16px 0;" />
+                <form id="payment-form" class="form-grid">
+                  <div class="field col-6"><label>فاکتور برای ایجاد پرداخت</label><select id="payment-invoice-select"></select></div>
+                  <div class="field col-6"><label>مبلغ پرداخت</label><input id="payment-amount" type="number" min="0.01" step="0.01" value="950000" /></div>
+                  <div class="field col-6"><label>تاریخ پرداخت</label><input id="payment-date" type="date" /></div>
+                  <div class="field col-6"><label>روش پرداخت</label><input id="payment-method" value="bank_transfer" /></div>
+                  <div class="field col-12"><label>مرجع بانکی</label><input id="payment-reference" value="BANK-REF-001" /></div>
+                  <div class="field col-12"><button class="primary" type="submit">ایجاد درخواست پرداخت</button></div>
+                </form>
+              </article>
+            </div>
+          </section>
+
+          <section id="records-section" class="card anchor-offset">
+            <div class="card-head">
+              <div>
+                <h3>اسناد و ارتباط بین فرایندها</h3>
+                <div class="muted">در این بخش هم اسناد اخیر را می‌بینی و هم می‌توانی شناسه هر سند را برای مرحله بعدی انتخاب کنی</div>
+              </div>
+            </div>
+            <div class="record-grid">
+              <div class="soft-box">
+                <strong>درخواست‌های خرید</strong>
+                <div id="purchase-requests-wrap" class="table-wrap" style="margin-top:10px;"></div>
+              </div>
+              <div class="soft-box">
+                <strong>RFQ و پیشنهادها</strong>
+                <div id="rfqs-wrap" class="table-wrap" style="margin-top:10px;"></div>
+              </div>
+              <div class="soft-box">
+                <strong>سفارش‌های خرید و دریافت‌ها</strong>
+                <div id="purchase-orders-wrap" class="table-wrap" style="margin-top:10px;"></div>
+                <div id="goods-receipts-wrap" class="table-wrap" style="margin-top:12px;"></div>
+              </div>
+              <div class="soft-box">
+                <strong>QC، فاکتور و پرداخت</strong>
+                <div id="quality-wrap" class="table-wrap" style="margin-top:10px;"></div>
+                <div id="invoices-wrap" class="table-wrap" style="margin-top:12px;"></div>
+                <div id="payments-wrap" class="table-wrap" style="margin-top:12px;"></div>
+              </div>
+            </div>
+          </section>
+
+          <section id="trace-section" class="card anchor-offset">
+            <div class="card-head">
+              <div>
+                <h3>رهگیری ارتباط فرایندها</h3>
+                <div class="muted">برای دیدن زنجیره کامل اسناد از هر نقطه، نوع سند و شناسه آن را وارد کن</div>
+              </div>
+            </div>
+            <form id="trace-form" class="form-grid">
+              <div class="field col-4">
+                <label>نوع سند</label>
+                <select id="trace-object-type">
+                  <option value="PurchaseRequest">درخواست خرید</option>
+                  <option value="RFQ">RFQ</option>
+                  <option value="PO">سفارش خرید</option>
+                  <option value="GoodsReceipt">رسید کالا</option>
+                  <option value="QualityInspection">کنترل کیفیت</option>
+                  <option value="SupplierInvoice">فاکتور تأمین‌کننده</option>
+                  <option value="Payment">پرداخت</option>
+                  <option value="SalesOrder">سفارش فروش</option>
+                </select>
+              </div>
+              <div class="field col-4"><label>شناسه سند</label><input id="trace-object-id" type="number" min="1" /></div>
+              <div class="field col-4" style="align-self:end;"><button class="primary" type="submit">نمایش رهگیری</button></div>
+            </form>
+            <div id="trace-overview" class="grid-3" style="margin-top:16px;"></div>
+            <div class="grid-2" style="margin-top:16px;">
+              <div class="soft-box">
+                <strong>اسناد مرتبط</strong>
+                <div id="trace-docs-wrap" class="table-wrap" style="margin-top:10px;"></div>
+              </div>
+              <div class="soft-box">
+                <strong>تایم‌لاین و اتفاقات</strong>
+                <div id="trace-timeline" class="timeline" style="margin-top:10px;"></div>
+              </div>
+            </div>
+          </section>
+
+          <section id="master-section" class="card anchor-offset" data-roles="Master Data Admin|Security Officer">
+            <div class="card-head">
+              <div>
+                <h3>مدیریت پایه و دسترسی</h3>
+                <div class="muted">ایجاد کاربر، تعریف نقش، و ثبت تأمین‌کننده برای شروع کار عملیاتی</div>
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="soft-box">
+                <strong>ایجاد کاربر</strong>
+                <form id="user-form" class="form-grid" style="margin-top:12px;">
+                  <div class="field col-6"><label>نام کاربری</label><input id="user-username" /></div>
+                  <div class="field col-6"><label>نام کامل</label><input id="user-full-name" /></div>
+                  <div class="field col-6"><label>رمز اولیه</label><input id="user-password" /></div>
+                  <div class="field col-6"><label>واحد</label><input id="user-department" value="ops" /></div>
+                  <div class="field col-12"><label>نقش</label><select id="user-role-select"></select></div>
+                  <div class="field col-12"><button class="primary" type="submit">ایجاد کاربر</button></div>
+                </form>
+              </div>
+              <div class="soft-box">
+                <strong>ایجاد تأمین‌کننده</strong>
+                <form id="supplier-form" class="form-grid" style="margin-top:12px;">
+                  <div class="field col-6"><label>کد</label><input id="supplier-code" value="SUP-001" /></div>
+                  <div class="field col-6"><label>نام</label><input id="supplier-name" value="تأمین‌کننده نمونه" /></div>
+                  <div class="field col-6"><label>سطح ریسک</label><select id="supplier-risk"><option value="low">کم</option><option value="medium" selected>متوسط</option><option value="high">زیاد</option></select></div>
+                  <div class="field col-6"><label>شرایط پرداخت</label><input id="supplier-payment-terms" value="30 days" /></div>
+                  <div class="field col-12"><button class="primary" type="submit">ثبت تأمین‌کننده</button></div>
+                </form>
+              </div>
+            </div>
+            <div class="soft-box" style="margin-top:16px;">
+              <strong>کاربران</strong>
+              <div id="users-wrap" class="table-wrap" style="margin-top:10px;"></div>
+            </div>
+          </section>
+
+          <section id="security-section" class="card anchor-offset" data-roles="Master Data Admin|Security Officer">
+            <div class="card-head">
+              <div>
+                <h3>امنیت و نشست‌ها</h3>
+                <div class="muted">مرور نشست‌های فعال، داشبورد امنیت، و امکان پاکسازی توکن‌ها برای نقش‌های مجاز</div>
+              </div>
+              <div class="actions">
+                <button class="secondary" id="cleanup-tokens-btn">پاکسازی توکن‌های منقضی/ابطال‌شده</button>
+              </div>
+            </div>
+            <div id="security-cards" class="stats-grid"></div>
+            <div class="grid-2" style="margin-top:16px;">
+              <div class="soft-box">
+                <strong>نشست‌های من</strong>
+                <div id="my-sessions-wrap" class="table-wrap" style="margin-top:10px;"></div>
+              </div>
+              <div class="soft-box">
+                <strong>جست‌وجوی نشست کاربر</strong>
+                <div class="actions" style="margin-top:10px;">
+                  <input id="session-lookup-username" placeholder="username" style="flex:1; min-width:180px;" />
+                  <button class="secondary" id="lookup-sessions-btn">نمایش نشست‌ها</button>
+                </div>
+                <div id="user-sessions-wrap" class="table-wrap" style="margin-top:12px;"></div>
+              </div>
+            </div>
+          </section>
+
+          <section id="password-section" class="card anchor-offset">
+            <div class="card-head">
+              <div>
+                <h3>تغییر کلمه عبور</h3>
+                <div class="muted">اگر مدیر سیستم الزام کند یا کاربر بخواهد، کلمه عبور از اینجا تغییر می‌کند</div>
+              </div>
+            </div>
+            <form id="password-form" class="form-grid">
+              <div class="field col-4"><label>رمز فعلی</label><input id="current-password" type="password" /></div>
+              <div class="field col-4"><label>رمز جدید</label><input id="new-password" type="password" /></div>
+              <div class="field col-4"><label>تکرار رمز جدید</label><input id="new-password-repeat" type="password" /></div>
+              <div class="field col-12"><button class="primary" type="submit">ثبت تغییر رمز</button></div>
+            </form>
+          </section>
+        </main>
+      </div>
+    </section>
 
     <script>
-      const tokenStorageKey = 'borna_console_token';
-      const userStorageKey = 'borna_console_user';
-      const stateStorageKey = 'borna_console_state';
-
-      const tokenArea = document.getElementById('active-token');
-      const sessionStatus = document.getElementById('session-status');
-      const currentUserMeta = document.getElementById('current-user-meta');
-      const responseMeta = document.getElementById('response-meta');
-      const responseOutput = document.getElementById('response-output');
-      const reviewStateOutput = document.getElementById('review-state-output');
-      let activeToken = '';
-
-      const presets = [
-        { label: 'Dashboard Summary', method: 'GET', path: '/api/v1/dashboard/summary', body: '' },
-        { label: 'Security Dashboard', method: 'GET', path: '/api/v1/security/dashboard', body: '' },
-        { label: 'My Sessions', method: 'GET', path: '/api/v1/security/my-sessions', body: '' },
-        { label: 'Audit Search: auth failures', method: 'GET', path: '/api/v1/audit/events?entity_name=auth&action=login_failed', body: '' },
-        { label: 'Create User', method: 'POST', path: '/api/v1/users', body: '{\n  "username": "review.user",\n  "password": "Review#1234",\n  "full_name": "Review User",\n  "department_code": "review",\n  "role_code": "Requester",\n  "status": "active"\n}' },
-        { label: 'Create Purchase Request', method: 'POST', path: '/api/v1/purchase-requests', body: '{\n  "requester": "ali",\n  "department": "ops",\n  "reason": "Need packaging material for urgent replenishment",\n  "cost_center_code": "OPS-100",\n  "budget_status": "within_budget",\n  "priority": "normal",\n  "total_estimated_amount": 25000000,\n  "currency": "IRR",\n  "created_by": "ali",\n  "lines": [\n    {\n      "line_no": 1,\n      "description": "Corrugated packaging box",\n      "material_code": "PKG-BOX",\n      "qty": 100,\n      "uom": "pcs",\n      "estimated_unit_price": 250000,\n      "cost_center_code": "OPS-100"\n    }\n  ]\n}' },
-        { label: 'Create RFQ', method: 'POST', path: '/api/v1/rfqs', body: '{\n  "purchase_request_id": 1,\n  "issue_date": "2026-09-22",\n  "close_date": "2026-09-29",\n  "minimum_quote_count": 1,\n  "buyer": "buyer.1",\n  "created_by": "buyer.1"\n}' },
-        { label: 'Create Supplier', method: 'POST', path: '/api/v1/suppliers', body: '{\n  "code": "SUP-CONSOLE",\n  "name": "Console Approved Supplier",\n  "approval_status": "approved",\n  "risk_level": "medium",\n  "payment_terms": "30D"\n}' },
-        { label: 'Create Supplier Invoice', method: 'POST', path: '/api/v1/supplier-invoices', body: '{\n  "supplier_id": 1,\n  "purchase_order_id": 1,\n  "goods_receipt_id": 1,\n  "invoice_no": "INV-CONSOLE-01",\n  "invoice_date": "2026-09-22",\n  "due_date": "2026-10-22",\n  "currency": "IRR",\n  "total_amount": 25000000,\n  "actor": "ap.1",\n  "actor_role": "AP Accountant"\n}' },
-        { label: 'Create Sales Order', method: 'POST', path: '/api/v1/sales-orders', body: '{\n  "customer_id": 1,\n  "product_id": 1,\n  "price_list_id": 1,\n  "order_date": "2026-09-22",\n  "requested_delivery_date": "2026-09-29",\n  "qty": 10,\n  "unit_price": 160,\n  "actor": "sales.1",\n  "actor_role": "Sales Officer"\n}' },
+      const API = '/api/v1';
+      const TOKEN_KEY = 'borna_portal_token';
+      const ROLE_LABELS = {
+        'Requester': 'درخواست‌کننده',
+        'Department Manager': 'مدیر واحد',
+        'Procurement Officer': 'کارشناس تدارکات',
+        'Procurement Manager': 'مدیر تدارکات',
+        'Technical Evaluator': 'ارزیاب فنی',
+        'Warehouse Receiver': 'مسئول انبار',
+        'QC Inspector': 'بازرس کنترل کیفیت',
+        'AP Accountant': 'حسابدار پرداختنی',
+        'Finance Manager': 'مدیر مالی',
+        'Treasury Officer': 'مسئول خزانه',
+        'Master Data Admin': 'مدیر داده پایه',
+        'Security Officer': 'افسر امنیت',
+        'Pricing Analyst': 'کارشناس قیمت‌گذاری',
+        'Sales Officer': 'کارشناس فروش',
+        'Sales Manager': 'مدیر فروش',
+        'Credit Controller': 'کنترل اعتبار',
+        'Planning Officer': 'برنامه‌ریز',
+        'Logistics Officer': 'مسئول لجستیک',
+        'AR Accountant': 'حسابدار دریافتنی',
+        'Collections Officer': 'مسئول وصول',
+      };
+      const ROLE_GUIDANCE = {
+        'Requester': 'درخواست خرید را ثبت و از جدول اسناد، آن را ارسال کن. سپس با رهگیری می‌توانی ببینی پرونده به چه مرحله‌ای رسیده است.',
+        'Department Manager': 'کارتابل تأیید را بررسی کن و درخواست‌های رسیده را ارجاع یا تأیید کن.',
+        'Procurement Officer': 'پس از تأیید درخواست، RFQ ایجاد کن، پیشنهادها را ثبت کن، ارزیابی بازرگانی انجام بده و سفارش خرید صادر کن.',
+        'Technical Evaluator': 'RFQهای رسیده به تأیید فنی را از کارتابل باز کن و تأیید فنی انجام بده.',
+        'Finance Manager': 'هم در تأیید درخواست/قیمت و هم در تأیید پرداخت از کارتابل خود اقدام کن.',
+        'Warehouse Receiver': 'بعد از صدور سفارش خرید، دریافت کالا را ثبت کن تا پرونده به QC برود.',
+        'QC Inspector': 'رسیدهای دریافتی را به QC تبدیل کن و نتیجه قبول/رد را ثبت کن.',
+        'AP Accountant': 'پس از تکمیل QC و آزادسازی موجودی، فاکتور تأمین‌کننده را ثبت، تطبیق و برای پرداخت آماده کن.',
+        'Treasury Officer': 'آیتم‌های تأییدشده برای پرداخت را از کارتابل اجرا کن.',
+        'Master Data Admin': 'کاربران، نقش‌ها، تأمین‌کننده‌ها و شاخص‌های امنیتی را مدیریت کن.',
+        'Security Officer': 'نشست‌ها، رویدادهای امنیتی و کاربران نیازمند بازنشانی رمز را پایش کن.',
+      };
+      const USER_ROLE_OPTIONS = [
+        'Requester', 'Department Manager', 'Procurement Officer', 'Procurement Manager', 'Technical Evaluator',
+        'Warehouse Receiver', 'QC Inspector', 'AP Accountant', 'Finance Manager', 'Treasury Officer',
+        'Master Data Admin', 'Security Officer', 'Pricing Analyst', 'Sales Officer', 'Sales Manager',
+        'Credit Controller', 'Planning Officer', 'Logistics Officer', 'AR Accountant', 'Collections Officer'
+      ];
+      const SECTION_CONFIG = [
+        { id: 'dashboard-section', label: 'داشبورد', roles: '*' },
+        { id: 'tasks-section', label: 'کارتابل من', roles: '*' },
+        { id: 'workspace-section', label: 'عملیات نقش من', roles: '*' },
+        { id: 'records-section', label: 'اسناد و ارتباطات', roles: '*' },
+        { id: 'trace-section', label: 'رهگیری', roles: '*' },
+        { id: 'master-section', label: 'مدیریت پایه', roles: ['Master Data Admin', 'Security Officer'] },
+        { id: 'security-section', label: 'امنیت و نشست‌ها', roles: ['Master Data Admin', 'Security Officer'] },
+        { id: 'password-section', label: 'تغییر رمز', roles: '*' },
       ];
 
-      function getToken() {
-        if (activeToken) return activeToken;
-        try {
-          return sessionStorage.getItem(tokenStorageKey) || tokenArea.value || '';
-        } catch (_) {
-          return tokenArea.value || '';
-        }
-      }
+      const appState = {
+        token: '',
+        user: null,
+        dashboard: null,
+        securityDashboard: null,
+        records: {
+          purchaseRequests: [],
+          rfqs: [],
+          purchaseOrders: [],
+          goodsReceipts: [],
+          qualityInspections: [],
+          supplierInvoices: [],
+          payments: [],
+          suppliers: [],
+          alerts: [],
+          users: [],
+        },
+        tasks: [],
+        approvals: [],
+        mySessions: [],
+        lookedUpSessions: [],
+        rfqDetails: {},
+      };
 
+      const authView = document.getElementById('auth-view');
+      const workspaceView = document.getElementById('workspace-view');
+      const authStatus = document.getElementById('auth-status');
+      const globalStatus = document.getElementById('global-status');
+
+      function $(id) { return document.getElementById(id); }
+      function getToken() { return localStorage.getItem(TOKEN_KEY) || ''; }
       function setToken(token) {
-        activeToken = token || '';
-        try {
-          if (activeToken) sessionStorage.setItem(tokenStorageKey, activeToken);
-          else sessionStorage.removeItem(tokenStorageKey);
-        } catch (_) {}
-        tokenArea.value = activeToken;
+        appState.token = token || '';
+        if (appState.token) localStorage.setItem(TOKEN_KEY, appState.token);
+        else localStorage.removeItem(TOKEN_KEY);
       }
-
-      function getCurrentUser() {
-        try { return JSON.parse(sessionStorage.getItem(userStorageKey) || 'null'); }
-        catch (_) { return null; }
+      function roleLabel(role) { return ROLE_LABELS[role] || role || '-'; }
+      function valueLabel(value) {
+        if (value === null || value === undefined || value === '') return '-';
+        return String(value).replace(/_/g, ' ');
       }
-
-      function setCurrentUser(user) {
-        if (user) sessionStorage.setItem(userStorageKey, JSON.stringify(user));
-        else sessionStorage.removeItem(userStorageKey);
-        renderSessionInfo();
+      function numberLabel(value) {
+        if (value === null || value === undefined || Number.isNaN(Number(value))) return '-';
+        return new Intl.NumberFormat('fa-IR').format(Number(value));
       }
-
-      function getReviewState() {
-        try { return JSON.parse(sessionStorage.getItem(stateStorageKey) || '{}'); }
-        catch (_) { return {}; }
-      }
-
-      function setReviewState(nextState) {
-        sessionStorage.setItem(stateStorageKey, JSON.stringify(nextState));
-        renderReviewState();
-      }
-
-      function rememberState(partial) {
-        setReviewState({ ...getReviewState(), ...partial });
-      }
-
-      function clearReviewState() {
-        sessionStorage.removeItem(stateStorageKey);
-        renderReviewState();
-      }
-
-      function setStatus(message, ok = true) {
-        sessionStatus.innerHTML = `<span class="${ok ? 'ok' : 'bad'}">${message}</span>`;
-      }
-
-      function renderSessionInfo() {
-        const user = getCurrentUser();
-        tokenArea.value = getToken();
-        if (!user) {
-          currentUserMeta.innerHTML = '<strong>User</strong><span>-</span><strong>Role</strong><span>-</span><strong>Password reset required</strong><span>-</span>';
-          return;
-        }
-        currentUserMeta.innerHTML = `
-          <strong>User</strong><span>${user.username || '-'}</span>
-          <strong>Role</strong><span>${user.role_code || '-'}</span>
-          <strong>Password reset required</strong><span>${user.password_reset_required ? 'yes' : 'no'}</span>
-        `;
-      }
-
-      function renderReviewState() {
-        reviewStateOutput.textContent = JSON.stringify(getReviewState(), null, 2);
-      }
-
-      function responseErrorText(payload) {
-        if (typeof payload === 'string') return payload;
-        if (payload && typeof payload.detail === 'string') return payload.detail;
-        return JSON.stringify(payload);
-      }
-
-      function showResponse(status, payload, headers = {}) {
-        responseMeta.textContent = `HTTP ${status}` + (headers['content-type'] ? ` | ${headers['content-type']}` : '');
-        responseOutput.textContent = typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2);
-      }
-
       function isoDate(offsetDays = 0) {
         const now = new Date();
         now.setDate(now.getDate() + offsetDays);
         return now.toISOString().slice(0, 10);
       }
-
-      function getCurrentActor() {
-        const user = getCurrentUser();
-        if (!user?.username || !user?.role_code) throw new Error('Login first and refresh current user.');
-        return { actor: user.username, actor_role: user.role_code };
+      function showStatus(target, text, type = 'success') {
+        target.textContent = text;
+        target.className = `status ${type}`;
+        target.classList.remove('hidden');
+      }
+      function hideStatus(target) {
+        target.classList.add('hidden');
+        target.textContent = '';
+      }
+      function escapeHtml(value) {
+        return String(value ?? '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+      function sectionAllowed(section, role) {
+        if (section.roles === '*') return true;
+        return section.roles.includes(role);
+      }
+      function roleAllowed(attr, role) {
+        if (!attr || attr === '*') return true;
+        return attr.split('|').includes(role);
+      }
+      function setBusy(button, busy) {
+        if (!button) return;
+        button.disabled = busy;
       }
 
-      function fillCredentials(username) {
-        document.getElementById('login-username').value = username;
-        document.getElementById('login-password').value = username;
-      }
-
-      async function apiRequest(path, { method = 'GET', body = undefined, useAuth = true, tokenOverride = '' } = {}) {
-        const headers = {};
-        const effectiveToken = tokenOverride || getToken();
-        if (useAuth && effectiveToken) {
-          headers['Authorization'] = `Bearer ${effectiveToken}`;
-          headers['X-Access-Token'] = effectiveToken;
+      async function api(path, { method = 'GET', body = undefined, auth = true } = {}) {
+        const headers = { 'Content-Type': 'application/json' };
+        if (auth && appState.token) {
+          headers['Authorization'] = `Bearer ${appState.token}`;
+          headers['X-Access-Token'] = appState.token;
         }
-        let payloadBody;
-        if (body !== undefined && body !== null && method !== 'GET') {
-          headers['Content-Type'] = 'application/json';
-          payloadBody = typeof body === 'string' ? body : JSON.stringify(body);
-        }
-        const response = await fetch(path, { method, headers, body: payloadBody });
+        const response = await fetch(`${API}${path}`, {
+          method,
+          headers,
+          body: body === undefined ? undefined : JSON.stringify(body),
+        });
         const contentType = response.headers.get('content-type') || '';
         const payload = contentType.includes('application/json') ? await response.json() : await response.text();
-        showResponse(response.status, payload, { 'content-type': contentType });
-        if (!response.ok) throw new Error(responseErrorText(payload));
+        if (!response.ok) {
+          const detail = typeof payload === 'string' ? payload : (payload.detail || JSON.stringify(payload));
+          throw new Error(detail);
+        }
         return payload;
       }
 
-      async function refreshCurrentUser(showStatus = true, tokenOverride = '') {
-        const effectiveToken = tokenOverride || getToken();
-        if (!effectiveToken) {
-          setCurrentUser(null);
-          if (showStatus) setStatus('No token is stored.', false);
-          return null;
-        }
-        try {
-          const payload = await apiRequest('/api/v1/auth/me', { tokenOverride: effectiveToken });
-          setCurrentUser(payload);
-          if (showStatus) setStatus(`Authenticated as ${payload.username} / ${payload.role_code}`);
-          return payload;
-        } catch (error) {
-          setCurrentUser(null);
-          if (showStatus) setStatus(`Session check failed: ${error.message}`, false);
-          throw error;
-        }
+      function switchToAuth() {
+        workspaceView.classList.add('hidden');
+        authView.classList.remove('hidden');
+      }
+      function switchToWorkspace() {
+        authView.classList.add('hidden');
+        workspaceView.classList.remove('hidden');
       }
 
-      function hydrateIdsFromState() {
-        const state = getReviewState();
-        if (state.latest_incident_id) document.getElementById('incident-id').value = String(state.latest_incident_id);
-        if (state.latest_user) document.getElementById('access-target-username').value = state.latest_user;
-        if (state.latest_session_id) document.getElementById('revoke-session-id').value = String(state.latest_session_id);
-        if (state.latest_purchase_request_id) document.getElementById('traceability-id').value = String(state.latest_purchase_request_id);
-      }
-
-      async function loginWithCredentials(username, password) {
-        const payload = await apiRequest('/api/v1/auth/login', {
-          method: 'POST',
-          body: { username, password },
-          useAuth: false,
+      function buildMenu() {
+        const role = appState.user?.role_code;
+        const passwordGate = Boolean(appState.user?.password_reset_required);
+        const menu = $('main-menu');
+        const items = SECTION_CONFIG.filter((section) => {
+          if (passwordGate) return section.id === 'password-section';
+          return sectionAllowed(section, role);
         });
-        const issuedToken = payload.access_token || '';
-        setToken(issuedToken);
+        menu.innerHTML = items.map((section) => `<a class="menu-item" href="#${section.id}">${section.label}</a>`).join('');
+      }
+
+      function toggleSectionsForRole() {
+        const role = appState.user?.role_code;
+        const passwordGate = Boolean(appState.user?.password_reset_required);
+        document.querySelectorAll('[data-roles]').forEach((el) => {
+          const allowed = roleAllowed(el.getAttribute('data-roles'), role);
+          el.classList.toggle('hidden', passwordGate ? el.id !== 'password-section' : !allowed);
+        });
+        document.querySelectorAll('.role-card').forEach((el) => {
+          const allowed = roleAllowed(el.getAttribute('data-roles'), role);
+          el.classList.toggle('hidden', passwordGate ? el.getAttribute('data-roles') !== '*' : !allowed);
+        });
+      }
+
+      function renderHeader() {
+        $('header-name').textContent = appState.user?.full_name || appState.user?.username || '-';
+        $('header-role').textContent = `${roleLabel(appState.user?.role_code)} | ${appState.user?.username || '-'}`;
+        $('role-guidance-main').textContent = ROLE_GUIDANCE[appState.user?.role_code] || 'منوی نقش فعلی را انتخاب کن و فقط عملیات مجاز همان نقش را انجام بده.';
+        $('role-guidance-side').textContent = ROLE_GUIDANCE[appState.user?.role_code] || 'با کارتابل و رهگیری کار کن.';
+        $('role-summary').innerHTML = `
+          <strong>نام</strong><span>${escapeHtml(appState.user?.full_name || '-')}</span>
+          <strong>نام کاربری</strong><span>${escapeHtml(appState.user?.username || '-')}</span>
+          <strong>نقش</strong><span>${escapeHtml(roleLabel(appState.user?.role_code))}</span>
+          <strong>واحد</strong><span>${escapeHtml(appState.user?.department_code || '-')}</span>
+          <strong>نیاز به تغییر رمز</strong><span>${appState.user?.password_reset_required ? 'بله' : 'خیر'}</span>
+        `;
+        $('role-chips').innerHTML = `
+          <span class="chip">${escapeHtml(roleLabel(appState.user?.role_code))}</span>
+          <span class="chip">${escapeHtml(appState.user?.department_code || 'بدون واحد')}</span>
+          <span class="chip">${appState.user?.password_reset_required ? 'تغییر رمز اجباری' : 'وضعیت ورود عادی'}</span>
+        `;
+      }
+
+      function renderDashboard() {
+        const cards = $('dashboard-cards');
+        const dash = appState.dashboard;
+        if (!dash) {
+          cards.innerHTML = '<div class="empty">داشبورد هنوز بارگذاری نشده است.</div>';
+          return;
+        }
+        const totalPR = Object.values(dash.purchase_requests_by_status || {}).reduce((a, b) => a + b, 0);
+        const totalRFQ = Object.values(dash.rfqs_by_status || {}).reduce((a, b) => a + b, 0);
+        const totalPO = Object.values(dash.purchase_orders_by_status || {}).reduce((a, b) => a + b, 0);
+        const totalPay = Object.values(dash.collections_by_status || {}).reduce((a, b) => a + b, 0) + Object.values(dash.sales_invoices_by_status || {}).reduce((a, b) => a + b, 0);
+        const entries = [
+          ['درخواست خرید', totalPR],
+          ['RFQ', totalRFQ],
+          ['سفارش خرید', totalPO],
+          ['آلارم باز', dash.open_alerts],
+          ['جریان باز', dash.workflow_instances],
+          ['موارد معوق', dash.overdue_workflow_instances],
+          ['موارد Escalated', dash.escalated_workflow_instances],
+          ['سفارش فروش', Object.values(dash.sales_orders_by_status || {}).reduce((a, b) => a + b, 0)],
+          ['تحویل فروش', Object.values(dash.sales_deliveries_by_status || {}).reduce((a, b) => a + b, 0)],
+          ['اسناد مالی/وصول', totalPay],
+        ];
+        cards.innerHTML = entries.map(([label, value]) => `
+          <div class="stat">
+            <div class="stat-label">${label}</div>
+            <div class="stat-value">${numberLabel(value)}</div>
+          </div>
+        `).join('');
+
+        if (appState.securityDashboard) {
+          renderSecurityDashboard();
+        }
+      }
+
+      function renderTable(containerId, columns, rows, emptyText = 'موردی یافت نشد') {
+        const container = $(containerId);
+        if (!rows.length) {
+          container.innerHTML = `<div class="empty">${emptyText}</div>`;
+          return;
+        }
+        const head = columns.map((col) => `<th>${col.label}</th>`).join('');
+        const body = rows.map((row) => `<tr>${columns.map((col) => `<td>${col.render(row)}</td>`).join('')}</tr>`).join('');
+        container.innerHTML = `<table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>`;
+      }
+
+      function renderTasks() {
+        renderTable('my-tasks-wrap', [
+          { label: 'فرایند', render: (item) => escapeHtml(item.process_name) },
+          { label: 'سند', render: (item) => `${escapeHtml(item.object_type)} #${item.object_id}` },
+          { label: 'وضعیت جاری', render: (item) => escapeHtml(valueLabel(item.current_state)) },
+          { label: 'مالک فعلی', render: (item) => escapeHtml(item.current_owner || '-') },
+          { label: 'رهگیری', render: (item) => `<button class="mini-btn secondary" onclick="portalOpenTrace('${item.object_type}', ${item.object_id})">رهگیری</button>` },
+        ], appState.tasks, 'فعلاً کاری به نام شما باز نیست.');
+
+        renderTable('approvals-wrap', [
+          { label: 'فرایند', render: (item) => escapeHtml(item.process_name) },
+          { label: 'سند', render: (item) => `${escapeHtml(item.object_type)} #${item.object_id}` },
+          { label: 'مرحله', render: (item) => escapeHtml(valueLabel(item.current_state)) },
+          { label: 'اقدام‌های مجاز', render: (item) => approvalButtons(item) },
+        ], appState.approvals, 'طبق نقش فعلی، فعلاً موردی برای اقدام وجود ندارد.');
+      }
+
+      function approvalButtons(item) {
+        return (item.available_actions || []).map((action) => {
+          const direct = directActionSupported(action, item.object_type);
+          const label = actionLabel(action);
+          if (direct) {
+            return `<button class="mini-btn primary" onclick="portalRunAction('${action}', '${item.object_type}', ${item.object_id})">${label}</button>`;
+          }
+          return `<button class="mini-btn secondary" onclick="portalPrefillAction('${action}', '${item.object_type}', ${item.object_id})">${label}</button>`;
+        }).join(' ');
+      }
+
+      function actionLabel(action) {
+        const labels = {
+          submit: 'ارسال',
+          route_review: 'ارجاع/بررسی',
+          approve: 'تأیید',
+          create_rfq: 'فرم RFQ',
+          record_quotes: 'فرم ثبت پیشنهادها',
+          commercial_eval: 'فرم ارزیابی بازرگانی',
+          technical_eval: 'تأیید فنی',
+          approve_price: 'تأیید قیمت',
+          issue_po: 'فرم صدور PO',
+          record_receipt: 'فرم دریافت',
+          accept_qc: 'فرم QC',
+          reject_qc: 'فرم QC',
+          match_invoice: 'فرم تطبیق فاکتور',
+          approve_payment: 'تأیید پرداخت',
+          execute_payment: 'اجرای پرداخت',
+        };
+        return labels[action] || action;
+      }
+
+      function directActionSupported(action, objectType) {
+        return [
+          'route_review', 'approve', 'technical_eval', 'approve_price', 'approve_payment', 'execute_payment'
+        ].includes(action) && ['PurchaseRequest', 'RFQ', 'Payment'].includes(objectType);
+      }
+
+      async function runDirectAction(action, objectType, objectId) {
+        const actor = appState.user.username;
+        const actorRole = appState.user.role_code;
+        const note = $('approval-note').value || undefined;
+        let path = null;
+        let body = { actor, actor_role: actorRole, note };
+
+        if (action === 'route_review' && objectType === 'PurchaseRequest') path = `/purchase-requests/${objectId}/route-review`;
+        if (action === 'approve' && objectType === 'PurchaseRequest') path = `/purchase-requests/${objectId}/approve`;
+        if (action === 'technical_eval' && objectType === 'RFQ') path = `/rfqs/${objectId}/technical-approve`;
+        if (action === 'approve_price' && objectType === 'RFQ') path = `/rfqs/${objectId}/price-approve`;
+        if (action === 'approve_payment' && objectType === 'Payment') path = `/payments/${objectId}/approve`;
+        if (action === 'execute_payment' && objectType === 'Payment') path = `/payments/${objectId}/execute`;
+
+        if (!path) {
+          throw new Error('برای این اقدام باید از فرم اختصاصی همان مرحله استفاده شود.');
+        }
+        await api(path, { method: 'POST', body });
+      }
+
+      function renderProcurementTables() {
+        const prs = appState.records.purchaseRequests.slice().sort((a, b) => b.id - a.id);
+        const rfqs = appState.records.rfqs.slice().sort((a, b) => b.id - a.id);
+        const pos = appState.records.purchaseOrders.slice().sort((a, b) => b.id - a.id);
+        const receipts = appState.records.goodsReceipts.slice().sort((a, b) => b.id - a.id);
+        const qcs = appState.records.qualityInspections.slice().sort((a, b) => b.id - a.id);
+        const invoices = appState.records.supplierInvoices.slice().sort((a, b) => b.id - a.id);
+        const payments = appState.records.payments.slice().sort((a, b) => b.id - a.id);
+
+        renderTable('purchase-requests-wrap', [
+          { label: 'شناسه', render: (item) => `PR #${item.id}<br><span class="muted">${escapeHtml(item.code)}</span>` },
+          { label: 'درخواست‌کننده', render: (item) => escapeHtml(item.requester) },
+          { label: 'وضعیت', render: (item) => escapeHtml(valueLabel(item.status)) },
+          { label: 'مبلغ', render: (item) => numberLabel(item.total_estimated_amount) },
+          { label: 'عملیات', render: (item) => purchaseRequestActions(item) },
+        ], prs, 'درخواست خریدی ثبت نشده است.');
+
+        renderTable('rfqs-wrap', [
+          { label: 'شناسه', render: (item) => `RFQ #${item.id}<br><span class="muted">${escapeHtml(item.code)}</span>` },
+          { label: 'PR', render: (item) => item.purchase_request_id },
+          { label: 'خریدار', render: (item) => escapeHtml(item.buyer) },
+          { label: 'وضعیت', render: (item) => escapeHtml(valueLabel(item.status)) },
+          { label: 'عملیات', render: (item) => rfqActions(item) },
+        ], rfqs, 'RFQای ثبت نشده است.');
+
+        renderTable('purchase-orders-wrap', [
+          { label: 'شناسه', render: (item) => `PO #${item.id}<br><span class="muted">${escapeHtml(item.code)}</span>` },
+          { label: 'RFQ', render: (item) => item.rfq_id },
+          { label: 'تأمین‌کننده', render: (item) => item.supplier_id },
+          { label: 'وضعیت', render: (item) => escapeHtml(valueLabel(item.status)) },
+          { label: 'عملیات', render: (item) => `<button class="mini-btn secondary" onclick="portalPrefillAction('record_receipt', 'PO', ${item.id})">استفاده در دریافت</button> <button class="mini-btn ghost" onclick="portalOpenTrace('PO', ${item.id})">رهگیری</button>` },
+        ], pos, 'سفارش خریدی ثبت نشده است.');
+
+        renderTable('goods-receipts-wrap', [
+          { label: 'رسید', render: (item) => `GR #${item.id}<br><span class="muted">${escapeHtml(item.code)}</span>` },
+          { label: 'PO', render: (item) => item.purchase_order_id },
+          { label: 'مقدار', render: (item) => numberLabel(item.received_qty) },
+          { label: 'وضعیت', render: (item) => escapeHtml(valueLabel(item.status)) },
+          { label: 'عملیات', render: (item) => `<button class="mini-btn secondary" onclick="portalPrefillAction('accept_qc', 'GoodsReceipt', ${item.id})">استفاده در QC</button> <button class="mini-btn ghost" onclick="portalOpenTrace('GoodsReceipt', ${item.id})">رهگیری</button>` },
+        ], receipts, 'رسید کالایی ثبت نشده است.');
+
+        renderTable('quality-wrap', [
+          { label: 'QC', render: (item) => `QC #${item.id}<br><span class="muted">${escapeHtml(item.code)}</span>` },
+          { label: 'رسید', render: (item) => item.goods_receipt_id },
+          { label: 'نتیجه', render: (item) => escapeHtml(valueLabel(item.result || '-')) },
+          { label: 'وضعیت', render: (item) => escapeHtml(valueLabel(item.status)) },
+          { label: 'رهگیری', render: (item) => `<button class="mini-btn ghost" onclick="portalOpenTrace('QualityInspection', ${item.id})">رهگیری</button>` },
+        ], qcs, 'پرونده QCای وجود ندارد.');
+
+        renderTable('invoices-wrap', [
+          { label: 'فاکتور', render: (item) => `INV #${item.id}<br><span class="muted">${escapeHtml(item.invoice_no)}</span>` },
+          { label: 'PO/GR', render: (item) => `${item.purchase_order_id} / ${item.goods_receipt_id}` },
+          { label: 'مبلغ', render: (item) => numberLabel(item.total_amount) },
+          { label: 'وضعیت', render: (item) => escapeHtml(valueLabel(item.status)) },
+          { label: 'عملیات', render: (item) => `<button class="mini-btn secondary" onclick="portalPrefillAction('match_invoice', 'SupplierInvoice', ${item.id})">تطبیق/پرداخت</button> <button class="mini-btn ghost" onclick="portalOpenTrace('SupplierInvoice', ${item.id})">رهگیری</button>` },
+        ], invoices, 'فاکتوری ثبت نشده است.');
+
+        renderTable('payments-wrap', [
+          { label: 'پرداخت', render: (item) => `PAY #${item.id}<br><span class="muted">${escapeHtml(item.code)}</span>` },
+          { label: 'فاکتور', render: (item) => item.supplier_invoice_id },
+          { label: 'مبلغ', render: (item) => numberLabel(item.amount) },
+          { label: 'وضعیت', render: (item) => escapeHtml(valueLabel(item.status)) },
+          { label: 'رهگیری', render: (item) => `<button class="mini-btn ghost" onclick="portalOpenTrace('Payment', ${item.id})">رهگیری</button>` },
+        ], payments, 'پرداختی ثبت نشده است.');
+      }
+
+      function purchaseRequestActions(item) {
+        const buttons = [`<button class="mini-btn ghost" onclick="portalOpenTrace('PurchaseRequest', ${item.id})">رهگیری</button>`];
+        if (appState.user?.role_code === 'Requester' && item.requester === appState.user.username && item.status === 'draft') {
+          buttons.unshift(`<button class="mini-btn primary" onclick="portalSubmitPurchaseRequest(${item.id})">ارسال</button>`);
+        }
+        if (appState.user?.role_code === 'Procurement Officer') {
+          buttons.unshift(`<button class="mini-btn secondary" onclick="portalPrefillAction('create_rfq', 'PurchaseRequest', ${item.id})">استفاده در RFQ</button>`);
+        }
+        return buttons.join(' ');
+      }
+
+      function rfqActions(item) {
+        const buttons = [`<button class="mini-btn ghost" onclick="portalOpenTrace('RFQ', ${item.id})">رهگیری</button>`];
+        if (appState.user?.role_code === 'Procurement Officer') {
+          buttons.unshift(`<button class="mini-btn secondary" onclick="portalPrefillAction('issue_po', 'RFQ', ${item.id})">صدور PO</button>`);
+          buttons.unshift(`<button class="mini-btn secondary" onclick="portalPrefillAction('commercial_eval', 'RFQ', ${item.id})">ارزیابی بازرگانی</button>`);
+          buttons.unshift(`<button class="mini-btn secondary" onclick="portalPrefillAction('record_quotes', 'RFQ', ${item.id})">ثبت پیشنهادها</button>`);
+        }
+        return buttons.join(' ');
+      }
+
+      function populateSelect(selectId, items, mapper, placeholder = 'انتخاب کنید') {
+        const select = $(selectId);
+        if (!select) return;
+        const options = [`<option value="">${placeholder}</option>`].concat(items.map(mapper));
+        select.innerHTML = options.join('');
+      }
+
+      function refreshSelectors() {
+        const prsForRFQ = appState.records.purchaseRequests.filter((item) => ['approved', 'under_review', 'submitted'].includes(item.status) || item.status === 'approved');
+        populateSelect('rfq-pr-select', prsForRFQ, (item) => `<option value="${item.id}">PR #${item.id} | ${escapeHtml(item.code)} | ${escapeHtml(item.status)}</option>`, 'درخواست خرید را انتخاب کن');
+        populateSelect('quote-rfq-select', appState.records.rfqs, (item) => `<option value="${item.id}">RFQ #${item.id} | ${escapeHtml(item.code)} | ${escapeHtml(item.status)}</option>`, 'RFQ را انتخاب کن');
+        populateSelect('record-rfq-select', appState.records.rfqs, (item) => `<option value="${item.id}">RFQ #${item.id} | ${escapeHtml(item.code)}</option>`, 'RFQ را انتخاب کن');
+        populateSelect('commercial-rfq-select', appState.records.rfqs, (item) => `<option value="${item.id}">RFQ #${item.id} | ${escapeHtml(item.code)}</option>`, 'RFQ را انتخاب کن');
+        populateSelect('po-rfq-select', appState.records.rfqs, (item) => `<option value="${item.id}">RFQ #${item.id} | ${escapeHtml(item.code)}</option>`, 'RFQ را انتخاب کن');
+        populateSelect('receipt-po-select', appState.records.purchaseOrders, (item) => `<option value="${item.id}">PO #${item.id} | ${escapeHtml(item.code)}</option>`, 'سفارش خرید را انتخاب کن');
+        populateSelect('qc-gr-select', appState.records.goodsReceipts, (item) => `<option value="${item.id}">GR #${item.id} | ${escapeHtml(item.code)}</option>`, 'رسید کالا را انتخاب کن');
+        populateSelect('qc-finalize-select', appState.records.qualityInspections, (item) => `<option value="${item.id}">QC #${item.id} | ${escapeHtml(item.code)} | ${escapeHtml(item.status)}</option>`, 'پرونده QC را انتخاب کن');
+        populateSelect('invoice-po-select', appState.records.purchaseOrders, (item) => `<option value="${item.id}">PO #${item.id} | ${escapeHtml(item.code)}</option>`, 'PO را انتخاب کن');
+        populateSelect('invoice-gr-select', appState.records.goodsReceipts, (item) => `<option value="${item.id}">GR #${item.id} | ${escapeHtml(item.code)}</option>`, 'رسید را انتخاب کن');
+        populateSelect('match-invoice-select', appState.records.supplierInvoices, (item) => `<option value="${item.id}">INV #${item.id} | ${escapeHtml(item.invoice_no)} | ${escapeHtml(item.status)}</option>`, 'فاکتور را انتخاب کن');
+        populateSelect('payment-invoice-select', appState.records.supplierInvoices, (item) => `<option value="${item.id}">INV #${item.id} | ${escapeHtml(item.invoice_no)}</option>`, 'فاکتور را انتخاب کن');
+        populateSelect('quote-supplier-select', appState.records.suppliers, (item) => `<option value="${item.id}">${escapeHtml(item.code)} | ${escapeHtml(item.name)}</option>`, 'تأمین‌کننده را انتخاب کن');
+        populateSelect('invoice-supplier-select', appState.records.suppliers, (item) => `<option value="${item.id}">${escapeHtml(item.code)} | ${escapeHtml(item.name)}</option>`, 'تأمین‌کننده را انتخاب کن');
+        populateSelect('user-role-select', USER_ROLE_OPTIONS, (role) => `<option value="${role}">${escapeHtml(roleLabel(role))}</option>`, 'نقش را انتخاب کن');
+      }
+
+      async function loadRfqDetailToSelects(rfqId, quoteSelectIds = []) {
+        if (!rfqId) {
+          quoteSelectIds.forEach((id) => populateSelect(id, [], () => '', 'ابتدا RFQ را انتخاب کن'));
+          return;
+        }
+        if (!appState.rfqDetails[rfqId]) {
+          appState.rfqDetails[rfqId] = await api(`/rfqs/${rfqId}`);
+        }
+        const detail = appState.rfqDetails[rfqId];
+        quoteSelectIds.forEach((selectId) => {
+          populateSelect(selectId, detail.quotations || [], (quote) => `<option value="${quote.id}">Quote #${quote.id} | مبلغ ${numberLabel(quote.total_amount)} | تأمین‌کننده ${quote.supplier_id}</option>`, 'پیشنهاد را انتخاب کن');
+        });
+      }
+
+      function renderUsers() {
+        renderTable('users-wrap', [
+          { label: 'کاربر', render: (item) => `${escapeHtml(item.username)}<br><span class="muted">${escapeHtml(item.full_name)}</span>` },
+          { label: 'نقش', render: (item) => escapeHtml(roleLabel(item.role_code)) },
+          { label: 'واحد', render: (item) => escapeHtml(item.department_code || '-') },
+          { label: 'وضعیت', render: (item) => escapeHtml(item.status) },
+          { label: 'عملیات', render: (item) => `<button class="mini-btn secondary" onclick="portalForceReset('${item.username}')">الزام تغییر رمز</button>` },
+        ], appState.records.users, 'فهرست کاربران قابل مشاهده نیست یا هنوز کاربری ثبت نشده است.');
+      }
+
+      function renderSecurityDashboard() {
+        const sec = appState.securityDashboard;
+        const cards = $('security-cards');
+        if (!sec) {
+          cards.innerHTML = '<div class="empty">داشبورد امنیت برای این نقش فعال نیست.</div>';
+          return;
+        }
+        const entries = [
+          ['توکن فعال', sec.active_tokens],
+          ['توکن ابطال‌شده', sec.revoked_tokens],
+          ['توکن منقضی', sec.expired_tokens],
+          ['رخداد باز', sec.open_incidents],
+          ['رخداد بحرانی باز', sec.critical_open_incidents],
+          ['ورود موفق 24h', sec.login_successes_24h],
+          ['ورود ناموفق 24h', sec.login_failures_24h],
+          ['رخداد مشکوک 24h', sec.suspicious_events_24h],
+          ['کاربران قفل‌شده', (sec.locked_usernames || []).length],
+          ['توکن نامعتبر 24h', sec.invalid_token_events_24h],
+        ];
+        cards.innerHTML = entries.map(([label, value]) => `<div class="stat"><div class="stat-label">${label}</div><div class="stat-value">${numberLabel(value)}</div></div>`).join('');
+      }
+
+      function renderSessions(containerId, items, emptyText) {
+        renderTable(containerId, [
+          { label: 'شناسه', render: (item) => item.id },
+          { label: 'کاربر', render: (item) => escapeHtml(item.username || '-') },
+          { label: 'ایجاد', render: (item) => escapeHtml(item.created_at || '-') },
+          { label: 'انقضا', render: (item) => escapeHtml(item.expires_at || '-') },
+          { label: 'وضعیت', render: (item) => item.is_active ? 'فعال' : 'غیرفعال' },
+          { label: 'عملیات', render: (item) => item.is_active ? `<button class="mini-btn danger" onclick="portalRevokeSession(${item.id})">ابطال نشست</button>` : '-' },
+        ], items, emptyText);
+      }
+
+      function renderTrace(response) {
+        if (!response || !response.overview) {
+          $('trace-overview').innerHTML = '<div class="empty">رهگیری‌ای برای نمایش وجود ندارد.</div>';
+          $('trace-docs-wrap').innerHTML = '<div class="empty">-</div>';
+          $('trace-timeline').innerHTML = '<div class="empty">-</div>';
+          return;
+        }
+        const overview = response.overview;
+        const cards = [
+          ['فرایند', overview.process_name],
+          ['سند ریشه', `${overview.root_object_type} #${overview.root_object_id}`],
+          ['سند فعال', overview.active_object_type ? `${overview.active_object_type} #${overview.active_object_id}` : '-'],
+          ['وضعیت جاری', valueLabel(overview.current_state)],
+          ['مالک جاری', overview.current_owner || '-'],
+          ['نقش جاری', roleLabel(overview.current_role)],
+        ];
+        $('trace-overview').innerHTML = cards.map(([label, value]) => `<div class="stat"><div class="stat-label">${escapeHtml(label)}</div><div class="stat-value" style="font-size:18px;">${escapeHtml(value || '-')}</div></div>`).join('');
+
+        renderTable('trace-docs-wrap', [
+          { label: 'سند', render: (item) => `${escapeHtml(item.object_type)} #${item.object_id}<br><span class="muted">${escapeHtml(item.code)}</span>` },
+          { label: 'رابطه', render: (item) => escapeHtml(valueLabel(item.relation)) },
+          { label: 'وضعیت', render: (item) => escapeHtml(valueLabel(item.status)) },
+          { label: 'مرحله', render: (item) => escapeHtml(valueLabel(item.current_state)) },
+          { label: 'مالک', render: (item) => escapeHtml(item.current_owner || '-') },
+        ], response.linked_documents || [], 'سند مرتبطی یافت نشد.');
+
+        const timelineItems = response.timeline || [];
+        $('trace-timeline').innerHTML = timelineItems.length
+          ? timelineItems.map((item) => `
+              <div class="timeline-item">
+                <strong>${escapeHtml(item.event_type)}</strong>
+                <div class="muted small">${escapeHtml(item.event_time || '-')} | ${escapeHtml(item.source_type || '-')} ${item.source_id ? '#' + item.source_id : ''}</div>
+                <div>${escapeHtml(item.actor || '-')} ${item.status ? ' | ' + escapeHtml(item.status) : ''}</div>
+                <div class="muted">${escapeHtml(item.message || '')}</div>
+              </div>
+            `).join('')
+          : '<div class="empty">رویدادی برای تایم‌لاین ثبت نشده است.</div>';
+      }
+
+      async function loadWorkspace() {
+        renderHeader();
+        toggleSectionsForRole();
+        buildMenu();
+        refreshSelectors();
+        if (appState.user?.password_reset_required) {
+          showStatus(globalStatus, 'این کاربر باید قبل از کار عملیاتی، کلمه عبور را تغییر دهد.', 'warning');
+          return;
+        }
+        hideStatus(globalStatus);
+        const results = await Promise.allSettled([
+          api('/dashboard/summary'),
+          api('/inbox/my-tasks'),
+          api('/inbox/approvals'),
+          api('/purchase-requests'),
+          api('/rfqs'),
+          api('/purchase-orders'),
+          api('/goods-receipts'),
+          api('/quality-inspections'),
+          api('/supplier-invoices'),
+          api('/payments'),
+          api('/suppliers'),
+          api('/alerts/my').catch(() => []),
+          ['Master Data Admin', 'Security Officer'].includes(appState.user?.role_code) ? api('/users') : Promise.resolve([]),
+          ['Master Data Admin', 'Security Officer'].includes(appState.user?.role_code) ? api('/security/dashboard') : Promise.resolve(null),
+          api('/security/my-sessions').catch(() => ({ items: [] })),
+        ]);
+
+        const [dashboardRes, tasksRes, approvalsRes, prRes, rfqRes, poRes, grRes, qcRes, invRes, payRes, supplierRes, alertRes, usersRes, securityRes, mySessionsRes] = results;
+        appState.dashboard = dashboardRes.status === 'fulfilled' ? dashboardRes.value : null;
+        appState.tasks = tasksRes.status === 'fulfilled' ? tasksRes.value : [];
+        appState.approvals = approvalsRes.status === 'fulfilled' ? approvalsRes.value : [];
+        appState.records.purchaseRequests = prRes.status === 'fulfilled' ? prRes.value : [];
+        appState.records.rfqs = rfqRes.status === 'fulfilled' ? rfqRes.value : [];
+        appState.records.purchaseOrders = poRes.status === 'fulfilled' ? poRes.value : [];
+        appState.records.goodsReceipts = grRes.status === 'fulfilled' ? grRes.value : [];
+        appState.records.qualityInspections = qcRes.status === 'fulfilled' ? qcRes.value : [];
+        appState.records.supplierInvoices = invRes.status === 'fulfilled' ? invRes.value : [];
+        appState.records.payments = payRes.status === 'fulfilled' ? payRes.value : [];
+        appState.records.suppliers = supplierRes.status === 'fulfilled' ? supplierRes.value : [];
+        appState.records.alerts = alertRes.status === 'fulfilled' ? alertRes.value : [];
+        appState.records.users = usersRes.status === 'fulfilled' ? usersRes.value : [];
+        appState.securityDashboard = securityRes.status === 'fulfilled' ? securityRes.value : null;
+        appState.mySessions = mySessionsRes.status === 'fulfilled' ? (mySessionsRes.value.items || []) : [];
+
+        renderDashboard();
+        renderTasks();
+        renderProcurementTables();
+        refreshSelectors();
+        renderUsers();
+        renderSessions('my-sessions-wrap', appState.mySessions, 'نشستی یافت نشد.');
+        renderSecurityDashboard();
+      }
+
+      async function refreshCurrentUser() {
+        appState.user = await api('/auth/me');
+        return appState.user;
+      }
+
+      async function login(username, password) {
+        const payload = await api('/auth/login', { method: 'POST', body: { username, password }, auth: false });
+        setToken(payload.access_token || '');
+        await refreshCurrentUser();
+        switchToWorkspace();
+        await loadWorkspace();
+        showStatus(globalStatus, `ورود با موفقیت انجام شد. نقش جاری: ${roleLabel(appState.user.role_code)}`, 'success');
+      }
+
+      async function logout() {
         try {
-          const me = await refreshCurrentUser(false, issuedToken);
-          setStatus(`Logged in as ${username}${me?.password_reset_required ? ' | password reset required' : ''}`);
-          if (me?.username) rememberState({ last_logged_in_user: me.username, last_role: me.role_code || null });
+          if (appState.token) await api('/auth/logout', { method: 'POST' });
         } catch (_) {
-          setStatus(`Token issued for ${username}. If session metadata does not load automatically, click Who am I? once.`, true);
-        }
-      }
-
-      async function createReviewUser() {
-        const response = await apiRequest('/api/v1/users', {
-          method: 'POST',
-          body: {
-            username: document.getElementById('new-user-username').value.trim(),
-            password: document.getElementById('new-user-password').value,
-            full_name: document.getElementById('new-user-full-name').value.trim(),
-            department_code: document.getElementById('new-user-department').value.trim() || null,
-            role_code: document.getElementById('new-user-role').value,
-            status: 'active',
-          },
-        });
-        document.getElementById('access-target-username').value = response.username;
-        rememberState({ latest_user: response.username });
-      }
-
-      async function forcePasswordReset() {
-        const username = document.getElementById('access-target-username').value.trim() || getReviewState().latest_user;
-        if (!username) throw new Error('Set a target username first.');
-        await apiRequest(`/api/v1/users/${encodeURIComponent(username)}/force-password-reset`, { method: 'POST' });
-        rememberState({ latest_user: username, forced_reset_target: username });
-      }
-
-      async function changeMyPassword() {
-        await apiRequest('/api/v1/auth/change-password', {
-          method: 'POST',
-          body: {
-            current_password: document.getElementById('change-password-current').value,
-            new_password: document.getElementById('change-password-new').value,
-          },
-        });
-        document.getElementById('login-password').value = document.getElementById('change-password-new').value;
-      }
-
-      async function loadSessionsForTarget() {
-        const currentUser = getCurrentUser();
-        const username = document.getElementById('access-target-username').value.trim() || currentUser?.username;
-        if (!username) throw new Error('No username is available for session lookup.');
-        const path = currentUser && username === currentUser.username
-          ? '/api/v1/security/my-sessions'
-          : `/api/v1/security/sessions?username=${encodeURIComponent(username)}`;
-        const payload = await apiRequest(path);
-        const preferred = (payload.items || []).find((item) => item.is_active && !item.is_current) || (payload.items || [])[0];
-        if (preferred) {
-          document.getElementById('revoke-session-id').value = String(preferred.id);
-          rememberState({ latest_session_id: preferred.id });
-        }
-        rememberState({ latest_session_target: username, latest_session_count: payload.total_count || 0 });
-      }
-
-      async function revokeSelectedSession() {
-        const sessionId = document.getElementById('revoke-session-id').value.trim();
-        if (!sessionId) throw new Error('Load sessions first or enter a session id.');
-        await apiRequest(`/api/v1/security/sessions/${sessionId}/revoke`, { method: 'POST' });
-      }
-
-      async function createIncident() {
-        const response = await apiRequest('/api/v1/security/incidents', {
-          method: 'POST',
-          body: {
-            title: document.getElementById('incident-title').value.trim(),
-            incident_type: document.getElementById('incident-type').value.trim(),
-            severity: document.getElementById('incident-severity').value,
-            related_username: document.getElementById('incident-related-user').value.trim() || null,
-            source_entity_name: document.getElementById('incident-source-entity').value.trim() || null,
-            source_entity_id: document.getElementById('incident-source-id').value.trim() || null,
-            audit_log_ids: [],
-            summary: document.getElementById('incident-summary').value.trim(),
-            assigned_to: document.getElementById('incident-assigned-to').value.trim() || null,
-            ...getCurrentActor(),
-          },
-        });
-        document.getElementById('incident-id').value = String(response.id);
-        rememberState({ latest_incident_id: response.id });
-      }
-
-      async function openLatestIncident() {
-        const incidentId = Number(document.getElementById('incident-id').value || getReviewState().latest_incident_id);
-        if (!incidentId) throw new Error('No incident id is available.');
-        const response = await apiRequest(`/api/v1/security/incidents/${incidentId}`);
-        document.getElementById('incident-id').value = String(response.id);
-        rememberState({ latest_incident_id: response.id });
-      }
-
-      async function runIncidentAction(action) {
-        const incidentId = Number(document.getElementById('incident-id').value || getReviewState().latest_incident_id);
-        if (!incidentId) throw new Error('Create or load an incident first.');
-        const response = await apiRequest(`/api/v1/security/incidents/${incidentId}/${action}`, {
-          method: 'POST',
-          body: {
-            ...getCurrentActor(),
-            note: document.getElementById('incident-note').value.trim() || null,
-            assigned_to: document.getElementById('incident-reassign').value.trim() || null,
-            containment_action: document.getElementById('incident-containment').value.trim() || null,
-            resolution_note: document.getElementById('incident-resolution').value.trim() || null,
-          },
-        });
-        document.getElementById('incident-id').value = String(response.id);
-        rememberState({ latest_incident_id: response.id });
-      }
-
-      async function createPurchaseRequest() {
-        const requester = document.getElementById('pr-requester').value.trim();
-        const qty = Number(document.getElementById('pr-qty').value || 0);
-        const unitPrice = Number(document.getElementById('pr-unit-price').value || 0);
-        const response = await apiRequest('/api/v1/purchase-requests', {
-          method: 'POST',
-          body: {
-            requester,
-            department: document.getElementById('pr-department').value.trim(),
-            reason: document.getElementById('pr-reason').value.trim(),
-            cost_center_code: document.getElementById('pr-cost-center').value.trim() || null,
-            budget_status: 'within_budget',
-            priority: 'normal',
-            total_estimated_amount: qty * unitPrice,
-            currency: 'IRR',
-            created_by: requester,
-            lines: [{
-              line_no: 1,
-              description: document.getElementById('pr-line-description').value.trim(),
-              material_code: document.getElementById('pr-material-code').value.trim() || null,
-              qty,
-              uom: 'pcs',
-              estimated_unit_price: unitPrice,
-              cost_center_code: document.getElementById('pr-cost-center').value.trim() || 'OPS-100',
-            }],
-          },
-        });
-        document.getElementById('traceability-type').value = 'purchase-request';
-        document.getElementById('traceability-id').value = String(response.id);
-        rememberState({ latest_purchase_request_id: response.id, latest_pr_code: response.code });
-      }
-
-      async function runPurchaseRequestAction(action) {
-        const prId = Number(getReviewState().latest_purchase_request_id || document.getElementById('traceability-id').value);
-        if (!prId) throw new Error('Create a purchase request first.');
-        const actor = getCurrentActor();
-        const payload = action === 'submit'
-          ? { ...actor, exception_approved: false }
-          : { ...actor, note: document.getElementById('pr-note').value.trim() || null };
-        const response = await apiRequest(`/api/v1/purchase-requests/${prId}/${action}`, { method: 'POST', body: payload });
-        rememberState({ latest_purchase_request_id: response.id, latest_pr_status: response.status });
-      }
-
-      async function tracePurchaseRequest() {
-        const prId = Number(getReviewState().latest_purchase_request_id);
-        if (!prId) throw new Error('No purchase request id in review state.');
-        document.getElementById('traceability-type').value = 'purchase-request';
-        document.getElementById('traceability-id').value = String(prId);
-        await apiRequest(`/api/v1/traceability/purchase-requests/${prId}`);
-      }
-
-      async function createSupplier() {
-        const response = await apiRequest('/api/v1/suppliers', {
-          method: 'POST',
-          body: {
-            code: document.getElementById('supplier-code').value.trim(),
-            name: document.getElementById('supplier-name').value.trim(),
-            approval_status: 'approved',
-            risk_level: 'medium',
-            payment_terms: document.getElementById('supplier-payment-terms').value.trim() || null,
-          },
-        });
-        rememberState({ latest_supplier_id: response.id, latest_supplier_code: response.code });
-      }
-
-      async function createRfq() {
-        const prId = Number(getReviewState().latest_purchase_request_id);
-        if (!prId) throw new Error('Approve a purchase request first.');
-        const buyer = document.getElementById('rfq-buyer').value.trim();
-        const response = await apiRequest('/api/v1/rfqs', {
-          method: 'POST',
-          body: {
-            purchase_request_id: prId,
-            issue_date: isoDate(0),
-            close_date: isoDate(7),
-            minimum_quote_count: Number(document.getElementById('rfq-min-quotes').value || 1),
-            buyer,
-            created_by: buyer,
-          },
-        });
-        rememberState({ latest_rfq_id: response.id, latest_rfq_code: response.code });
-      }
-
-      async function addQuotation() {
-        const rfqId = Number(getReviewState().latest_rfq_id);
-        const supplierId = Number(getReviewState().latest_supplier_id);
-        if (!rfqId || !supplierId) throw new Error('Create supplier and RFQ first.');
-        const response = await apiRequest(`/api/v1/rfqs/${rfqId}/quotations`, {
-          method: 'POST',
-          body: {
-            supplier_id: supplierId,
-            quote_no: document.getElementById('quotation-no').value.trim(),
-            quote_date: isoDate(0),
-            currency: 'IRR',
-            validity_date: isoDate(14),
-            delivery_days: Number(document.getElementById('quotation-delivery-days').value || 0),
-            payment_terms: document.getElementById('supplier-payment-terms').value.trim() || null,
-            total_amount: Number(document.getElementById('quotation-amount').value || 0),
-            price_variance_pct: 0,
-            commercial_score: 90,
-            technical_score: 88,
-            created_by: getCurrentUser()?.username || undefined,
-          },
-        });
-        rememberState({
-          latest_quotation_id: response.id,
-          latest_quote_no: response.quote_no,
-          latest_quote_amount: response.total_amount,
-          latest_selected_quotation_id: response.id,
-        });
-      }
-
-      async function recordQuotes() {
-        const rfqId = Number(getReviewState().latest_rfq_id);
-        if (!rfqId) throw new Error('Create RFQ first.');
-        await apiRequest(`/api/v1/rfqs/${rfqId}/record-quotes`, {
-          method: 'POST',
-          body: { ...getCurrentActor(), exception_approved: false },
-        });
-      }
-
-      async function commercialEvaluate() {
-        const rfqId = Number(getReviewState().latest_rfq_id);
-        const quotationId = Number(getReviewState().latest_selected_quotation_id || getReviewState().latest_quotation_id);
-        if (!rfqId || !quotationId) throw new Error('Add a quotation first.');
-        await apiRequest(`/api/v1/rfqs/${rfqId}/commercial-evaluate`, {
-          method: 'POST',
-          body: {
-            ...getCurrentActor(),
-            selected_quotation_id: quotationId,
-            note: document.getElementById('proc-downstream-note').value.trim() || null,
-          },
-        });
-      }
-
-      async function technicalApprove() {
-        const rfqId = Number(getReviewState().latest_rfq_id);
-        if (!rfqId) throw new Error('Create RFQ first.');
-        await apiRequest(`/api/v1/rfqs/${rfqId}/technical-approve`, {
-          method: 'POST',
-          body: { ...getCurrentActor(), note: document.getElementById('proc-downstream-note').value.trim() || null },
-        });
-      }
-
-      async function priceApprove() {
-        const rfqId = Number(getReviewState().latest_rfq_id);
-        if (!rfqId) throw new Error('Create RFQ first.');
-        await apiRequest(`/api/v1/rfqs/${rfqId}/price-approve`, {
-          method: 'POST',
-          body: { ...getCurrentActor(), note: document.getElementById('proc-downstream-note').value.trim() || null },
-        });
-      }
-
-      async function createPurchaseOrder() {
-        const rfqId = Number(getReviewState().latest_rfq_id);
-        const quotationId = Number(getReviewState().latest_selected_quotation_id || getReviewState().latest_quotation_id);
-        if (!rfqId || !quotationId) throw new Error('Create RFQ and quotation first.');
-        const response = await apiRequest('/api/v1/purchase-orders', {
-          method: 'POST',
-          body: {
-            rfq_id: rfqId,
-            selected_quotation_id: quotationId,
-            order_date: isoDate(0),
-            delivery_date: isoDate(7),
-            emergency_flag: false,
-            exception_approved: false,
-            note: document.getElementById('proc-downstream-note').value.trim() || null,
-            ...getCurrentActor(),
-          },
-        });
-        document.getElementById('traceability-type').value = 'document';
-        document.getElementById('traceability-object-type').value = 'po';
-        document.getElementById('traceability-id').value = String(response.id);
-        rememberState({ latest_po_id: response.id, latest_po_code: response.code, latest_po_supplier_id: response.supplier_id });
-      }
-
-      async function createGoodsReceipt() {
-        const poId = Number(getReviewState().latest_po_id);
-        if (!poId) throw new Error('Create a purchase order first.');
-        const response = await apiRequest('/api/v1/goods-receipts', {
-          method: 'POST',
-          body: {
-            purchase_order_id: poId,
-            receipt_date: isoDate(1),
-            warehouse_code: document.getElementById('receipt-warehouse').value.trim(),
-            supplier_delivery_ref: document.getElementById('supplier-delivery-ref').value.trim() || null,
-            received_qty: Number(document.getElementById('receipt-qty').value || 0),
-            ...getCurrentActor(),
-          },
-        });
-        rememberState({ latest_receipt_id: response.id, latest_grn_code: response.code });
-      }
-
-      async function createQualityInspection() {
-        const receiptId = Number(getReviewState().latest_receipt_id);
-        const currentUser = getCurrentUser();
-        if (!receiptId) throw new Error('Create a goods receipt first.');
-        if (!currentUser?.username || !currentUser?.role_code) throw new Error('Login as QC Inspector first.');
-        const response = await apiRequest('/api/v1/quality-inspections', {
-          method: 'POST',
-          body: {
-            goods_receipt_id: receiptId,
-            inspection_date: isoDate(1),
-            inspector: currentUser.username,
-            actor_role: currentUser.role_code,
-          },
-        });
-        rememberState({ latest_qc_id: response.id, latest_qc_code: response.code });
-      }
-
-      async function finalizeQualityInspection() {
-        const qcId = Number(getReviewState().latest_qc_id);
-        if (!qcId) throw new Error('Create QC first.');
-        const result = document.getElementById('qc-result').value;
-        const response = await apiRequest(`/api/v1/quality-inspections/${qcId}/finalize`, {
-          method: 'POST',
-          body: {
-            ...getCurrentActor(),
-            result,
-            accepted_qty: Number(document.getElementById('qc-accepted-qty').value || 0),
-            rejected_qty: Number(document.getElementById('qc-rejected-qty').value || 0),
-            defect_code: result === 'rejected' ? 'QC-FAIL' : null,
-            corrective_action: result === 'rejected' ? 'Return material to supplier' : 'Inventory released',
-            note: document.getElementById('proc-downstream-note').value.trim() || null,
-          },
-        });
-        rememberState({ latest_qc_id: response.id, latest_qc_status: response.status });
-      }
-
-      async function createSupplierInvoice() {
-        const poId = Number(getReviewState().latest_po_id);
-        const receiptId = Number(getReviewState().latest_receipt_id);
-        const supplierId = Number(getReviewState().latest_po_supplier_id || getReviewState().latest_supplier_id);
-        if (!poId || !receiptId || !supplierId) throw new Error('Need supplier, PO, and goods receipt first.');
-        const response = await apiRequest('/api/v1/supplier-invoices', {
-          method: 'POST',
-          body: {
-            supplier_id: supplierId,
-            purchase_order_id: poId,
-            goods_receipt_id: receiptId,
-            invoice_no: document.getElementById('invoice-no').value.trim(),
-            invoice_date: isoDate(2),
-            due_date: isoDate(32),
-            currency: 'IRR',
-            total_amount: Number(getReviewState().latest_quote_amount || document.getElementById('quotation-amount').value || 0),
-            ...getCurrentActor(),
-          },
-        });
-        rememberState({ latest_invoice_id: response.id, latest_invoice_code: response.code });
-      }
-
-      async function matchSupplierInvoice() {
-        const invoiceId = Number(getReviewState().latest_invoice_id);
-        if (!invoiceId) throw new Error('Create supplier invoice first.');
-        await apiRequest(`/api/v1/supplier-invoices/${invoiceId}/match`, {
-          method: 'POST',
-          body: { ...getCurrentActor(), note: document.getElementById('proc-downstream-note').value.trim() || null },
-        });
-      }
-
-      async function createPayment() {
-        const invoiceId = Number(getReviewState().latest_invoice_id);
-        if (!invoiceId) throw new Error('Create and match invoice first.');
-        const response = await apiRequest('/api/v1/payments', {
-          method: 'POST',
-          body: {
-            supplier_invoice_id: invoiceId,
-            payment_date: isoDate(3),
-            amount: Number(getReviewState().latest_quote_amount || document.getElementById('quotation-amount').value || 0),
-            currency: 'IRR',
-            payment_method: 'bank_transfer',
-            bank_reference: document.getElementById('payment-bank-ref').value.trim() || null,
-            ...getCurrentActor(),
-          },
-        });
-        document.getElementById('traceability-type').value = 'document';
-        document.getElementById('traceability-object-type').value = 'payment';
-        document.getElementById('traceability-id').value = String(response.id);
-        rememberState({ latest_payment_id: response.id, latest_payment_code: response.code });
-      }
-
-      async function approvePayment() {
-        const paymentId = Number(getReviewState().latest_payment_id);
-        if (!paymentId) throw new Error('Create payment first.');
-        await apiRequest(`/api/v1/payments/${paymentId}/approve`, {
-          method: 'POST',
-          body: { ...getCurrentActor(), note: document.getElementById('proc-downstream-note').value.trim() || null },
-        });
-      }
-
-      async function executePayment() {
-        const paymentId = Number(getReviewState().latest_payment_id);
-        if (!paymentId) throw new Error('Create payment first.');
-        await apiRequest(`/api/v1/payments/${paymentId}/execute`, {
-          method: 'POST',
-          body: { ...getCurrentActor(), note: document.getElementById('proc-downstream-note').value.trim() || null },
-        });
-      }
-
-      async function traceLatestPayment() {
-        const paymentId = Number(getReviewState().latest_payment_id);
-        if (!paymentId) throw new Error('No payment id in review state.');
-        document.getElementById('traceability-type').value = 'document';
-        document.getElementById('traceability-object-type').value = 'payment';
-        document.getElementById('traceability-id').value = String(paymentId);
-        await apiRequest(`/api/v1/traceability/document/payment/${paymentId}`);
-      }
-
-      async function createCustomer() {
-        const response = await apiRequest('/api/v1/customers', {
-          method: 'POST',
-          body: {
-            code: document.getElementById('sales-customer-code').value.trim(),
-            name: document.getElementById('sales-customer-name').value.trim(),
-            payment_terms: '30D',
-            credit_limit: 100000,
-            credit_status: 'open',
-          },
-        });
-        rememberState({ latest_customer_id: response.id, latest_customer_code: response.code });
-      }
-
-      async function createProduct() {
-        const response = await apiRequest('/api/v1/products', {
-          method: 'POST',
-          body: {
-            code: document.getElementById('sales-product-code').value.trim(),
-            name: document.getElementById('sales-product-name').value.trim(),
-            family: 'FG',
-            uom: 'pcs',
-            standard_cost: Number(document.getElementById('sales-standard-cost').value || 0),
-            approved_min_price: Number(document.getElementById('sales-min-price').value || 0),
-            pricing_method: 'Cost Plus',
-            status: 'active',
-          },
-        });
-        rememberState({ latest_product_id: response.id, latest_product_code: response.code });
-      }
-
-      async function createPriceList() {
-        const state = getReviewState();
-        if (!state.latest_customer_id || !state.latest_product_id) throw new Error('Create customer and product first.');
-        const response = await apiRequest('/api/v1/pricing', {
-          method: 'POST',
-          body: {
-            customer_id: state.latest_customer_id,
-            product_id: state.latest_product_id,
-            pricing_method: 'Cost Plus',
-            cost_basis: Number(document.getElementById('sales-standard-cost').value || 0),
-            target_margin_pct: 25,
-            logistics_cost: 5,
-            financial_cost: 3,
-            risk_cost: 2,
-            proposed_price: Number(document.getElementById('sales-proposed-price').value || 0),
-            approved_min_price: Number(document.getElementById('sales-min-price').value || 0),
-            valid_from: isoDate(0),
-            valid_to: isoDate(30),
-            ...getCurrentActor(),
-          },
-        });
-        rememberState({ latest_price_list_id: response.id, latest_price_list_code: response.code });
-      }
-
-      async function approvePriceList() {
-        const priceListId = Number(getReviewState().latest_price_list_id);
-        if (!priceListId) throw new Error('Create a price list first.');
-        const response = await apiRequest(`/api/v1/pricing/${priceListId}/approve`, {
-          method: 'POST',
-          body: { ...getCurrentActor(), note: document.getElementById('sales-note').value.trim() || null },
-        });
-        rememberState({ latest_price_list_id: response.id, latest_price_list_status: response.status });
-      }
-
-      async function createSalesOrder() {
-        const state = getReviewState();
-        if (!state.latest_customer_id || !state.latest_product_id || !state.latest_price_list_id) {
-          throw new Error('Create customer, product, and approved price list first.');
-        }
-        const response = await apiRequest('/api/v1/sales-orders', {
-          method: 'POST',
-          body: {
-            customer_id: state.latest_customer_id,
-            product_id: state.latest_product_id,
-            price_list_id: state.latest_price_list_id,
-            order_date: isoDate(0),
-            requested_delivery_date: isoDate(7),
-            qty: Number(document.getElementById('sales-order-qty').value || 0),
-            unit_price: Number(document.getElementById('sales-proposed-price').value || 0),
-            ...getCurrentActor(),
-          },
-        });
-        document.getElementById('traceability-type').value = 'sales-order';
-        document.getElementById('traceability-id').value = String(response.id);
-        rememberState({ latest_sales_order_id: response.id, latest_sales_order_code: response.code });
-      }
-
-      async function confirmSalesOrder() {
-        const salesOrderId = Number(getReviewState().latest_sales_order_id);
-        if (!salesOrderId) throw new Error('Create a sales order first.');
-        const response = await apiRequest(`/api/v1/sales-orders/${salesOrderId}/confirm`, {
-          method: 'POST',
-          body: { ...getCurrentActor(), note: document.getElementById('sales-note').value.trim() || null },
-        });
-        rememberState({ latest_sales_order_id: response.id, latest_sales_order_status: response.status });
-      }
-
-      async function traceSalesOrder() {
-        const salesOrderId = Number(getReviewState().latest_sales_order_id);
-        if (!salesOrderId) throw new Error('No sales order id in review state.');
-        document.getElementById('traceability-type').value = 'sales-order';
-        document.getElementById('traceability-id').value = String(salesOrderId);
-        await apiRequest(`/api/v1/traceability/sales-orders/${salesOrderId}`);
-      }
-
-      function loadPreset(index) {
-        const preset = presets[index];
-        if (!preset) return;
-        document.getElementById('request-method').value = preset.method;
-        document.getElementById('request-path').value = preset.path;
-        document.getElementById('request-body').value = preset.body || '';
-      }
-
-      function injectCurrentActor() {
-        const area = document.getElementById('request-body');
-        const actor = getCurrentActor();
-        const payload = area.value.trim() ? JSON.parse(area.value) : {};
-        payload.actor = actor.actor;
-        payload.actor_role = actor.actor_role;
-        area.value = JSON.stringify(payload, null, 2);
-      }
-
-      async function runTraceability() {
-        const type = document.getElementById('traceability-type').value;
-        const id = document.getElementById('traceability-id').value.trim();
-        const objectType = document.getElementById('traceability-object-type').value.trim();
-        let path = `/api/v1/traceability/purchase-requests/${id}`;
-        if (type === 'sales-order') path = `/api/v1/traceability/sales-orders/${id}`;
-        if (type === 'document') path = `/api/v1/traceability/document/${objectType}/${id}`;
-        await apiRequest(path);
-      }
-
-      async function searchAudit() {
-        const params = new URLSearchParams();
-        const q = document.getElementById('audit-query').value.trim();
-        const entity = document.getElementById('audit-entity').value.trim();
-        const user = document.getElementById('audit-user').value.trim();
-        const action = document.getElementById('audit-action').value.trim();
-        if (q) params.set('q', q);
-        if (entity) params.set('entity_name', entity);
-        if (user) params.set('user_name', user);
-        if (action) params.set('action', action);
-        const query = params.toString();
-        await apiRequest(`/api/v1/audit/events${query ? `?${query}` : ''}`);
-      }
-
-      document.getElementById('login-btn').addEventListener('click', async () => {
-        try { await loginWithCredentials(document.getElementById('login-username').value.trim(), document.getElementById('login-password').value); }
-        catch (error) { setStatus(`Login failed: ${error.message}`, false); }
-      });
-
-      document.querySelectorAll('[data-login-shortcut]').forEach((button) => {
-        button.addEventListener('click', async () => {
-          const username = button.dataset.loginShortcut;
-          fillCredentials(username);
-          try { await loginWithCredentials(username, username); }
-          catch (error) { setStatus(`Shortcut login failed: ${error.message}`, false); }
-        });
-      });
-
-      document.getElementById('logout-btn').addEventListener('click', async () => {
-        try {
-          await apiRequest('/api/v1/auth/logout', { method: 'POST' });
+        } finally {
           setToken('');
-          setCurrentUser(null);
-          setStatus('Logged out');
-        } catch (error) {
-          setStatus(`Logout failed: ${error.message}`, false);
+          appState.user = null;
+          switchToAuth();
+          showStatus(authStatus, 'از سامانه خارج شدی.', 'success');
         }
-      });
+      }
 
-      document.getElementById('me-btn').addEventListener('click', async () => { try { await refreshCurrentUser(true); } catch (_) {} });
-      document.getElementById('sync-me-btn').addEventListener('click', async () => { try { await refreshCurrentUser(true); } catch (_) {} });
-      document.getElementById('clear-review-state-btn').addEventListener('click', () => { clearReviewState(); hydrateIdsFromState(); });
-
-      document.querySelectorAll('[data-path]').forEach((button) => {
-        button.addEventListener('click', async () => { try { await apiRequest(button.dataset.path, { method: button.dataset.method || 'GET' }); } catch (_) {} });
-      });
-
-      document.getElementById('create-user-btn').addEventListener('click', async () => { try { await createReviewUser(); setStatus('User created.'); } catch (error) { setStatus(`Create user failed: ${error.message}`, false); } });
-      document.getElementById('force-reset-btn').addEventListener('click', async () => { try { await forcePasswordReset(); setStatus('Password reset forced.'); } catch (error) { setStatus(`Force reset failed: ${error.message}`, false); } });
-      document.getElementById('change-password-btn').addEventListener('click', async () => { try { await changeMyPassword(); await refreshCurrentUser(false); setStatus('Password changed successfully.'); } catch (error) { setStatus(`Change password failed: ${error.message}`, false); } });
-      document.getElementById('load-user-sessions-btn').addEventListener('click', async () => { try { await loadSessionsForTarget(); setStatus('Sessions loaded.'); } catch (error) { setStatus(`Load sessions failed: ${error.message}`, false); } });
-      document.getElementById('revoke-session-btn').addEventListener('click', async () => { try { await revokeSelectedSession(); setStatus('Session revoked.'); } catch (error) { setStatus(`Revoke session failed: ${error.message}`, false); } });
-
-      document.getElementById('create-incident-btn').addEventListener('click', async () => { try { await createIncident(); setStatus('Incident created.'); } catch (error) { setStatus(`Create incident failed: ${error.message}`, false); } });
-      document.getElementById('list-incidents-btn').addEventListener('click', async () => { try { await apiRequest('/api/v1/security/incidents'); } catch (_) {} });
-      document.getElementById('open-latest-incident-btn').addEventListener('click', async () => { try { await openLatestIncident(); setStatus('Incident loaded.'); } catch (error) { setStatus(`Open incident failed: ${error.message}`, false); } });
-      document.querySelectorAll('[data-incident-action]').forEach((button) => {
-        button.addEventListener('click', async () => { try { await runIncidentAction(button.dataset.incidentAction); setStatus(`Incident ${button.dataset.incidentAction} completed.`); } catch (error) { setStatus(`${button.dataset.incidentAction} failed: ${error.message}`, false); } });
-      });
-
-      document.getElementById('create-pr-btn').addEventListener('click', async () => { try { await createPurchaseRequest(); setStatus('Purchase request created.'); } catch (error) { setStatus(`Create PR failed: ${error.message}`, false); } });
-      document.getElementById('submit-pr-btn').addEventListener('click', async () => { try { await runPurchaseRequestAction('submit'); setStatus('Purchase request submitted.'); } catch (error) { setStatus(`Submit PR failed: ${error.message}`, false); } });
-      document.getElementById('route-pr-btn').addEventListener('click', async () => { try { await runPurchaseRequestAction('route-review'); setStatus('Purchase request moved to review.'); } catch (error) { setStatus(`Route review failed: ${error.message}`, false); } });
-      document.getElementById('approve-pr-btn').addEventListener('click', async () => { try { await runPurchaseRequestAction('approve'); setStatus('Purchase request approved.'); } catch (error) { setStatus(`Approve PR failed: ${error.message}`, false); } });
-      document.getElementById('trace-pr-btn').addEventListener('click', async () => { try { await tracePurchaseRequest(); } catch (error) { setStatus(`Traceability failed: ${error.message}`, false); } });
-
-      document.getElementById('create-supplier-btn').addEventListener('click', async () => { try { await createSupplier(); setStatus('Supplier created.'); } catch (error) { setStatus(`Create supplier failed: ${error.message}`, false); } });
-      document.getElementById('create-rfq-btn').addEventListener('click', async () => { try { await createRfq(); setStatus('RFQ created.'); } catch (error) { setStatus(`Create RFQ failed: ${error.message}`, false); } });
-      document.getElementById('add-quotation-btn').addEventListener('click', async () => { try { await addQuotation(); setStatus('Quotation added.'); } catch (error) { setStatus(`Add quotation failed: ${error.message}`, false); } });
-      document.getElementById('record-quotes-btn').addEventListener('click', async () => { try { await recordQuotes(); setStatus('Quotes recorded.'); } catch (error) { setStatus(`Record quotes failed: ${error.message}`, false); } });
-      document.getElementById('commercial-eval-btn').addEventListener('click', async () => { try { await commercialEvaluate(); setStatus('Commercial evaluation completed.'); } catch (error) { setStatus(`Commercial evaluation failed: ${error.message}`, false); } });
-      document.getElementById('technical-approve-btn').addEventListener('click', async () => { try { await technicalApprove(); setStatus('Technical approval completed.'); } catch (error) { setStatus(`Technical approval failed: ${error.message}`, false); } });
-      document.getElementById('price-approve-btn').addEventListener('click', async () => { try { await priceApprove(); setStatus('Price approval completed.'); } catch (error) { setStatus(`Price approval failed: ${error.message}`, false); } });
-      document.getElementById('create-po-btn').addEventListener('click', async () => { try { await createPurchaseOrder(); setStatus('Purchase order created.'); } catch (error) { setStatus(`Create PO failed: ${error.message}`, false); } });
-      document.getElementById('create-grn-btn').addEventListener('click', async () => { try { await createGoodsReceipt(); setStatus('Goods receipt created.'); } catch (error) { setStatus(`Create GRN failed: ${error.message}`, false); } });
-      document.getElementById('create-qc-btn').addEventListener('click', async () => { try { await createQualityInspection(); setStatus('Quality inspection created.'); } catch (error) { setStatus(`Create QC failed: ${error.message}`, false); } });
-      document.getElementById('finalize-qc-btn').addEventListener('click', async () => { try { await finalizeQualityInspection(); setStatus('Quality inspection finalized.'); } catch (error) { setStatus(`Finalize QC failed: ${error.message}`, false); } });
-      document.getElementById('create-invoice-btn').addEventListener('click', async () => { try { await createSupplierInvoice(); setStatus('Supplier invoice created.'); } catch (error) { setStatus(`Create invoice failed: ${error.message}`, false); } });
-      document.getElementById('match-invoice-btn').addEventListener('click', async () => { try { await matchSupplierInvoice(); setStatus('Supplier invoice matched.'); } catch (error) { setStatus(`3-way match failed: ${error.message}`, false); } });
-      document.getElementById('create-payment-btn').addEventListener('click', async () => { try { await createPayment(); setStatus('Payment created.'); } catch (error) { setStatus(`Create payment failed: ${error.message}`, false); } });
-      document.getElementById('approve-payment-btn').addEventListener('click', async () => { try { await approvePayment(); setStatus('Payment approved.'); } catch (error) { setStatus(`Approve payment failed: ${error.message}`, false); } });
-      document.getElementById('execute-payment-btn').addEventListener('click', async () => { try { await executePayment(); setStatus('Payment executed.'); } catch (error) { setStatus(`Execute payment failed: ${error.message}`, false); } });
-      document.getElementById('trace-payment-btn').addEventListener('click', async () => { try { await traceLatestPayment(); } catch (error) { setStatus(`Traceability failed: ${error.message}`, false); } });
-
-      document.getElementById('create-customer-btn').addEventListener('click', async () => { try { await createCustomer(); setStatus('Customer created.'); } catch (error) { setStatus(`Create customer failed: ${error.message}`, false); } });
-      document.getElementById('create-product-btn').addEventListener('click', async () => { try { await createProduct(); setStatus('Product created.'); } catch (error) { setStatus(`Create product failed: ${error.message}`, false); } });
-      document.getElementById('create-price-btn').addEventListener('click', async () => { try { await createPriceList(); setStatus('Price list created.'); } catch (error) { setStatus(`Create price list failed: ${error.message}`, false); } });
-      document.getElementById('approve-price-btn').addEventListener('click', async () => { try { await approvePriceList(); setStatus('Price list approved.'); } catch (error) { setStatus(`Approve price failed: ${error.message}`, false); } });
-      document.getElementById('create-sales-order-btn').addEventListener('click', async () => { try { await createSalesOrder(); setStatus('Sales order created.'); } catch (error) { setStatus(`Create sales order failed: ${error.message}`, false); } });
-      document.getElementById('confirm-sales-order-btn').addEventListener('click', async () => { try { await confirmSalesOrder(); setStatus('Sales order confirmed.'); } catch (error) { setStatus(`Confirm sales order failed: ${error.message}`, false); } });
-      document.getElementById('trace-sales-order-btn').addEventListener('click', async () => { try { await traceSalesOrder(); } catch (error) { setStatus(`Traceability failed: ${error.message}`, false); } });
-
-      document.getElementById('send-request-btn').addEventListener('click', async () => {
+      async function withAction(button, fn, successMessage) {
+        setBusy(button, true);
         try {
-          const path = document.getElementById('request-path').value.trim();
-          const method = document.getElementById('request-method').value;
-          const useAuth = document.getElementById('use-auth').value === 'yes';
-          const raw = document.getElementById('request-body').value.trim();
-          const body = raw && method !== 'GET' ? JSON.parse(raw) : undefined;
-          await apiRequest(path, { method, body, useAuth });
+          await fn();
+          await loadWorkspace();
+          if (successMessage) showStatus(globalStatus, successMessage, 'success');
         } catch (error) {
-          setStatus(`Request failed: ${error.message}`, false);
+          showStatus(globalStatus, error.message, 'error');
+          throw error;
+        } finally {
+          setBusy(button, false);
+        }
+      }
+
+      async function submitPurchaseRequest(prId) {
+        await api(`/purchase-requests/${prId}/submit`, {
+          method: 'POST',
+          body: {
+            actor: appState.user.username,
+            actor_role: appState.user.role_code,
+            exception_approved: false,
+          },
+        });
+      }
+
+      function prefillAction(action, objectType, objectId) {
+        const section = $('workspace-section');
+        if (action === 'create_rfq' && objectType === 'PurchaseRequest') {
+          $('rfq-pr-select').value = String(objectId);
+        }
+        if (action === 'record_quotes' && objectType === 'RFQ') {
+          $('record-rfq-select').value = String(objectId);
+          $('quote-rfq-select').value = String(objectId);
+        }
+        if (action === 'commercial_eval' && objectType === 'RFQ') {
+          $('commercial-rfq-select').value = String(objectId);
+          loadRfqDetailToSelects(String(objectId), ['commercial-quote-select']);
+        }
+        if (action === 'issue_po' && objectType === 'RFQ') {
+          $('po-rfq-select').value = String(objectId);
+          loadRfqDetailToSelects(String(objectId), ['po-quote-select']);
+        }
+        if (action === 'record_receipt' && objectType === 'PO') {
+          $('receipt-po-select').value = String(objectId);
+        }
+        if ((action === 'accept_qc' || action === 'reject_qc') && objectType === 'GoodsReceipt') {
+          $('qc-gr-select').value = String(objectId);
+        }
+        if (action === 'match_invoice' && objectType === 'SupplierInvoice') {
+          $('match-invoice-select').value = String(objectId);
+          $('payment-invoice-select').value = String(objectId);
+        }
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        showStatus(globalStatus, 'فرم مرحله بعدی برایت آماده شد.', 'success');
+      }
+
+      async function openTrace(objectType, objectId) {
+        $('trace-object-type').value = objectType;
+        $('trace-object-id').value = objectId;
+        const response = await api(`/traceability/document/${encodeURIComponent(objectType)}/${objectId}`);
+        renderTrace(response);
+        $('trace-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      async function forceReset(username) {
+        await api(`/users/${encodeURIComponent(username)}/force-password-reset`, { method: 'POST' });
+      }
+
+      async function revokeSession(sessionId) {
+        await api(`/security/sessions/${sessionId}/revoke`, { method: 'POST' });
+      }
+
+      window.portalOpenTrace = (objectType, objectId) => {
+        openTrace(objectType, objectId).catch((error) => showStatus(globalStatus, error.message, 'error'));
+      };
+      window.portalRunAction = (action, objectType, objectId) => {
+        runDirectAction(action, objectType, objectId)
+          .then(() => loadWorkspace())
+          .then(() => showStatus(globalStatus, 'اقدام با موفقیت ثبت شد.', 'success'))
+          .catch((error) => showStatus(globalStatus, error.message, 'error'));
+      };
+      window.portalPrefillAction = (action, objectType, objectId) => {
+        prefillAction(action, objectType, objectId);
+      };
+      window.portalSubmitPurchaseRequest = (prId) => {
+        submitPurchaseRequest(prId)
+          .then(() => loadWorkspace())
+          .then(() => showStatus(globalStatus, 'درخواست خرید ارسال شد.', 'success'))
+          .catch((error) => showStatus(globalStatus, error.message, 'error'));
+      };
+      window.portalForceReset = (username) => {
+        forceReset(username)
+          .then(() => loadWorkspace())
+          .then(() => showStatus(globalStatus, `الزام تغییر رمز برای ${username} ثبت شد.`, 'success'))
+          .catch((error) => showStatus(globalStatus, error.message, 'error'));
+      };
+      window.portalRevokeSession = (sessionId) => {
+        revokeSession(sessionId)
+          .then(() => loadWorkspace())
+          .then(() => showStatus(globalStatus, 'نشست ابطال شد.', 'success'))
+          .catch((error) => showStatus(globalStatus, error.message, 'error'));
+      };
+
+      $('login-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const button = $('login-btn');
+        setBusy(button, true);
+        hideStatus(authStatus);
+        try {
+          await login($('login-username').value.trim(), $('login-password').value);
+        } catch (error) {
+          showStatus(authStatus, error.message, 'error');
+        } finally {
+          setBusy(button, false);
         }
       });
 
-      document.getElementById('format-json-btn').addEventListener('click', () => {
-        const area = document.getElementById('request-body');
-        if (!area.value.trim()) return;
-        try { area.value = JSON.stringify(JSON.parse(area.value), null, 2); }
-        catch (error) { setStatus(`JSON format error: ${error.message}`, false); }
+      function quickLogin(username) {
+        $('login-username').value = username;
+        $('login-password').value = username;
+      }
+      $('demo-requester-btn').addEventListener('click', () => quickLogin('ali'));
+      $('demo-manager-btn').addEventListener('click', () => quickLogin('manager.1'));
+      $('demo-proc-btn').addEventListener('click', () => quickLogin('buyer.1'));
+
+      $('logout-btn').addEventListener('click', () => logout());
+      $('reload-btn').addEventListener('click', () => loadWorkspace().catch((error) => showStatus(globalStatus, error.message, 'error')));
+
+      $('pr-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const btn = event.submitter;
+        await withAction(btn, async () => {
+          await api('/purchase-requests', {
+            method: 'POST',
+            body: {
+              requester: appState.user.username,
+              department: $('pr-department').value.trim(),
+              need_date: $('pr-need-date').value || null,
+              reason: $('pr-reason').value.trim(),
+              cost_center_code: $('pr-cost-center').value.trim() || null,
+              budget_status: 'within_budget',
+              priority: $('pr-priority').value,
+              total_estimated_amount: Number($('pr-total-amount').value || 0),
+              currency: 'IRR',
+              created_by: appState.user.username,
+              lines: [{
+                line_no: 1,
+                description: $('pr-line-desc').value.trim(),
+                material_code: null,
+                qty: Number($('pr-line-qty').value || 0),
+                uom: $('pr-line-uom').value.trim(),
+                estimated_unit_price: Number($('pr-line-price').value || 0),
+                cost_center_code: $('pr-cost-center').value.trim() || 'CC-100',
+              }],
+            },
+          });
+        }, 'درخواست خرید ثبت شد.');
       });
 
-      document.getElementById('use-current-actor-btn').addEventListener('click', () => {
-        try { injectCurrentActor(); setStatus('Current actor injected into request body.'); }
-        catch (error) { setStatus(`Inject actor failed: ${error.message}`, false); }
+      $('rfq-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const btn = event.submitter;
+        await withAction(btn, async () => {
+          await api('/rfqs', {
+            method: 'POST',
+            body: {
+              purchase_request_id: Number($('rfq-pr-select').value),
+              issue_date: $('rfq-issue-date').value,
+              close_date: $('rfq-close-date').value || null,
+              minimum_quote_count: Number($('rfq-min-quotes').value || 1),
+              buyer: appState.user.username,
+              created_by: appState.user.username,
+            },
+          });
+        }, 'RFQ ایجاد شد.');
       });
 
-      document.getElementById('traceability-btn').addEventListener('click', async () => { try { await runTraceability(); } catch (error) { setStatus(`Traceability failed: ${error.message}`, false); } });
-      document.getElementById('audit-search-btn').addEventListener('click', async () => { try { await searchAudit(); } catch (error) { setStatus(`Audit search failed: ${error.message}`, false); } });
-
-      const presetSelect = document.getElementById('preset-select');
-      presets.forEach((preset, index) => {
-        const option = document.createElement('option');
-        option.value = String(index);
-        option.textContent = preset.label;
-        presetSelect.appendChild(option);
+      $('quote-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const btn = event.submitter;
+        await withAction(btn, async () => {
+          await api(`/rfqs/${Number($('quote-rfq-select').value)}/quotations`, {
+            method: 'POST',
+            body: {
+              supplier_id: Number($('quote-supplier-select').value),
+              quote_no: $('quote-no').value.trim(),
+              quote_date: $('quote-date').value,
+              currency: 'IRR',
+              validity_date: null,
+              delivery_days: Number($('quote-delivery-days').value || 0),
+              payment_terms: $('quote-payment-terms').value.trim() || null,
+              total_amount: Number($('quote-amount').value || 0),
+              price_variance_pct: Number($('quote-variance').value || 0),
+              commercial_score: null,
+              technical_score: null,
+              created_by: appState.user.username,
+            },
+          });
+          appState.rfqDetails = {};
+        }, 'پیشنهاد تأمین‌کننده ثبت شد.');
       });
-      presetSelect.addEventListener('change', () => loadPreset(Number(presetSelect.value)));
 
-      loadPreset(0);
-      renderSessionInfo();
-      renderReviewState();
-      hydrateIdsFromState();
-      if (getToken()) refreshCurrentUser(false).catch(() => {});
-    </script>
-  </body>
-</html>
-   </script>
-  </body>
-</html>
-State();
-      hydrateIdsFromState();
-      if (getToken()) refreshCurrentUser(false).catch(() => {});
+      $('record-quotes-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const btn = event.submitter;
+        await withAction(btn, async () => {
+          await api(`/rfqs/${Number($('record-rfq-select').value)}/record-quotes`, {
+            method: 'POST',
+            body: {
+              actor: appState.user.username,
+              actor_role: appState.user.role_code,
+              exception_approved: false,
+            },
+          });
+        }, 'مرحله دریافت پیشنهادها ثبت شد.');
+      });
+
+      $('commercial-rfq-select').addEventListener('change', (event) => {
+        loadRfqDetailToSelects(event.target.value, ['commercial-quote-select']).catch((error) => showStatus(globalStatus, error.message, 'error'));
+      });
+      $('po-rfq-select').addEventListener('change', (event) => {
+        loadRfqDetailToSelects(event.target.value, ['po-quote-select']).catch((error) => showStatus(globalStatus, error.message, 'error'));
+      });
+
+      $('commercial-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const btn = event.submitter;
+        await withAction(btn, async () => {
+          await api(`/rfqs/${Number($('commercial-rfq-select').value)}/commercial-evaluate`, {
+            method: 'POST',
+            body: {
+              actor: appState.user.username,
+              actor_role: appState.user.role_code,
+              selected_quotation_id: Number($('commercial-quote-select').value),
+              note: $('commercial-note').value.trim() || null,
+            },
+          });
+        }, 'ارزیابی بازرگانی ثبت شد.');
+      });
+
+      $('po-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const btn = event.submitter;
+        await withAction(btn, async () => {
+          await api('/purchase-orders', {
+            method: 'POST',
+            body: {
+              rfq_id: Number($('po-rfq-select').value),
+              selected_quotation_id: Number($('po-quote-select').value),
+              order_date: $('po-order-date').value,
+              delivery_date: $('po-delivery-date').value || null,
+              emergency_flag: false,
+              actor: appState.user.username,
+              actor_role: appState.user.role_code,
+              exception_approved: false,
+              note: null,
+            },
+          });
+        }, 'سفارش خرید صادر شد.');
+      });
+
+      $('receipt-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const btn = event.submitter;
+        await withAction(btn, async () => {
+          await api('/goods-receipts', {
+            method: 'POST',
+            body: {
+              purchase_order_id: Number($('receipt-po-select').value),
+              receipt_date: $('receipt-date').value,
+              warehouse_code: $('receipt-warehouse').value.trim(),
+              supplier_delivery_ref: $('receipt-ref').value.trim() || null,
+              received_qty: Number($('receipt-qty').value || 0),
+              actor: appState.user.username,
+              actor_role: appState.user.role_code,
+            },
+          });
+        }, 'رسید کالا ثبت شد.');
+      });
+
+      $('qc-create-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const btn = event.submitter;
+        await withAction(btn, async () => {
+          await api('/quality-inspections', {
+            method: 'POST',
+            body: {
+              goods_receipt_id: Number($('qc-gr-select').value),
+              inspection_date: $('qc-date').value,
+              inspector: appState.user.username,
+              actor_role: appState.user.role_code,
+            },
+          });
+        }, 'پرونده کنترل کیفیت ایجاد شد.');
+      });
+
+      $('qc-finalize-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const btn = event.submitter;
+        await withAction(btn, async () => {
+          await api(`/quality-inspections/${Number($('qc-finalize-select').value)}/finalize`, {
+            method: 'POST',
+            body: {
+              actor: appState.user.username,
+              actor_role: appState.user.role_code,
+              result: $('qc-result').value,
+              accepted_qty: Number($('qc-accepted').value || 0),
+              rejected_qty: Number($('qc-rejected').value || 0),
+              defect_code: $('qc-defect').value.trim() || null,
+              corrective_action: $('qc-corrective').value.trim() || null,
+              note: $('qc-note').value.trim() || null,
+            },
+          });
+        }, 'نتیجه QC ثبت شد.');
+      });
+
+      $('invoice-po-select').addEventListener('change', () => {
+        const po = appState.records.purchaseOrders.find((item) => String(item.id) === $('invoice-po-select').value);
+        if (po) $('invoice-supplier-select').value = String(po.supplier_id);
+      });
+
+      $('invoice-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const btn = event.submitter;
+        await withAction(btn, async () => {
+          await api('/supplier-invoices', {
+            method: 'POST',
+            body: {
+              supplier_id: Number($('invoice-supplier-select').value),
+              purchase_order_id: Number($('invoice-po-select').value),
+              goods_receipt_id: Number($('invoice-gr-select').value),
+              invoice_no: $('invoice-no').value.trim(),
+              invoice_date: $('invoice-date').value,
+              due_date: $('invoice-due-date').value || null,
+              currency: 'IRR',
+              total_amount: Number($('invoice-amount').value || 0),
+              actor: appState.user.username,
+              actor_role: appState.user.role_code,
+            },
+          });
+        }, 'فاکتور تأمین‌کننده ثبت شد.');
+      });
+
+      $('invoice-match-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const btn = event.submitter;
+        await withAction(btn, async () => {
+          await api(`/supplier-invoices/${Number($('match-invoice-select').value)}/match`, {
+            method: 'POST',
+            body: {
+              actor: appState.user.username,
+              actor_role: appState.user.role_code,
+              note: 'تطبیق سه‌طرفه انجام شد',
+            },
+          });
+        }, 'تطبیق فاکتور ثبت شد.');
+      });
+
+      $('payment-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const btn = event.submitter;
+        await withAction(btn, async () => {
+          await api('/payments', {
+            method: 'POST',
+            body: {
+              supplier_invoice_id: Number($('payment-invoice-select').value),
+              payment_date: $('payment-date').value || null,
+              amount: Number($('payment-amount').value || 0),
+              currency: 'IRR',
+              payment_method: $('payment-method').value.trim() || null,
+              bank_reference: $('payment-reference').value.trim() || null,
+              actor: appState.user.username,
+              actor_role: appState.user.role_code,
+            },
+          });
+        }, 'درخواست پرداخت ایجاد شد.');
+      });
+
+      $('trace-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const btn = event.submitter;
+        await withAction(btn, async () => {
+          const response = await api(`/traceability/document/${encodeURIComponent($('trace-object-type').value)}/${Number($('trace-object-id').value)}`);
+          renderTrace(response);
+        }, 'رهگیری بارگذاری شد.');
+      });
+
+      $('user-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const btn = event.submitter;
+        await withAction(btn, async () => {
+          await api('/users', {
+            method: 'POST',
+            body: {
+              username: $('user-username').value.trim(),
+              password: $('user-password').value,
+              full_name: $('user-full-name').value.trim(),
+              department_code: $('user-department').value.trim() || null,
+              role_code: $('user-role-select').value,
+              status: 'active',
+            },
+          });
+        }, 'کاربر جدید ایجاد شد.');
+      });
+
+      $('supplier-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const btn = event.submitter;
+        await withAction(btn, async () => {
+          await api('/suppliers', {
+            method: 'POST',
+            body: {
+              code: $('supplier-code').value.trim(),
+              name: $('supplier-name').value.trim(),
+              approval_status: 'approved',
+              risk_level: $('supplier-risk').value,
+              payment_terms: $('supplier-payment-terms').value.trim() || null,
+              created_by: appState.user.username,
+            },
+          });
+        }, 'تأمین‌کننده ثبت شد.');
+      });
+
+      $('cleanup-tokens-btn').addEventListener('click', async (event) => {
+        const btn = event.currentTarget;
+        await withAction(btn, async () => { await api('/security/tokens/cleanup', { method: 'POST' }); }, 'پاکسازی توکن‌ها انجام شد.');
+      });
+
+      $('lookup-sessions-btn').addEventListener('click', async (event) => {
+        const btn = event.currentTarget;
+        await withAction(btn, async () => {
+          const username = $('session-lookup-username').value.trim();
+          const response = await api(`/security/sessions?username=${encodeURIComponent(username)}`);
+          appState.lookedUpSessions = response.items || [];
+          renderSessions('user-sessions-wrap', appState.lookedUpSessions, 'نشستی برای این کاربر پیدا نشد.');
+        }, 'نشست‌های کاربر بارگذاری شد.');
+      });
+
+      $('password-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const btn = event.submitter;
+        if ($('new-password').value !== $('new-password-repeat').value) {
+          showStatus(globalStatus, 'تکرار رمز جدید با رمز جدید یکسان نیست.', 'error');
+          return;
+        }
+        await withAction(btn, async () => {
+          await api('/auth/change-password', {
+            method: 'POST',
+            body: {
+              current_password: $('current-password').value,
+              new_password: $('new-password').value,
+            },
+          });
+          await refreshCurrentUser();
+        }, 'رمز عبور تغییر کرد.');
+      });
+
+      function initDefaults() {
+        $('pr-need-date').value = isoDate(3);
+        $('rfq-issue-date').value = isoDate();
+        $('rfq-close-date').value = isoDate(7);
+        $('quote-date').value = isoDate();
+        $('po-order-date').value = isoDate();
+        $('po-delivery-date').value = isoDate(10);
+        $('receipt-date').value = isoDate();
+        $('qc-date').value = isoDate();
+        $('invoice-date').value = isoDate();
+        $('invoice-due-date').value = isoDate(30);
+        $('payment-date').value = isoDate();
+        populateSelect('user-role-select', USER_ROLE_OPTIONS, (role) => `<option value="${role}">${escapeHtml(roleLabel(role))}</option>`, 'نقش را انتخاب کن');
+      }
+
+      async function bootstrap() {
+        initDefaults();
+        const token = getToken();
+        if (!token) return;
+        try {
+          setToken(token);
+          await refreshCurrentUser();
+          switchToWorkspace();
+          await loadWorkspace();
+        } catch (_) {
+          setToken('');
+          switchToAuth();
+        }
+      }
+
+      bootstrap();
     </script>
   </body>
 </html>
