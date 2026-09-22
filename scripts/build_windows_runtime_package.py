@@ -19,6 +19,7 @@ INCLUDE_FILES = [
     "RUN_ON_SERVER_IP.bat",
     "ENABLE_WINDOWS_FIREWALL_8000.bat",
     "OPEN_IIS_DEPLOY_GUIDE.bat",
+    "INSTALL_PYTHON_FIRST.bat",
     "run_borna_server.bat",
     "run_borna_server_reset_demo.bat",
     "setup_windows_env.bat",
@@ -104,7 +105,8 @@ def build_release_tree() -> None:
 2) For local quick start: double-click OPEN_ME_FIRST.bat
 3) For LAN access: run ENABLE_WINDOWS_FIREWALL_8000.bat and then RUN_ON_SERVER_IP.bat
 4) For a fresh demo database each time: run RESET_AND_RUN_DEMO.bat
-5) For IIS / Reverse Proxy deployment: run OPEN_IIS_DEPLOY_GUIDE.bat
+5) If Python is not installed yet: run INSTALL_PYTHON_FIRST.bat
+6) For IIS / Reverse Proxy deployment: run OPEN_IIS_DEPLOY_GUIDE.bat
 
 Main guides:
 - docs/windows_run_guide_fa.md

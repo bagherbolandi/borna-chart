@@ -51,6 +51,15 @@ RESET_AND_RUN_DEMO.bat
 
 این فایل قبل از اجرا، `borna_chart.db` را حذف می‌کند تا نسخه دمو از صفر بالا بیاید.
 
+## اگر Python هنوز نصب نیست
+ابتدا این فایل را اجرا کنید:
+
+```bat
+INSTALL_PYTHON_FIRST.bat
+```
+
+بعد از نصب Python 3.11 یا 3.12، دوباره `OPEN_ME_FIRST.bat` یا `RUN_ON_SERVER_IP.bat` را اجرا کنید.
+
 ## سناریوی 4 — IIS / Reverse Proxy
 اگر می‌خواهید استقرار رسمی‌تر روی IIS داشته باشید:
 

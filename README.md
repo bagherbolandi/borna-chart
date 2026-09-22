@@ -43,6 +43,11 @@ RUN_ON_SERVER_IP.bat
 RESET_AND_RUN_DEMO.bat
 ```
 
+اگر Python روی سرور نصب نیست:
+```bat
+INSTALL_PYTHON_FIRST.bat
+```
+
 برای راهنمای IIS / Reverse Proxy:
 ```bat
 OPEN_IIS_DEPLOY_GUIDE.bat
