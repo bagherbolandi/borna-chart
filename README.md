@@ -86,6 +86,12 @@ set BORNA_PORTABLE_LOCAL=1
 powershell -NoProfile -ExecutionPolicy Bypass -File portable\bootstrap_portable_runtime.ps1
 ```
 
+اگر Endpoint Security باز شدن خودکار مرورگر را block کرد، این را اجرا کنید و آدرس را دستی باز کنید:
+```bat
+set BORNA_PORTABLE_LOCAL=1
+powershell -NoProfile -ExecutionPolicy Bypass -File portable\bootstrap_portable_runtime.ps1 -NoBrowser
+```
+
 جزئیات بیشتر در `docs/windows_truly_portable_fa.md` آمده است.
 
 ### Docker

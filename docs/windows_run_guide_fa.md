@@ -141,6 +141,15 @@ RUN_ON_SERVER_IP.bat
 1. کمی پایین‌تر اسکرول کنید
 2. یا همان endpoint را در Swagger (`/docs`) تست کنید
 
+## اگر Endpoint Security باز شدن مرورگر را block کرد
+در بعضی سیستم‌های سازمانی، اجرای خودکار browser از داخل Script block می‌شود. در این حالت:
+- خود API ممکن است بالا آمده باشد
+- فقط باز شدن خودکار browser fail می‌شود
+
+پس آدرس را دستی باز کنید:
+- `http://localhost:8000/console`
+- `http://localhost:8000/docs`
+
 ## مسیر مستقیم بدون BAT
 اگر بخواهید دستی اجرا کنید:
 

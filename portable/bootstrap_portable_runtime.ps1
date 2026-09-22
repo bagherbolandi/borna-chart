@@ -175,7 +175,13 @@ Write-Step ("Local Swagger: {0}" -f $LocalDocsUrl)
 Show-LanHints
 
 if (-not $NoBrowser) {
-    Start-Process $LocalConsoleUrl | Out-Null
+    try {
+        Start-Process $LocalConsoleUrl | Out-Null
+    }
+    catch {
+        Write-Step 'Browser auto-open was blocked by local security policy. Continuing without auto-open...'
+        Write-Step ("Open this address manually: {0}" -f $LocalConsoleUrl)
+    }
 }
 
 $PythonExe = Join-Path $PythonRoot 'python.exe'

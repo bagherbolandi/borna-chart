@@ -66,6 +66,14 @@ PORTABLE_RESET_AND_RUN_DEMO.bat
 و در حالت LAN:
 - `http://SERVER-IP:8000/console`
 
+## اگر آنتی‌ویروس یا Endpoint Security باز شدن خودکار مرورگر را block کرد
+بعضی محیط‌های سازمانی ممکن است اجرای خودکار `msedge.exe` یا مرورگر را از داخل PowerShell block کنند. در این حالت:
+- server همچنان می‌تواند بالا بیاید
+- فقط browser auto-open fail می‌شود
+
+در این وضعیت آدرس را دستی در مرورگر باز کنید:
+- `http://localhost:8000/console`
+
 ## کاربران دمو
 - `master.admin / master.admin`
 - `security.1 / security.1`
